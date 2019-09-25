@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="HealthTestCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="148" height="249"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="148" height="249"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PdV-uz-Hga">
+                        <rect key="frame" x="4" y="4" width="140" height="245"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xLo-ca-Agw">
+                                <rect key="frame" x="-1.5" y="0.0" width="143.5" height="114"/>
+                                <color key="backgroundColor" red="0.76448567710000004" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="xLo-ca-Agw" secondAttribute="height" multiplier="311:246" id="pDG-Wv-lPl"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="中医体质检测" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N6A-0g-Aqw">
+                                <rect key="frame" x="8.5" y="124" width="104" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="e18-qC-4Z7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="权威中医体质检测，检测你属于哪种体质检测你属于哪种体质" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zFJ-ac-Xxk">
+                                <rect key="frame" x="8.5" y="155" width="123.5" height="33"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="33" id="By7-2a-TZT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <size key="shadowOffset" width="0.0" height="0.0"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TL6-kF-Khh">
+                                <rect key="frame" x="8.5" y="198" width="83.5" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="83" id="2Gz-jp-hF6"/>
+                                    <constraint firstAttribute="height" constant="30" id="s03-zw-a8n"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <state key="normal" title="开始测试">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="beginTest:" destination="gTV-IL-0wX" eventType="touchUpInside" id="LLi-aG-cl4"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="zFJ-ac-Xxk" firstAttribute="trailing" secondItem="xLo-ca-Agw" secondAttribute="trailing" constant="-10" id="0Fb-5U-0vP"/>
+                            <constraint firstItem="TL6-kF-Khh" firstAttribute="top" secondItem="zFJ-ac-Xxk" secondAttribute="bottom" constant="10" id="Ggd-Hi-Pu3"/>
+                            <constraint firstItem="xLo-ca-Agw" firstAttribute="top" secondItem="PdV-uz-Hga" secondAttribute="top" id="NFL-3P-MeW"/>
+                            <constraint firstItem="zFJ-ac-Xxk" firstAttribute="leading" secondItem="N6A-0g-Aqw" secondAttribute="leading" id="Nw1-WU-XCc"/>
+                            <constraint firstItem="xLo-ca-Agw" firstAttribute="centerX" secondItem="PdV-uz-Hga" secondAttribute="centerX" id="RDu-tg-blO"/>
+                            <constraint firstItem="TL6-kF-Khh" firstAttribute="leading" secondItem="zFJ-ac-Xxk" secondAttribute="leading" id="U3r-MH-vTS"/>
+                            <constraint firstAttribute="bottom" secondItem="TL6-kF-Khh" secondAttribute="bottom" constant="17" id="fkV-tm-9lT"/>
+                            <constraint firstItem="N6A-0g-Aqw" firstAttribute="leading" secondItem="xLo-ca-Agw" secondAttribute="leading" constant="10" id="tFJ-92-Dgp"/>
+                            <constraint firstItem="zFJ-ac-Xxk" firstAttribute="top" secondItem="N6A-0g-Aqw" secondAttribute="bottom" constant="10" id="tYb-J9-aSY"/>
+                            <constraint firstItem="N6A-0g-Aqw" firstAttribute="top" secondItem="xLo-ca-Agw" secondAttribute="bottom" constant="10" id="uK5-aK-myW"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="PdV-uz-Hga" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="66q-Vw-t18"/>
+                <constraint firstAttribute="trailing" secondItem="PdV-uz-Hga" secondAttribute="trailing" constant="4" id="Qgr-Wz-jEk"/>
+                <constraint firstItem="PdV-uz-Hga" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="XHN-wE-NwW"/>
+                <constraint firstAttribute="bottom" secondItem="PdV-uz-Hga" secondAttribute="bottom" id="pM4-iu-YO9"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="SEy-5g-ep8"/>
+            <size key="customSize" width="348" height="369"/>
+            <connections>
+                <outlet property="BeginTestBtn" destination="TL6-kF-Khh" id="DmS-xL-x4s"/>
+                <outlet property="backView" destination="PdV-uz-Hga" id="Krc-sE-hY8"/>
+                <outlet property="bgImage" destination="xLo-ca-Agw" id="wsB-oj-wAO"/>
+                <outlet property="detailLab" destination="zFJ-ac-Xxk" id="2Zt-Tn-eSg"/>
+                <outlet property="nameLab" destination="N6A-0g-Aqw" id="Hb4-pv-a7q"/>
+            </connections>
+            <point key="canvasLocation" x="-29" y="-15.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

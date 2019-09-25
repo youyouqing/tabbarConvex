@@ -1,0 +1,106 @@
+//
+//  SportDetailController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/23.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "SportDetailController.h"
+#import "RunningView.h"
+#import "BaiduMap_SportViewController.h"
+@interface SportDetailController ()
+@property(nonatomic,strong) RunningView *runningView;
+@property (nonatomic,strong) UIButton *presentControllerButton;
+
+@property (nonatomic,weak) UILabel *distanceLB;//目标公里数(公里)
+@property (nonatomic,weak) UILabel *timeLB;
+@property (nonatomic,weak) UILabel *speedLB;//距离(公里)
+@end
+
+@implementation SportDetailController
+-(RunningView *)runningView {
+    if(!_runningView) {
+        _runningView = [[[NSBundle mainBundle] loadNibNamed:@"RunningView" owner:self options:nil] firstObject];
+        _runningView.x = 0;
+        _runningView.y = 0;
+        _runningView.width = KScreenWidth;
+        _runningView.height = KScreenHeight;
+    }
+    return _runningView;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view = self.runningView;
+     [self presentMapVC];
+    //更新数据时减少getter访问的次数[???]
+    self.distanceLB = self.runningView.distanceLB;
+    self.timeLB = self.runningView.timeLB;
+    self.speedLB = self.runningView.speedLB;
+    [self createPresentControllerButtonStop];
+}
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //这里一定要再设置一次，因为如果从地图页面过来的，viewDidLoad()不会再加载了，只会加载viewWillAppear:方法
+//    self.locationManager.delegate = self;
+    [self continueTimer];
+}
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self stopTime];
+}
+- (void)createPresentControllerButtonStop
+{
+    CGFloat y = 400;
+    CGFloat width = 90;
+    CGFloat height = width;
+    CGFloat x = 110;
+    
+    self.presentControllerButton = [[UIButton alloc] initWithFrame:CGRectMake(x, y, width, height)];
+    self.presentControllerButton.layer.cornerRadius = width / 2.;
+    //self.presentControllerButton.backgroundColor = [UIColor redColor];
+    
+    [self.presentControllerButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
+    
+    [self.presentControllerButton addTarget:self action:@selector(stopRecord) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:self.presentControllerButton];
+}
+-(void)stopTime {
+    //关闭定时器
+    [self.runningView.timer setFireDate:[NSDate distantFuture]];
+}
+-(void)presentMapVC {
+    [self.runningView.mapButton addTarget:self action:@selector(mapShow) forControlEvents:UIControlEventTouchUpInside];
+}
+-(void)mapShow {
+    BaiduMap_SportViewController *mapVc = [[BaiduMap_SportViewController alloc]initWithType:pageTypeNoNavigation];
+    [self presentLHViewController:mapVc tapView:self.runningView.mapButton color:nil animated:YES completion:^{
+
+    }];
+}
+-(void)continueTimer {
+//    if(self.locationManager.running) {
+        [self.runningView.timer setFireDate:[NSDate distantPast]];
+        NSDate *nowDate = [[NSDate alloc] init];
+//        NSTimeInterval timeInterval = [nowDate timeIntervalSinceDate:self.locationManager.startLocationDate];
+//        self.runningView.timerNumber = (NSInteger)timeInterval;
+//    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

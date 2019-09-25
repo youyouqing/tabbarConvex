@@ -1,0 +1,84 @@
+//
+//  HealthTopScrollHeaderView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTopScrollHeaderView.h"
+
+@interface HealthTopScrollHeaderView()
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+
+@end
+
+@implementation HealthTopScrollHeaderView
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    _scrollView.bounces = NO;
+    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.delegate = self;
+    _scrollView.pagingEnabled = YES;
+    _scrollView.contentSize = CGSizeMake(((60)+KWidth(22.5) )* 4+KWidth(22.5), KWidth(105));
+    for (int i = 0; i < 4; i++)
+    {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button setBackgroundColor:[UIColor getColor:@"8FE5FF"]];
+        button.titleLabel.font = [UIFont systemFontOfSize:13.0];
+        [button setTitle:@"父亲" forState:UIControlStateNormal];
+        button.clipsToBounds = YES;
+        [button addTarget:self action:@selector(replaceOtherRelation:) forControlEvents:UIControlEventTouchUpInside];
+        button.layer.cornerRadius = (60)/2.0;
+        button.frame = CGRectMake(((60)+KWidth(22.5)) * i+KWidth(22.5), (22), (60), (60));
+        [_scrollView addSubview:button];
+        
+
+        
+        UILabel *contentLab = [[UILabel alloc]init];
+        contentLab.text = @"我";
+        contentLab.textColor = [UIColor whiteColor];
+        contentLab.font = Kfont(15);
+        contentLab.textAlignment = NSTextAlignmentCenter;
+        contentLab.frame = CGRectMake(((60)+KWidth(22.5)) * i+KWidth(22.5), (22)+CGRectGetHeight(button.frame)+KHeight(9),CGRectGetWidth(button.frame), KHeight(20));
+        [_scrollView addSubview:contentLab];
+    }
+}
+
+- (IBAction)addFamilyAction:(id)sender {
+    
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(addFamilyTools)]) {
+        [self.delegate addFamilyTools];
+        
+    }
+    
+    
+}
+-(void)replaceOtherRelation:(UIButton *)sender{
+    UIButton *btn = (UIButton *)sender;
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        btn.layer.borderWidth = 10.f;
+    }else
+        btn.layer.borderWidth = 0.f;
+    
+    btn.layer.borderColor = [UIColor whiteColor].CGColor;
+    
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(replaceRelationData:)]) {
+        [self.delegate replaceRelationData:@"123"];
+        
+    }
+    
+    
+    
+}
+@end

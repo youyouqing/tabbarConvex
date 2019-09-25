@@ -1,0 +1,46 @@
+//
+//  AddFamilyBindPhoneViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/17.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "AddFamilyBindPhoneViewController.h"
+
+@interface AddFamilyBindPhoneViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *addBtn;
+@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UIImageView *iconImage;
+
+@end
+
+@implementation AddFamilyBindPhoneViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.headerView.backgroundColor = [UIColor whiteColor];
+    [self.leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    self.addBtn.clipsToBounds = YES;
+    self.addBtn.layer.cornerRadius = self.addBtn.frame.size.height/2.0;
+    
+    self.iconImage.clipsToBounds = YES;
+    self.iconImage.layer.cornerRadius = self.iconImage.frame.size.height/2.0;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

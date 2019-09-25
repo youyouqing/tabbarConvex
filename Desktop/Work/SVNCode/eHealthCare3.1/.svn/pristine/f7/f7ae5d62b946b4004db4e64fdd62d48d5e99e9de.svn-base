@@ -1,0 +1,17 @@
+//
+//  XKDetectToolViewController.h
+//  eHealthCare
+//
+//  Created by xiekang on 2017/11/2.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "XKHouseHoldModel.h"
+
+@interface XKDetectToolViewController : UIViewController
+
+
+@property(assign,nonatomic) XKDetectStyle style;
+@property(strong,nonatomic) XKHouseHoldModel *model;
+@end

@@ -1,0 +1,73 @@
+//
+//  XKHealthIntegralTaskSuccessView.m
+//  eHealthCare
+//
+//  Created by mac on 2017/10/21.
+//  Copyright © 2017年 mac. All rights reserved.
+//携康APP3.0版本任务完成页面弹窗
+
+#import "XKHealthIntegralTaskSuccessView.h"
+
+
+@interface XKHealthIntegralTaskSuccessView ()
+
+/**
+ 容器视图
+ */
+@property (weak, nonatomic) IBOutlet UIView *bigContainerView;
+
+/**
+ 水波纹容器
+ */
+@property (weak, nonatomic) IBOutlet UIView *waveContainerView;
+
+
+/**
+ 本次任务获得康币数量标签
+ */
+@property (weak, nonatomic) IBOutlet UILabel *kangCountLab;
+
+
+/**透明背景图*/
+@property (weak, nonatomic) IBOutlet UIImageView *transparentBackImg;
+
+
+@end
+
+@implementation XKHealthIntegralTaskSuccessView
+
+/**重写数据源set方法*/
+-(void)setCompleteModel:(XKCompleteTaskModel *)completeModel{
+    _completeModel = completeModel;
+    //UI显示数据
+    self.kangCountLab.text = [NSString stringWithFormat:@"x%li",_completeModel.KCurrency];
+    self.tatolKValueLab.text = [NSString stringWithFormat:@"%li",_completeModel.SKValue];
+    
+  
+    
+}
+
+-(void)awakeFromNib{
+    [super awakeFromNib];
+    //容器视图圆角设置
+    self.bigContainerView.layer.cornerRadius = 10;
+    self.bigContainerView.layer.masksToBounds = YES;
+    
+
+}
+/**
+ 继续任务按钮的点击
+ */
+- (IBAction)clickContinueTask:(id)sender {
+    NSLog(@"继续任务");
+     [self removeFromSuperview];
+}
+/**
+ 关闭窗口
+ */
+- (IBAction)clickTaskClose:(id)sender {
+    NSLog(@"关闭窗口的点击事件");
+    [self removeFromSuperview];
+}
+
+@end

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="240" id="KGk-i7-Jjw" customClass="XKRecordSeeDoctorCell">
+            <rect key="frame" x="0.0" y="0.0" width="561" height="294"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="561" height="293.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mf8-0H-k7A">
+                        <rect key="frame" x="6" y="0.0" width="549" height="140"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBI-kb-D5e">
+                                <rect key="frame" x="10" y="50" width="529" height="0.5"/>
+                                <color key="backgroundColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="Yys-Z4-u2U"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="就诊原因" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AGY-gy-l1G">
+                                <rect key="frame" x="15" y="14" width="69.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w5p-ZN-T46">
+                                <rect key="frame" x="15" y="60.5" width="519" height="79.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                        <color key="value" red="0.58431372549019611" green="0.58431372549019611" blue="0.58431372549019611" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="请输入就诊原因"/>
+                                </userDefinedRuntimeAttributes>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AGY-gy-l1G" firstAttribute="top" secondItem="Mf8-0H-k7A" secondAttribute="top" constant="14" id="3Oi-dg-sBM"/>
+                            <constraint firstItem="xBI-kb-D5e" firstAttribute="leading" secondItem="Mf8-0H-k7A" secondAttribute="leading" constant="10" id="6Ay-Wh-vZo"/>
+                            <constraint firstAttribute="bottom" secondItem="w5p-ZN-T46" secondAttribute="bottom" id="Obb-p1-EXf"/>
+                            <constraint firstItem="w5p-ZN-T46" firstAttribute="top" secondItem="xBI-kb-D5e" secondAttribute="bottom" constant="10" id="SmE-D1-wGp"/>
+                            <constraint firstAttribute="trailing" secondItem="w5p-ZN-T46" secondAttribute="trailing" constant="15" id="TOU-dC-r8i"/>
+                            <constraint firstAttribute="height" constant="140" id="a8L-Sy-js1"/>
+                            <constraint firstItem="xBI-kb-D5e" firstAttribute="top" secondItem="Mf8-0H-k7A" secondAttribute="top" constant="50" id="ftg-UT-Grt"/>
+                            <constraint firstItem="w5p-ZN-T46" firstAttribute="leading" secondItem="Mf8-0H-k7A" secondAttribute="leading" constant="15" id="jJj-dX-SeX"/>
+                            <constraint firstItem="AGY-gy-l1G" firstAttribute="leading" secondItem="Mf8-0H-k7A" secondAttribute="leading" constant="15" id="lUP-uy-ByE"/>
+                            <constraint firstAttribute="trailing" secondItem="xBI-kb-D5e" secondAttribute="trailing" constant="10" id="miv-L6-Ik2"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qDP-bO-qRp">
+                        <rect key="frame" x="6" y="146" width="549" height="140"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W2Q-sw-IsO">
+                                <rect key="frame" x="10" y="50" width="529" height="0.5"/>
+                                <color key="backgroundColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="giO-0o-4aV"/>
+                                </constraints>
+                            </view>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pEz-jV-pUp">
+                                <rect key="frame" x="15" y="60.5" width="519" height="79.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                        <color key="value" red="0.58431372549019611" green="0.58431372549019611" blue="0.58431372549019611" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="请输入就诊结果"/>
+                                </userDefinedRuntimeAttributes>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="就诊结果" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gHz-LP-NgZ">
+                                <rect key="frame" x="15" y="14" width="69.5" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="gHz-LP-NgZ" firstAttribute="leading" secondItem="qDP-bO-qRp" secondAttribute="leading" constant="15" id="6iW-Wu-Bxh"/>
+                            <constraint firstAttribute="trailing" secondItem="W2Q-sw-IsO" secondAttribute="trailing" constant="10" id="BoU-b5-Hb9"/>
+                            <constraint firstItem="pEz-jV-pUp" firstAttribute="top" secondItem="W2Q-sw-IsO" secondAttribute="bottom" constant="10" id="Ddz-b7-5xF"/>
+                            <constraint firstAttribute="trailing" secondItem="pEz-jV-pUp" secondAttribute="trailing" constant="15" id="FTR-Sm-qBx"/>
+                            <constraint firstItem="W2Q-sw-IsO" firstAttribute="leading" secondItem="qDP-bO-qRp" secondAttribute="leading" constant="10" id="MrN-yk-mzj"/>
+                            <constraint firstItem="pEz-jV-pUp" firstAttribute="leading" secondItem="qDP-bO-qRp" secondAttribute="leading" constant="15" id="Rfz-kx-hPo"/>
+                            <constraint firstItem="W2Q-sw-IsO" firstAttribute="top" secondItem="qDP-bO-qRp" secondAttribute="top" constant="50" id="VS7-6z-TX8"/>
+                            <constraint firstAttribute="height" constant="140" id="fmN-OX-OIm"/>
+                            <constraint firstItem="gHz-LP-NgZ" firstAttribute="top" secondItem="qDP-bO-qRp" secondAttribute="top" constant="14" id="jdl-ZP-vIP"/>
+                            <constraint firstAttribute="bottom" secondItem="pEz-jV-pUp" secondAttribute="bottom" id="pu1-bD-kKC"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="Mf8-0H-k7A" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="6" id="7cQ-ba-CnS"/>
+                    <constraint firstItem="qDP-bO-qRp" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="6" id="ArT-2i-TYD"/>
+                    <constraint firstAttribute="trailing" secondItem="qDP-bO-qRp" secondAttribute="trailing" constant="6" id="Ngk-Xf-blj"/>
+                    <constraint firstItem="qDP-bO-qRp" firstAttribute="top" secondItem="Mf8-0H-k7A" secondAttribute="bottom" constant="6" id="SxH-pc-aZh"/>
+                    <constraint firstAttribute="trailing" secondItem="Mf8-0H-k7A" secondAttribute="trailing" constant="6" id="UI5-LZ-RID"/>
+                    <constraint firstItem="Mf8-0H-k7A" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="cJ3-IY-rMW"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="backViewOne" destination="Mf8-0H-k7A" id="zfn-KA-odM"/>
+                <outlet property="backViewTwo" destination="qDP-bO-qRp" id="SXb-1V-Jdp"/>
+                <outlet property="resonTxt" destination="w5p-ZN-T46" id="ZDE-aj-uog"/>
+                <outlet property="resultTxt" destination="pEz-jV-pUp" id="4MN-S9-5HP"/>
+            </connections>
+            <point key="canvasLocation" x="146.5" y="150"/>
+        </tableViewCell>
+    </objects>
+</document>

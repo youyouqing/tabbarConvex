@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="XKTopicHotChildController">
+            <connections>
+                <outlet property="publishBtn" destination="tNS-0W-SF0" id="jBi-3U-exR"/>
+                <outlet property="topicTable" destination="JVa-Sd-lKU" id="Tbx-eX-szH"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5FL-CV-yAo">
+                    <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNS-0W-SF0">
+                            <rect key="frame" x="132.5" y="19" width="110" height="22"/>
+                            <state key="normal" title="   发表话题" image="publish">
+                                <color key="titleColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </state>
+                            <connections>
+                                <action selector="clickPublishHotToip:" destination="-1" eventType="touchUpInside" id="H3Z-Id-YHY"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Edh-fO-VZX">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="0.5"/>
+                            <color key="backgroundColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="cT7-Lt-BFE"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="AiU-0j-vNd"/>
+                        <constraint firstItem="tNS-0W-SF0" firstAttribute="centerY" secondItem="5FL-CV-yAo" secondAttribute="centerY" id="HL0-xx-syJ"/>
+                        <constraint firstItem="Edh-fO-VZX" firstAttribute="top" secondItem="5FL-CV-yAo" secondAttribute="top" id="Pd0-Cb-YBg"/>
+                        <constraint firstItem="tNS-0W-SF0" firstAttribute="centerX" secondItem="5FL-CV-yAo" secondAttribute="centerX" id="h3I-sE-yO9"/>
+                        <constraint firstItem="Edh-fO-VZX" firstAttribute="leading" secondItem="5FL-CV-yAo" secondAttribute="leading" id="k4V-lG-iUU"/>
+                        <constraint firstAttribute="trailing" secondItem="Edh-fO-VZX" secondAttribute="trailing" id="ksS-IL-pcK"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="JVa-Sd-lKU">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="607"/>
+                    <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="JVa-Sd-lKU" secondAttribute="trailing" id="1no-u7-xyU"/>
+                <constraint firstItem="5FL-CV-yAo" firstAttribute="top" secondItem="JVa-Sd-lKU" secondAttribute="bottom" id="RNP-k6-OTL"/>
+                <constraint firstItem="JVa-Sd-lKU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="e8g-Ke-4zt"/>
+                <constraint firstItem="5FL-CV-yAo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ict-UM-Dmu"/>
+                <constraint firstItem="JVa-Sd-lKU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nTS-eM-tN8"/>
+                <constraint firstAttribute="bottom" secondItem="5FL-CV-yAo" secondAttribute="bottom" id="q7e-CP-mhU"/>
+                <constraint firstAttribute="trailing" secondItem="5FL-CV-yAo" secondAttribute="trailing" id="y4X-Vm-dka"/>
+            </constraints>
+            <point key="canvasLocation" x="25.5" y="52.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="publish" width="22" height="22"/>
+    </resources>
+</document>

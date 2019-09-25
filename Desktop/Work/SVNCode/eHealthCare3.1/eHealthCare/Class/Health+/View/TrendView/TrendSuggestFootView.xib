@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11542" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="kdt-qf-4ME" customClass="TrendSuggestFootView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hng-JY-oE0">
+                    <rect key="frame" x="15" y="0.0" width="290" height="60"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b59-fb-8wW">
+                            <rect key="frame" x="15" y="10" width="120" height="35"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="120" id="1gG-3f-4ag"/>
+                                <constraint firstAttribute="height" constant="35" id="BKr-vi-f6l"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="体检项目推荐" backgroundImage="detailFootBtn">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="clickOne:" destination="kdt-qf-4ME" eventType="touchUpInside" id="1M6-3X-BbW"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IP8-l2-KUt">
+                            <rect key="frame" x="155" y="10" width="120" height="35"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="理疗项目推荐" backgroundImage="detailFootBtn">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="clickTwo:" destination="kdt-qf-4ME" eventType="touchUpInside" id="uyk-ZR-6Ku"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.92156862745098034" green="0.98431372549019602" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="b59-fb-8wW" secondAttribute="bottom" constant="15" id="3mJ-hS-R0G"/>
+                        <constraint firstItem="IP8-l2-KUt" firstAttribute="width" secondItem="b59-fb-8wW" secondAttribute="width" id="4uw-e7-Bq7"/>
+                        <constraint firstAttribute="bottom" secondItem="IP8-l2-KUt" secondAttribute="bottom" constant="15" id="I4e-15-OIy"/>
+                        <constraint firstItem="b59-fb-8wW" firstAttribute="leading" secondItem="Hng-JY-oE0" secondAttribute="leading" constant="15" id="rH0-UK-PvN"/>
+                        <constraint firstAttribute="trailing" secondItem="IP8-l2-KUt" secondAttribute="trailing" constant="15" id="rHc-fk-ebn"/>
+                        <constraint firstItem="IP8-l2-KUt" firstAttribute="height" secondItem="b59-fb-8wW" secondAttribute="height" id="yWJ-MG-bNM"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Hng-JY-oE0" firstAttribute="leading" secondItem="kdt-qf-4ME" secondAttribute="leading" constant="15" id="Jfn-Mg-N6M"/>
+                <constraint firstAttribute="trailing" secondItem="Hng-JY-oE0" secondAttribute="trailing" constant="15" id="Xo8-xQ-Mhn"/>
+                <constraint firstAttribute="bottom" secondItem="Hng-JY-oE0" secondAttribute="bottom" constant="10" id="Xrb-Qr-8Yf"/>
+                <constraint firstItem="Hng-JY-oE0" firstAttribute="top" secondItem="kdt-qf-4ME" secondAttribute="top" id="rrI-46-ASo"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="examPutBtn" destination="b59-fb-8wW" id="e5U-fk-3Tc"/>
+                <outlet property="phsPutBtn" destination="IP8-l2-KUt" id="Ngy-Ub-1Vl"/>
+            </connections>
+            <point key="canvasLocation" x="6" y="186"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="detailFootBtn" width="147" height="40"/>
+    </resources>
+</document>

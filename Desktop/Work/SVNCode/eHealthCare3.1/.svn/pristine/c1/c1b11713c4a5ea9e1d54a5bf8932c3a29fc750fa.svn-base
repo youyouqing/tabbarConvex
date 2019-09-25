@@ -1,0 +1,30 @@
+//
+//  BaiduMap_SportViewController.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/10.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "BaseViewController.h"
+#import "BaiduMapTrackManager.h"
+
+typedef NS_ENUM(NSInteger, sportType){
+    
+    sportTypeRun = 0,//跑步
+    sportTypeRide = 1//骑行
+    
+};
+
+typedef NS_ENUM(NSInteger,TrailType){
+    
+    TrailStart,//路径状态开始
+    TrailEnd//路径状态结束
+    
+};
+
+@interface BaiduMap_SportViewController : BaseViewController
+
+@property (nonatomic, assign) sportType sportType;//运动类型
+
+@end

@@ -1,0 +1,105 @@
+//
+//  BreathingTrainPrepareView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/30.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#define lightBlueColor [UIColor colorWithRed:85/255. green:184/255. blue:249/255. alpha:1]
+
+#import "BreathingTrainPrepareView.h"
+
+@implementation BreathingTrainPrepareView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        [self createUI];
+    }
+    return self;
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    UILabel *title = [[UILabel alloc]init];
+    
+    title.font = Kfont(25);
+    title.text = @"三分钟深呼吸训练";
+    title.textColor = lightBlueColor;
+    title.textAlignment = NSTextAlignmentCenter;
+    
+    [self addSubview:title];
+    [title mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(KHeight(72));
+        make.height.mas_equalTo(KHeight(23));
+        make.centerX.mas_equalTo(self.mas_centerX);
+    }];
+    
+    UILabel *remindLabel = [[UILabel alloc]init];
+    
+    remindLabel.font = Kfont(12);
+    remindLabel.text = @"一呼一吸活跃肺部，同时减轻心理压力";
+    remindLabel.textColor = GRAYCOLOR;
+    remindLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [self addSubview:remindLabel];
+    [remindLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(title.mas_bottom).mas_offset(KHeight(16));
+        make.height.mas_equalTo(KHeight(11));
+        make.centerX.mas_equalTo(self.mas_centerX);
+    }];
+    
+    NSArray *buttonTitle = @[@"入门训练",@"中级训练",@"高级训练"];
+    for (int i = 0; i < 3; i++) {
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        [button setTitle:buttonTitle[i] forState:UIControlStateNormal];
+        [button setTitleColor:lightBlueColor forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(choseLevelOfTraining:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self addSubview:button];
+        [button mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.top.mas_equalTo(remindLabel.mas_bottom).mas_offset(KHeight(35) + i * KHeight(65));
+            make.centerX.mas_equalTo(self.mas_centerX);
+            make.size.mas_equalTo(CGSizeMake(KWidth(230), KHeight(45)));
+        }];
+        
+        button.layer.cornerRadius = 20;
+        button.layer.borderWidth = 0.8;
+        button.layer.masksToBounds = YES;
+        button.layer.borderColor = lightBlueColor.CGColor;
+    }
+}
+
+#pragma mark Action
+- (void)choseLevelOfTraining:(UIButton *)button
+{
+    BreathingTrainLevel type = 0;
+    if (button.tag == 100) {
+        
+        type = BreathingTrainLevelLow;
+        
+    }else if (button.tag == 101){
+        
+        type = BreathingTrainLevelMiddle;
+        
+    }else if (button.tag == 102){
+        
+        type = BreathingTrainLevelHigh;
+        
+    }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(choseTheLevelOfTrain:)]) {
+        
+        [self.delegate choseTheLevelOfTrain:type];
+    }
+}
+@end

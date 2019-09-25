@@ -1,0 +1,42 @@
+//
+//  TrainWithMusicViewController.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/23.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "BaseViewController.h"
+
+//训练类型(1：安静调节、2：缓解压力、3：正念训练、4：早安、5：晚安)  安静调节 缓解压力 正念训练 都归属于正念这个大类里
+typedef NS_ENUM(NSInteger,TrainType){
+    
+    ///安静调节训练
+    TrainTypeSilence = 0,
+    
+    ///缓解压力训练
+    TrainTypeStress = 1,
+    
+    ///正念训练
+    TrainTypeMindfulness = 2,
+    
+    ///早安
+    TrainTypeMorning = 3,
+    
+    ///晚安
+    TrainTypeEvening = 4,
+    
+};
+
+@interface TrainWithMusicViewController : BaseViewController
+
+///训练类型(1：安静调节、2：缓解压力、3：正念训练)
+@property (nonatomic, assign) TrainType trainType;
+
+///只是展示 1：安静调节、2：缓解压力、3：正念训练、4：早安、5：晚安 这些的数据
+@property (nonatomic, strong) NSDictionary *dataDic;
+
+///对应的训练类型下所有资源数组 换皮肤主体用的
+@property (nonatomic, strong) NSArray *TopicDataArray;
+
+@end

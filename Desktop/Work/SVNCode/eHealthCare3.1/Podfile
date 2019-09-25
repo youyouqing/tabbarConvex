@@ -1,0 +1,37 @@
+# Uncomment the next line to define a global platform for your project
+ platform :ios, '9.0'
+
+target 'eHealthCare' do
+
+pod 'AFNetworking'
+pod 'SVProgressHUD'
+pod 'MJExtension'
+pod 'MJRefresh'
+pod 'Masonry'
+pod 'SDWebImage','~> 4.4.1'
+pod 'Reachability'
+pod 'EGOCache'
+pod 'MBProgressHUD'
+pod 'JPush'
+
+#Facebook开源的动画框架
+pod 'pop'
+
+#豆瓣开源的流媒体处理框架
+pod 'DOUAudioStreamer'
+
+#shareSDK分享
+pod 'mob_sharesdk'
+pod 'mob_sharesdk/ShareSDKUI'
+pod 'mob_sharesdk/ShareSDKPlatforms/QQ'
+pod 'mob_sharesdk/ShareSDKPlatforms/SinaWeibo'
+pod 'mob_sharesdk/ShareSDKConfigFile'
+pod 'mob_sharesdk/ShareSDKExtension'
+pod 'WechatOpenSDK'
+
+#百度地图
+pod 'BaiduMapKit','~> 4.1.1'
+
+pod 'MZTimerLabel'
+
+end

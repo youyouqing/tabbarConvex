@@ -1,0 +1,147 @@
+//
+//  XKMyPlanLookCell.m
+//  eHealthCare
+//
+//  Created by xiekang on 2017/6/9.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKMyPlanLookCell.h"
+
+@interface XKMyPlanLookCell ()
+
+@property (weak, nonatomic) IBOutlet UIImageView *circleOneImage;
+
+@property (assign, nonatomic)CGFloat progress;
+@property (weak, nonatomic) IBOutlet UIImageView *circleTwoImage;
+
+@end
+
+@implementation XKMyPlanLookCell
+- (void)drawCircle {
+    //创建一个layer并添加到self.layer上面去
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame = self.circleTwoImage.bounds;
+    [self.circleTwoImage.layer addSublayer:layer];
+    //创建一个圆
+    CGFloat width = CGRectGetWidth(self.circleTwoImage.bounds);
+    CGFloat height = CGRectGetHeight(self.circleTwoImage.bounds);
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(width/2, height/2) radius:width/2 startAngle:0 endAngle:2* M_PI clockwise:YES];
+    layer.path = path.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.strokeColor = [UIColor whiteColor].CGColor;
+    layer.lineWidth = 10;
+    layer.lineCap = kCALineCapRound;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self updateProgressCircle];
+    });
+}
+- (void)updateProgressCircle{
+    //update progress value
+    self.progress = (float) (0.3);
+    //redraw back & progress circles
+    //    [self setNeedsDisplay];
+    [self drawColorLayer];
+    //增加动画
+    
+}
+//设置整个view渐变色
+- (void)drawColorLayer {
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame = self.circleTwoImage.bounds;
+    [self.circleTwoImage.layer addSublayer:layer];
+    
+    layer.frame = self.circleTwoImage.bounds;
+    layer.lineWidth = 10;
+    UIBezierPath *progressCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.circleTwoImage.bounds.size.width / 2,self.circleTwoImage.bounds.size.height / 2)
+                                                                  radius:65/2
+                                                              startAngle:(CGFloat) - M_PI_2
+                                                                endAngle:(CGFloat)(- M_PI_2 + self.progress * 2 * M_PI)
+                                                               clockwise:YES];
+    
+    
+    layer.path = progressCircle.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.strokeColor = kMainColor.CGColor;
+    layer.lineCap = kCALineCapButt;
+    
+    
+    CABasicAnimation *pathAnimation=[CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    pathAnimation.duration = 2;
+    pathAnimation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    pathAnimation.fromValue=[NSNumber numberWithFloat:0.0f];
+    pathAnimation.toValue=[NSNumber numberWithFloat:self.progress];
+    pathAnimation.autoreverses=NO;
+    
+    pathAnimation.fillMode = kCAFillModeForwards;
+    pathAnimation.removedOnCompletion = NO;
+    pathAnimation.repeatCount = 1;
+    [layer addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+     [self drawCircle];
+    
+    self.joinBtn.layer.cornerRadius = self.joinBtn.height/2;
+    self.joinBtn.clipsToBounds = YES;
+    self.backgroundColor = [UIColor getColor:@"edf8ff"];
+    
+//    self.bgView.layer.cornerRadius = 5;
+//    self.bgView.layer.borderWidth = 0.5f;
+//    self.bgView.layer.borderColor = [UIColor getColor:@"e5e5e5"].CGColor;
+//    self.bgView.clipsToBounds = YES;
+    
+    self.bgView.layer.shadowColor = [UIColor colorWithRed:3/255.0 green:199/255.0 blue:255/255.0 alpha:0.24].CGColor;
+    self.bgView.layer.shadowOpacity = 1;
+    self.bgView.layer.shadowRadius = 9.f;
+    self.bgView.layer.shadowOffset = CGSizeMake(0, 2);
+    
+    self.iconImage.clipsToBounds = YES;
+    
+    self.iconImage.layer.cornerRadius = self.iconImage.height/2.0;
+    
+    
+    self.circleOneImage.clipsToBounds = YES;
+    
+    self.circleOneImage.layer.cornerRadius = self.circleOneImage.height/2.0;
+    
+    self.circleTwoImage.clipsToBounds = YES;
+    
+    self.circleTwoImage.layer.cornerRadius = self.circleTwoImage.height/2.0;
+    
+    
+    
+    
+    if (IS_IPHONE5||IS_IPHONE4S) {
+        self.planProtectLab.font = [UIFont boldSystemFontOfSize:15.f];
+        
+        self.planNumberLab.font  = [UIFont systemFontOfSize:11.f];
+    }
+    
+    
+
+    
+    
+
+    
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+- (IBAction)joinAction:(id)sender {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(XKMyPlanLookCellJoinAction:)]) {
+        
+        [self.delegate XKMyPlanLookCellJoinAction:self];
+    }
+    
+    
+}
+
+
+
+@end

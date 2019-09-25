@@ -1,0 +1,203 @@
+//
+//  HomeViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/2.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HomeViewController.h"
+
+#import "NoralWebViewController.h"
+#import "HealthWiKiViewController.h"
+#import "HealthTestViewController.h"
+#import "HealthPlanViewController.h"
+
+#import "HomeViewModel.h"
+
+@interface HomeViewController ()
+
+///热门话题
+@property (nonatomic, strong) NSArray *HotTopicListArray;
+
+///健康计划
+@property (nonatomic, strong) NSArray *HealthPlanListArray;
+
+///健康百科
+@property (nonatomic, strong) NSArray *WikiListArray;
+
+///广告
+@property (nonatomic, strong) NSArray *AdvertiseListArray;
+
+///运动步数公里数等
+@property (nonatomic, strong) NSArray *StepEntityArray;
+
+///心理疏导 早安、晚安、正念等
+@property (nonatomic, strong) NSArray *EaseListArray;
+
+@end
+
+@implementation HomeViewController
+
+#pragma mark life cycle
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    [self createUI];
+    
+    //拉去首页数据
+    [self getHotTopicHealthPlanAndMoreWithNetWorking];
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    NSArray *buttonArray = @[@"在线医生",
+                             @"调理养生",
+                             @"健康体检",
+                             @"健康百科",
+                             @"健康自测",
+                             @"健康计划",
+                             @"健康话题",
+                             @"健康资讯"];
+    for (int i = 0; i < buttonArray.count; i++) {
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        button.tag = 100 + i;
+        [button setTitle:buttonArray[i] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:button];
+        [button mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.top.mas_equalTo(KHeight(40) + i * KHeight(60));
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.size.mas_equalTo(CGSizeMake(KScreenWidth, KHeight(30)));
+        }];
+        
+    }
+}
+
+#pragma mark Action
+- (void)buttonAction:(UIButton *)sender
+{
+    switch (sender.tag - 100) {
+        case 0:
+        {
+            [self goToNoralWebView:XKOnlineConsultantUrl title:@"在线问诊"];
+        }
+            break;
+        case 1:
+        {
+            [self goToNoralWebView:kConditioningRegimenUrl title:@"调理养生"];
+        }
+            break;
+        case 2:
+        {
+            [self goToNoralWebView:kHealthCheckUpUrl title:@"健康体检"];
+        }
+            break;
+        case 3:
+        {
+            [self goToHealthWiki:[NSString stringWithFormat:@"%@AppComm/BaikeIndex",kMainUrl] title:@"健康百科"];
+        }
+            break;
+        case 4:
+        {
+            HealthTestViewController *health = [[HealthTestViewController alloc]initWithType:pageTypeNormal];
+            health.myTitle = @"健康自测";
+            [self.navigationController pushViewController:health animated:YES];
+        }
+            break;
+        case 5:
+        {
+            HealthPlanViewController *plan = [[HealthPlanViewController alloc]initWithType:pageTypeNormal];
+            plan.myTitle = @"健康计划";
+            [self.navigationController pushViewController:plan animated:YES];
+        }
+            break;
+        case 6:
+        {
+            
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark 界面跳转
+//在线医生
+- (void)goToNoralWebView:(NSString *)url title:(NSString *)title
+{
+    NoralWebViewController *web = [[NoralWebViewController alloc]initWithType:pageTypeNormal];
+    
+    web.urlString = url;
+    web.myTitle = title;
+    
+    [self.navigationController pushViewController:web animated:YES];
+}
+
+//健康百科
+- (void)goToHealthWiki:(NSString *)url title:(NSString *)title
+{
+    HealthWiKiViewController *web = [[HealthWiKiViewController alloc]initWithType:pageTypeNormal];
+    
+    web.urlString = url;
+    web.myTitle = title;
+    
+    [self.navigationController pushViewController:web animated:YES];
+}
+
+#pragma mark NetWorking
+- (void)getHotTopicHealthPlanAndMoreWithNetWorking
+{
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                          @"MemberID":[UserInfoTool getLoginInfo].MemberID,
+                          @"PageIndex":@1,
+                          @"PageSize":@3};
+    
+    [HomeViewModel getHotTopicHealthPlanAndMoreWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed) {
+            
+            self.HotTopicListArray = response.Result[@"HotTopicList"];
+            
+            self.HealthPlanListArray = response.Result[@"HealthPlanList"];
+            
+            self.WikiListArray = response.Result[@"WikiList"];
+            
+            self.AdvertiseListArray = response.Result[@"AdvertiseList"];
+            
+            self.StepEntityArray = response.Result[@"StepEntity"];
+            
+            self.EaseListArray = response.Result[@"EaseList"];
+            
+        }else
+        {
+            ShowErrorStatus(response.msg);
+        }
+    }];
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

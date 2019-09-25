@@ -1,0 +1,340 @@
+//
+//  HealthRecordController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/11.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthRecordController.h"
+#import "HealthRecordCell.h"
+#import "HealthRecordHeaderView.h"
+#import "HealthRecordMedical TableViewCell.h"
+#import "HealthInformationCell.h"
+#import "HealthRecordFooterView.h"
+#import "RecordDetailController.h"
+#import "MineElectronMedicController.h"
+#import "ArchiveSettingViewController.h"
+#import "HealthRecordNoDataFooterView.h"
+#import "HealthTopScrollHeaderView.h"
+#import "AddFamilyViewController.h"
+#import "PersonArchiveBottomView.h"
+#import "FamilyRelationController.h"
+static NSString *testReportListCell = @"HealthRecordCell";
+
+@interface HealthRecordController ()
+///数据源
+@property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong)HealthRecordHeaderView *headView;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong)HealthRecordNoDataFooterView *rowFooterView;
+@property (nonatomic, strong)HealthTopScrollHeaderView *HeaderTopScrollView;
+
+@end
+
+@implementation HealthRecordController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self createUI];
+    self.myTitle = @"健康档案";
+    [self.rightBtn setImage:[UIImage imageNamed:@"icon_my_setting"] forState:UIControlStateNormal];
+    
+    [self.rightBtn setTitle:@"" forState:UIControlStateNormal];
+    [self.rightBtn addTarget:self action:@selector(enterArchive) forControlEvents:UIControlEventTouchUpInside];
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, PublicY, KScreenWidth, KScreenHeight-(PublicY)) style:UITableViewStyleGrouped];
+    tableView.showsVerticalScrollIndicator=NO;
+    tableView.showsHorizontalScrollIndicator=NO;
+    tableView.delegate = self;
+    tableView.dataSource = self;
+     tableView.backgroundColor = [UIColor getColor:@"edf8ff"];
+     self.view.backgroundColor = [UIColor getColor:@"edf8ff"];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableView registerNib:[UINib nibWithNibName:@"HealthRecordCell" bundle:nil] forCellReuseIdentifier:@"HealthRecordCell"];
+    [tableView registerNib:[UINib nibWithNibName:@"HealthRecordMedical TableViewCell" bundle:nil] forCellReuseIdentifier:@"HealthRecordMedical TableViewCell"];
+    [tableView registerNib:[UINib nibWithNibName:@"HealthInformationCell" bundle:nil] forCellReuseIdentifier:@"HealthInformationCell"];
+    [self.view addSubview:tableView];
+     self.tableView = tableView;
+    
+     self.tableView.tableHeaderView= self.HeaderTopScrollView;
+    
+    
+    
+}
+-(HealthTopScrollHeaderView *)HeaderTopScrollView
+{
+
+    if (!_HeaderTopScrollView) {
+        _HeaderTopScrollView = [[[NSBundle mainBundle] loadNibNamed:@"HealthTopScrollHeaderView" owner:self options:nil] firstObject];
+        _HeaderTopScrollView.delegate = self;
+        _HeaderTopScrollView.left=0;
+        _HeaderTopScrollView.top=PublicY;
+        _HeaderTopScrollView.width=KScreenWidth;
+        _HeaderTopScrollView.height=180-(PublicY);
+    }
+    return _HeaderTopScrollView;
+}
+
+-(HealthRecordNoDataFooterView *)rowFooterView
+{
+    
+    if (!_rowFooterView) {
+        _rowFooterView = [[[NSBundle mainBundle] loadNibNamed:@"HealthRecordNoDataFooterView" owner:self options:nil] firstObject];
+//        _rowFooterView.delegate = self;
+        _rowFooterView.left=0;
+        _rowFooterView.top=PublicY;
+        _rowFooterView.width=KScreenWidth;
+        _rowFooterView.height=180-(PublicY);
+    }
+    return _rowFooterView;
+}
+-(void)addFamilyTools;
+{
+  
+    [self openPersonArchiveUI];
+}
+#pragma mark tableView dataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 3;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    
+    return 5;//self.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        HealthRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:testReportListCell];
+         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        return cell;
+    }
+    
+    else  if (indexPath.section==4)
+    {
+        NSString *cellid = @"HealthRecordMedical TableViewCell";
+        HealthRecordMedical_TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        
+        //        cell.delegate = self;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }else
+    {
+        
+        NSString *cellid = @"HealthInformationCell";
+        HealthInformationCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        
+        //        cell.delegate = self;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+        
+    }
+}
+
+#pragma mark tableView delegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 4) {
+        return KHeight(113)+10;
+    }else
+    return KHeight(50);
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.section == 4) {
+        MineElectronMedicController *detail = [[MineElectronMedicController alloc]initWithType:pageTypeNormal];
+        [self.navigationController pushViewController:detail animated:YES];
+    }
+
+
+
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if (section == 0){
+        HealthRecordHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordHeaderView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"今日健康记录";
+        [headV.editBtn setImage:[UIImage imageNamed:@"mood_bad"] forState:UIControlStateNormal];
+        [headV.editBtn setTitle:@"酷" forState:UIControlStateNormal];
+        headV.editBtn.layer.borderWidth = 0;
+        headV.delegate = self;
+        return headV;
+    }else if (section == 1){
+        HealthRecordHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordHeaderView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"基本健康信息";
+        headV.editBtn.titleLabel.text =@"编辑";
+        headV.delegate = self;
+        //        headV.arrowImg.hidden = NO;
+        return headV;
+    }
+    else if (section == 2){
+        HealthRecordHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordHeaderView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"健康史信息";
+        headV.editBtn.titleLabel.text =@"编辑";
+        headV.delegate = self;
+        //        headV.arrowImg.hidden = NO;
+        return headV;
+    }
+    else if (section == 3){
+        HealthRecordHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordHeaderView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"最新检测报告";
+        [headV.editBtn setTitle:@"查看详情" forState: UIControlStateNormal];
+        headV.delegate = self;
+        return headV;
+    }
+    else{
+        HealthRecordHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordHeaderView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"最新电子病历";
+        [headV.editBtn setTitle:@"查看更多" forState: UIControlStateNormal];
+        //    headV.editBtn.titleLabel.text =@"";
+        return headV;
+    }
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    if (section == 0){
+        return 213;//UITableViewAutomaticDimension;
+    }
+    else if (section == 1)
+    {
+        return 199;
+    }else
+        return 228;
+
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+   return 45+10;
+    
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    if (section == 0){
+        HealthRecordFooterView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordFooterView" owner:self options:nil]  firstObject];
+      
+        return footerV;
+    }
+   else if (section == 1){
+        HealthRecordNoDataFooterView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordNoDataFooterView" owner:self options:nil]  firstObject];
+        footerV.titleLab.text=@"加入健康队伍";
+        [footerV.goBtn setTitle:@"我来了" forState:UIControlStateNormal];
+        footerV.delegate = self;
+        return footerV;
+    }
+    else if (section == 2){
+        HealthRecordNoDataFooterView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordNoDataFooterView" owner:self options:nil]  firstObject];
+        footerV.titleLab.text=@"加入健康队伍就差这一步了";
+        [footerV.goBtn setTitle:@"这就来" forState:UIControlStateNormal];
+        footerV.delegate = self;
+        return footerV;
+    }
+    else if (section == 3){
+        HealthRecordNoDataFooterView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordNoDataFooterView" owner:self options:nil]  firstObject];
+        footerV.titleLab.text=@"您半年没跟“体检”约会了";
+         [footerV.goBtn setTitle:@"约个时间" forState:UIControlStateNormal];
+        footerV.delegate = self;
+        return footerV;
+    }
+    else{
+        HealthRecordNoDataFooterView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"HealthRecordNoDataFooterView" owner:self options:nil]  firstObject];
+        footerV.titleLab.text=@"之前的病历还在吗";
+        
+        [footerV.goBtn setTitle:@"找到TA上传" forState:UIControlStateNormal];
+//        footerV.editBtn.layer.borderWidth = 0;
+        footerV.delegate = self;
+        return footerV;
+    }
+    
+    
+}
+#pragma mark NetWorking
+- (void)getTestReportListData
+{
+//    NSDictionary *dic = @{@"Token":[SingleTon shareInstance].token,
+//                          @"MemberID":@([UserInfoTool getLoginInfo].MemberID),
+//                          @"PageIndex":@(self.pageNum),
+//                          @"PageSize":@(self.dataCount)};
+//
+//    [TestReportViewModel getTestReportListWithParams:dic FinishedBlock:^(ResponseObject *response) {
+//
+//        if (response.code == CodeTypeSucceed) {
+//
+//
+//        }else
+//        {
+//            ShowErrorStatus(response.msg);
+//        }
+//    }];
+}
+
+-(void)enterArchive{
+    
+    ArchiveSettingViewController *detail = [[ArchiveSettingViewController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:detail animated:YES];
+    
+}
+#pragma mark HealthRecordNoDataFooterViewDelegate
+- (void)ComebuttonClick;
+{
+    
+    
+}
+#pragma mark HealthRecordHeaderViewDelegate
+- (void)HealthRecordHeaderViewButtonClick;
+{
+   
+ 
+    RecordDetailController *detail = [[RecordDetailController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:detail animated:YES];
+}
+#pragma mark   创建家人档案的底部选择已有家人
+-(void)openPersonArchiveUI
+{
+    //5s:300 6:330
+    PersonArchiveBottomView *bottomView = [[[NSBundle mainBundle]loadNibNamed:@"PersonArchiveBottomView" owner:self options:nil]  firstObject];
+    bottomView.left = 0;
+    bottomView.top=0;
+    bottomView.width=KScreenWidth;
+    bottomView.height=KScreenHeight;
+    bottomView.delegate = self;
+    [[UIApplication sharedApplication].keyWindow addSubview:bottomView];
+}
+- (void)ArchiveBottomViewSelectClick:(NSInteger)selectedIndex;
+{
+    
+    NSLog(@"--------_%li",selectedIndex);
+    if (selectedIndex == 1) {
+        AddFamilyViewController *detail = [[AddFamilyViewController alloc]initWithType:pageTypeNormal];
+        [self.navigationController pushViewController:detail animated:YES];
+        
+    }
+    if (selectedIndex == 0) {
+        FamilyRelationController *detail = [[FamilyRelationController alloc]initWithType:pageTypeNormal];
+        [self.navigationController pushViewController:detail animated:YES];
+        
+    }
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

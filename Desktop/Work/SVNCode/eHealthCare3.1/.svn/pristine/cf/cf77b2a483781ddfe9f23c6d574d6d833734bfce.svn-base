@@ -1,0 +1,448 @@
+//
+//  RecordDetalInfoViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "RecordDetalInfoViewController.h"
+#import "PersonalCellHeadView.h"
+#import "PersonalArchiveCell.h"
+#import "PersonArchiveSinglePopView.h"
+#import "HealthRecordViewModel.h"
+#import "PersonalDictionaryMsg.h"
+#import "PersonArchiveTextPutView.h"
+@interface RecordDetalInfoViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property(strong,nonatomic) PersonArchiveSinglePopView *popBottomView;
+@property (nonatomic,strong)PersonalDictionaryMsg *personalDictionaryMsg;
+@property(strong,nonatomic) PersonArchiveTextPutView *popInputTextView;
+@property(strong,nonatomic)UITableView *tableView;
+@end
+
+@implementation RecordDetalInfoViewController
+
+-(PersonArchiveTextPutView*)popInputTextView
+{
+    if (!_popInputTextView) {
+        _popInputTextView = [[[NSBundle mainBundle]loadNibNamed:@"PersonArchiveTextPutView" owner:self options:nil]  firstObject];
+        _popInputTextView.left = 0;
+        _popInputTextView.top=0;
+        _popInputTextView.width=KScreenWidth;
+        _popInputTextView.height=KScreenHeight;
+        _popInputTextView.delegate = self;
+    }
+    return _popInputTextView    ;
+}
+-(PersonArchiveSinglePopView *)popBottomView
+{
+    if (!_popBottomView) {
+        _popBottomView = [[[NSBundle mainBundle]loadNibNamed:@"PersonArchiveSinglePopView" owner:self options:nil]  firstObject];
+        _popBottomView.left = 0;
+        _popBottomView.top=0;
+        _popBottomView.width=KScreenWidth;
+        _popBottomView.height=KScreenHeight;
+        _popBottomView.delegate = self;
+    }
+    return _popBottomView    ;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
+    
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    self.view.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableView registerNib:[UINib nibWithNibName:@"PersonalArchiveCell" bundle:nil] forCellReuseIdentifier:@"PersonalArchiveCell"];
+    [self.view addSubview:tableView];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(10 );
+        make.bottom.mas_equalTo(0);
+        make.width.mas_equalTo( CGRectGetWidth(self.view.frame)-20);
+    }];
+    self.tableView = tableView;
+    [self addFamilyResultWithNetWorking];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    
+    
+    [self getPersonDataWithNewWorking];
+}
+-(void) keyBoardChange:(NSNotification *)note
+{
+    
+    //获取键盘弹出或收回时frame
+    
+    CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
+    //获取键盘弹出所需时长
+    
+    float duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    //添加弹出动画
+    
+    [UIView animateWithDuration:duration animations:^{
+        
+        self.popInputTextView.transform = CGAffineTransformMakeTranslation(0, keyboardFrame.origin.y+KHeight(100) - (KScreenHeight));
+        
+    }];
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0.01;
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.bigArr[self.typeTag] count];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *cellid = @"PersonalArchiveCell";
+    PersonalArchiveCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    NSArray *tempArray =  self.bigArr[self.typeTag];
+    NSDictionary *dic = tempArray[indexPath.row];
+    cell.nameLal.text = [NSString stringWithFormat:@"%@",dic[@"name"]];
+    cell.textLal.text = [NSString stringWithFormat:@"%@",dic[@"text"]];
+    cell.selectStarLab.hidden = [dic[@"hiden"] boolValue];
+    return cell;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 50;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    NSArray *tempArray =  self.bigArr[self.typeTag];
+    NSDictionary *dic = tempArray[indexPath.row];
+    if ([dic[@"tag"] integerValue]== 1) {
+       if(indexPath.row == 0 ){
+           [UIView animateWithDuration:.2 animations:^{
+               self.popInputTextView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+                                                                         CGAffineTransformMakeScale(1.0f, 1.0f));
+           }];
+           [[UIApplication sharedApplication].keyWindow addSubview:self.popInputTextView];
+        
+       
+        }else
+       {
+            self.popBottomView.popBottomType = indexPath.row;
+           //5s:300 6:330
+//           [UIView animateWithDuration:.2 animations:^{
+//               self.popBottomView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+//                                                                      CGAffineTransformMakeScale(1.0f, 1.0f));
+//           }];
+           [[UIApplication sharedApplication].keyWindow addSubview:self.popBottomView];
+    }
+  }else   if ([dic[@"tag"] integerValue]== 2)
+  {
+       [self addFamilyResultWithNetWorking];
+      NSMutableArray *tempArr = [NSMutableArray array];
+      NSString *tempStr = @"";
+      if (indexPath.row == 1) {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.PastHistory) {
+              [tempArr addObject:model];
+          }
+         tempStr = @"";//A
+          
+      }
+      else if (indexPath.row == 0)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.PastHistory) {
+              [tempArr addObject:model];
+          }
+      }else if (indexPath.row == 2)
+      {
+//           tempArr = self.personalDictionaryMsg.OperationTrauma;
+          for (DictionaryMsg *model in self.personalDictionaryMsg.OperationTrauma) {
+              [tempArr addObject:model];
+          }
+      }
+      else if (indexPath.row == 3)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.AllergyDrug) {
+              [tempArr addObject:model];
+          }
+//           tempArr = self.personalDictionaryMsg.AllergyDrug;
+      }
+      else if (indexPath.row == 4)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.FoodAllergy) {
+              [tempArr addObject:model];
+          }
+//           tempArr = self.personalDictionaryMsg.FoodAllergy;
+      }
+      else if (indexPath.row == 5)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.LongTermMedicine) {
+              [tempArr addObject:model];
+          }
+//          tempArr = self.personalDictionaryMsg.LongTermMedicine;
+      }
+      
+    
+      NSArray *tempArray =  self.bigArr[self.typeTag];
+      NSDictionary *dic = tempArray[indexPath.row];
+      NSArray *defaultSelectedillness=[dic[@"text"] componentsSeparatedByString:@","];
+      NSMutableArray *defaultSelectedConditions = [[NSMutableArray alloc]init];
+      NSLog(@"defaultSelectedillness:%@",defaultSelectedillness);
+   
+      [defaultSelectedConditions removeAllObjects];
+          if (defaultSelectedillness.count<1) {
+              for (int i = 0; i<tempArr.count; i++) {
+                  DictionaryMsg *model= tempArr[i];
+                  if ([model.DictionaryName isEqualToString:dic[@"text"]]) {
+                      [defaultSelectedConditions addObject:model];
+                  }
+              }
+             
+          }else
+          {
+              for (int i=0; i<defaultSelectedillness.count; i++) {
+                  
+                  NSString *str=defaultSelectedillness[i];
+                  for (int i = 0; i<tempArr.count; i++) {
+                      DictionaryMsg *model= tempArr[i];
+                      if ([model.DictionaryName isEqualToString:str]) {
+                          [defaultSelectedConditions addObject:model];
+                      }
+                  }
+              }
+              
+          }
+           NSLog(@"defaultSelectedConditions:%@",defaultSelectedConditions);
+       [SureMultipleSelectedWindow showWindowWithTitle:@"请选择过敏药物" selectedConditions:tempArr defaultSelectedConditions:defaultSelectedConditions title:tempStr  selectedBlock:^(NSArray *selectedArr) {
+                  NSLog(@"---%@",selectedArr);
+                  NSMutableString *medStr=[[NSMutableString alloc]initWithCapacity:0];
+                  NSMutableString *medNameStr=[[NSMutableString alloc]initWithCapacity:0];
+                  for (DictionaryMsg *model in selectedArr) {
+                     
+                      if (medStr.length==0) {//长期服用药物，多个药物之间逗号分隔，如（1，2，3）
+                            [medNameStr appendString:[NSString stringWithFormat:@"%@",model.DictionaryName]];
+                          [medStr appendString:[NSString stringWithFormat:@"%li",model.DictionaryID]];
+                          
+                      }else{
+                           [medNameStr appendString:[NSString stringWithFormat:@"%@%@",@",",model.DictionaryName]];
+                          [medStr appendString:[NSString stringWithFormat:@"%@%li",@",",model.DictionaryID]];
+                          
+                      }
+                      
+                  }
+           if (indexPath.row == 1) {
+//              self.personalDictionaryMsg.PastHistory
+               
+               self.personalMsg.PastHistory = medNameStr;
+                self.personalMsg.PastHistoryIDList = medStr;
+           }
+           else if (indexPath.row == 0)
+           {
+              self.personalMsg.FamilyHistoryIDList= medStr;
+              self.personalMsg.FamilyHistory = medNameStr;
+           }
+               
+          else if (indexPath.row == 2)
+           {
+               self.personalMsg.ProjectOperationNo = medStr;
+               self.personalMsg.ProjectOperation = medNameStr;
+           }
+           else if (indexPath.row == 3)
+           {
+               self.personalMsg.AllergyDrugNo = medStr;
+               self.personalMsg.AllergyDrug = medNameStr;
+           }
+           else if (indexPath.row == 4)
+           {
+              self.personalMsg.FoodAllergyNo = medStr;
+                self.personalMsg.FoodAllergy = medNameStr;
+           }
+           else if (indexPath.row == 5)
+           {
+                self.personalMsg.LongTermMedicine = medNameStr;
+                self.personalMsg.LongTermMedicineNo = medStr;
+           }
+           
+           NSArray *tempArray =  self.bigArr[1];
+           NSMutableArray *tempArr = [NSMutableArray arrayWithArray:tempArray];
+           NSDictionary *dic = tempArr[indexPath.row];
+           NSMutableDictionary *mutableItem = [NSMutableDictionary dictionaryWithDictionary:dic];
+           [mutableItem setObject:medNameStr forKey:@"text"];
+           [self.bigArr[1] replaceObjectAtIndex:indexPath.row withObject:mutableItem];
+           [self modifyRecordsWithNetWorking];
+        }];
+      
+  }else
+  {
+      if (indexPath.row == 0) {
+           self.popBottomView.tempSmokeOrDrinkArr = self.personalDictionaryMsg.SmokingStatus;
+      }else
+           self.popBottomView.tempSmokeOrDrinkArr = self.personalDictionaryMsg.DrinkingStatus;
+     
+      self.popBottomView.popBottomType = 5+indexPath.row;
+      //5s:300 6:330
+      [UIView animateWithDuration:.2 animations:^{
+          self.popBottomView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+                                                                 CGAffineTransformMakeScale(1.0f, 1.0f));
+      }];
+      [[UIApplication sharedApplication].keyWindow addSubview:self.popBottomView];
+      
+  }
+      
+}
+- (void)addFamilyResultWithNetWorking
+{
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                      
+                          };
+    
+    [HealthRecordViewModel editRecordResultDataWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed) {
+            self.personalDictionaryMsg=[PersonalDictionaryMsg mj_objectWithKeyValues:response.Result];
+            
+            NSLog(@"309获取个人档案相关字典%@",response.Result);
+            [self.tableView reloadData];
+            
+        }else
+        {
+            ShowErrorStatus(response.msg);
+        }
+    }];
+}
+-(void)modifyRecordsWithNetWorking  {// @"Age":@(), @"IdCard":@"", @"HeadImg":@"",   @"AllergyDrug":@"", @"FoodAllergy":@"", @"SmokingStatusName":@"", @"LongMedication":@"", @"FamilyHistoryIDList":@"",@"PastHistoryIDList":@"",   @"ProjectOperation":@"",  @"DrinkingStatusName":@"",
+    NSDictionary *dict = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                           @"MemberID":@([UserInfoTool getLoginInfo].MemberID),
+                           @"FullName":self.personalMsg.FullName.length>0?self.personalMsg.FullName:@"",
+                           @"SexID":@(self.personalMsg.SexID),//性别编号 0、男 1、女 -1、未选择
+                           @"Birthday":self.personalMsg.Birthday.length>0?self.personalMsg.Birthday:@"",
+                           @"Height":@(self.personalMsg.Height),
+                           @"Weight":@(self.personalMsg.Weight),
+                           @"FamilyHistoryIDList":self.personalMsg.FamilyHistoryIDList.length>0?self.personalMsg.FamilyHistoryIDList:@"",
+                           @"PastHistoryIDList":self.personalMsg.PastHistoryIDList.length>0?self.personalMsg.PastHistoryIDList:@"",
+                           @"ProjectOperationNo":self.personalMsg.ProjectOperationNo.length>0?self.personalMsg.ProjectOperationNo:@"",
+                           @"SmokingStatusID":self.personalMsg.SmokingStatusID.length>0?self.personalMsg.SmokingStatusID:@"",
+                           @"AllergyDrugNo":self.personalMsg.AllergyDrugNo.length>0?self.personalMsg.AllergyDrugNo:@"",
+                           @"FoodAllergyNo":self.personalMsg.FoodAllergyNo.length>0?self.personalMsg.FoodAllergyNo:@"",
+                           @"LongTermMedicineNo":self.personalMsg.LongTermMedicineNo.length>0?self.personalMsg.LongTermMedicineNo:@"",
+                           @"DrinkingStatusID":self.personalMsg.DrinkingStatusID.length>0?self.personalMsg.DrinkingStatusID:@"",
+                            @"BloodType":self.personalMsg.BloodType.length>0?self.personalMsg.BloodType:@""
+                           };
+    NSLog(@"dict%@",dict);
+    [[XKLoadingView shareLoadingView]showLoadingText:@""];
+
+    [NetWorkTool postAction:checkHomeEditPersonalFileUrl params:dict finishedBlock:^(ResponseObject *response) {
+       [[XKLoadingView shareLoadingView] hideLoding];
+        if (response.code == CodeTypeSucceed) {
+
+            NSLog(@"310----%@",response.Result);
+            [self.tableView reloadData];
+        }else{
+
+            ShowErrorStatus(response.msg);
+        }
+
+    }];
+}
+-(void)getPersonDataWithNewWorking{
+    
+    Dateformat *dateF =   [[Dateformat alloc]init];
+    NSMutableArray *dataOneArr =  [NSMutableArray arrayWithArray:@[@{@"name":@"姓名",@"text":self.personalMsg.FullName,@"hiden":@NO,@"tag":@1},@{@"name":@"性别",@"text":self.personalMsg.Sex,@"hiden":@NO,@"tag":@1},@{@"name":@"生日",@"text":[dateF DateFormatWithDate:self.personalMsg.Birthday withFormat:@"YYYY-MM-dd"],@"hiden":@NO,@"tag":@1},@{@"name":@"身高",@"text":@(self.personalMsg.Height),@"hiden":@NO,@"tag":@1},@{@"name":@"体重",@"text":@(self.personalMsg.Weight),@"hiden":@NO,@"tag":@1}]];
+    NSMutableArray *dataTwoArr = [NSMutableArray arrayWithArray:@[@{@"name":@"家族病史",@"text":self.personalMsg.FamilyHistory,@"hiden":@YES,@"tag":@2},@{@"name":@"既往病史",@"text":self.personalMsg.PastHistory,@"hiden":@YES,@"tag":@2},@{@"name":@"手术和外伤",@"text":self.personalMsg.ProjectOperation,@"hiden":@YES,@"tag":@2},@{@"name":@"过敏药物",@"text":self.personalMsg.AllergyDrug,@"hiden":@YES,@"tag":@2},@{@"name":@"食物和接触物过敏",@"text":self.personalMsg.FoodAllergy,@"hiden":@YES,@"tag":@2},@{@"name":@"长期服用药物",@"text":self.personalMsg.LongTermMedicine,@"hiden":@YES,@"tag":@2}]];
+    //    @[@"家族病史",@"既往病史",@"手术和外伤",@"过敏药物",@"食物和接触物过敏",@"长期服用药物"];
+    NSMutableArray *dataThreeArr =  [NSMutableArray arrayWithArray:@[@{@"name":@"吸烟",@"text":self.personalMsg.SmokingStatusName,@"hiden":@NO,@"tag":@3},@{@"name":@"饮酒",@"text":self.personalMsg.DrinkingStatusName,@"hiden":@NO,@"tag":@3}]];
+    //  @[@"吸烟",@"饮酒"];
+    self.bigArr = @[dataOneArr,dataTwoArr,dataThreeArr];
+    [self.tableView reloadData];
+}
+#pragma mark   输入框添加姓名
+- (void)PersonArchiveTextPutViewCompleteClick:(NSString *)dataStr;
+{
+    if (dataStr.length>0) {
+        self.personalMsg.FullName = dataStr;
+        NSArray *tempArray =  self.bigArr[self.typeTag];
+        NSMutableArray *tempArr = [NSMutableArray arrayWithArray:tempArray];
+        NSDictionary *dic = tempArr[0];
+        NSMutableDictionary *mutableItem = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mutableItem setObject:dataStr forKey:@"text"];
+//       [self.bigArr[self.typeTag] setObject:mutableItem atIndexedSubscript:0];
+        [self.bigArr[self.typeTag] replaceObjectAtIndex:0 withObject:mutableItem];
+        [self modifyRecordsWithNetWorking];
+        
+    }
+}
+- (void)PersonArchiveSinglePopViewSelectItemClick:(NSString *)completeStr ArchiveType:(ArchiveSingleType)ArchiveType;
+{
+    if (ArchiveType<5) {
+       
+        NSArray *tempArray =  self.bigArr[0];
+        NSMutableArray *tempArr = [NSMutableArray arrayWithArray:tempArray];
+        NSDictionary *dic = tempArr[ArchiveType];
+        NSMutableDictionary *mutableItem = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mutableItem setObject:completeStr forKey:@"text"];
+        [self.bigArr[0] replaceObjectAtIndex:ArchiveType withObject:mutableItem];
+        if (ArchiveType == 3) {
+            self.personalMsg.Height = [completeStr intValue];
+        }
+        if (ArchiveType == 4) {
+            self.personalMsg.Weight = [completeStr intValue];
+        }
+        if (ArchiveType == 1) {
+            self.personalMsg.SexID = [completeStr isEqualToString:@"男"]?0:1;
+        }
+        if (ArchiveType == 2) {
+            self.personalMsg.Birthday = completeStr ;
+        }
+         [self modifyRecordsWithNetWorking];
+        
+        
+    }else if (ArchiveType == 5)
+    {
+        NSArray *tempArray =  self.bigArr[2];
+        NSMutableArray *tempArr = [NSMutableArray arrayWithArray:tempArray];
+        NSDictionary *dic = tempArr[0];
+        NSMutableDictionary *mutableItem = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mutableItem setObject:completeStr forKey:@"text"];
+        [self.bigArr[2] replaceObjectAtIndex:0 withObject:mutableItem];
+        
+        for (DictionaryMsg *model in self.personalDictionaryMsg.SmokingStatus) {
+            if ([model.DictionaryName isEqualToString:completeStr]) {
+                 self.personalMsg.SmokingStatusID = [NSString stringWithFormat:@"%li",model.DictionaryID];
+                self.personalMsg.SmokingStatusName = [NSString stringWithFormat:@"%@",model.DictionaryName];
+            }
+        }
+       
+         [self modifyRecordsWithNetWorking];
+       
+        
+    }
+    else if (ArchiveType == 6)
+    {
+        NSArray *tempArray =  self.bigArr[2];
+        NSMutableArray *tempArr = [NSMutableArray arrayWithArray:tempArray];
+        NSDictionary *dic = tempArr[1];
+        NSMutableDictionary *mutableItem = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mutableItem setObject:completeStr forKey:@"text"];
+        [self.bigArr[2] replaceObjectAtIndex:1 withObject:mutableItem];
+        for (DictionaryMsg *model in self.personalDictionaryMsg.DrinkingStatus) {
+            if ([model.DictionaryName isEqualToString:completeStr]) {
+                self.personalMsg.DrinkingStatusID = [NSString stringWithFormat:@"%li",model.DictionaryID];
+                self.personalMsg.DrinkingStatusName = [NSString stringWithFormat:@"%@",model.DictionaryName];
+            }
+        }
+        
+        [self modifyRecordsWithNetWorking];
+      
+        
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

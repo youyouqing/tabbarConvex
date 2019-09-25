@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="XKEquiptBindTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="L287" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qCm-gf-bUm">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ITw-6h-XfA">
+                        <rect key="frame" x="0.0" y="42.5" width="320" height="1"/>
+                        <color key="backgroundColor" red="0.58431372550000005" green="0.58431372550000005" blue="0.58431372550000005" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="Zfo-FE-Mtv"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.58431372550000005" green="0.58431372550000005" blue="0.58431372550000005" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="ITw-6h-XfA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="6g8-04-zdA"/>
+                    <constraint firstItem="qCm-gf-bUm" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="HTa-rG-rq8"/>
+                    <constraint firstAttribute="trailing" secondItem="qCm-gf-bUm" secondAttribute="trailing" id="RsI-3L-Niq"/>
+                    <constraint firstAttribute="trailing" secondItem="ITw-6h-XfA" secondAttribute="trailing" id="TzY-gH-8PF"/>
+                    <constraint firstAttribute="bottom" secondItem="ITw-6h-XfA" secondAttribute="bottom" id="fxb-Fe-bio"/>
+                    <constraint firstItem="qCm-gf-bUm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="jeQ-As-aeK"/>
+                    <constraint firstAttribute="bottom" secondItem="qCm-gf-bUm" secondAttribute="bottom" id="xMI-6q-4Ro"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="equiptNameLab" destination="qCm-gf-bUm" id="rGA-aP-iej"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

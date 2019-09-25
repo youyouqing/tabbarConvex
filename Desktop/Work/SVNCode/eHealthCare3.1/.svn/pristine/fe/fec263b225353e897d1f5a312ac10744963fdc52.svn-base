@@ -1,0 +1,565 @@
+//
+//  XKDetectToolViewController.m
+//  eHealthCare
+//
+//  Created by xiekang on 2017/11/2.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKDetectToolViewController.h"
+#import "XKDetectTableViewCell.h"
+#import "XKDetectView.h"
+#import "XKManualInputView.h"
+#import "CheckResultViewController.h"
+#import "XKBindToolsViewController.h"
+#import "XKBindEquipmentViewController.h"
+#import "XKCheckResultSugarView.h"
+#import "HematocrystallinView.h"
+#import "NewTrendDetailController.h"
+#import "XKDeviceMod.h"
+#import "XKDeviceDetailMod.h"
+
+@interface XKDetectToolViewController ()
+{
+    
+    
+    
+    
+    
+    
+    XKDeviceDetailMod *deviceDetailMod;
+    
+    
+    
+}
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *webViewHeight;
+
+
+
+@property (weak, nonatomic) IBOutlet UIWebView *weView;
+/**
+ 还没有设备？中心X坐标
+ */
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *unHaveEquiptCenterX;
+
+
+/**
+ 手动输入 中心X坐标
+ */
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *manaualInputCenterX;
+
+/**
+ 未绑定设备时背景图
+ */
+@property (weak, nonatomic) IBOutlet UIView *unBindEquiptToolsView;
+
+
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBeginBtn;
+
+
+
+@property (weak, nonatomic) IBOutlet UIButton *unHaveEquiptBtn;
+
+/**
+ 手动输入
+ */
+@property(strong,nonatomic)XKManualInputView *manualInputView;
+
+/**
+ 手动输入
+ */
+@property(strong,nonatomic)HematocrystallinView *manualHematoryView;
+
+
+/**
+ 区头
+ */
+@property(strong,nonatomic)XKDetectView *dectView;
+/**
+ 介绍
+ */
+@property (weak, nonatomic) IBOutlet UILabel *introduceLab;
+
+
+
+/**
+ 自动检测
+ */
+@property (weak, nonatomic) IBOutlet UIButton *detectLab;
+
+/**
+ 手动输入
+ */
+@property (weak, nonatomic) IBOutlet UIButton *manaulLab;
+
+@property (nonatomic,strong)NSArray *dataBigArray;
+@end
+
+@implementation XKDetectToolViewController
+
+-(HematocrystallinView *)manualHematoryView
+{
+    
+    if (!_manualHematoryView) {
+        
+        _manualHematoryView = [[NSBundle mainBundle]loadNibNamed:@"HematocrystallinView" owner:self options:nil].firstObject;
+        
+        _manualHematoryView.x = 0;
+        
+        _manualHematoryView.y = 0;
+        
+        _manualHematoryView.width = KScreenWidth;
+        
+        _manualHematoryView.height = KScreenHeight;
+        
+        //        _manualHematoryView.style = self.style;
+        
+        _manualHematoryView.delegate = self;
+    }
+    return _manualHematoryView;
+    
+}
+-(XKManualInputView *)manualInputView
+{
+    
+    if (!_manualInputView) {
+        
+        _manualInputView = [[NSBundle mainBundle]loadNibNamed:@"XKManualInputView" owner:self options:nil].firstObject;
+        
+        _manualInputView.x = 0;
+        
+        _manualInputView.y = 0;
+        
+        _manualInputView.width = KScreenWidth;
+        
+        _manualInputView.height = KScreenHeight;
+        
+        _manualInputView.delegate = self;
+    }
+    return _manualInputView;
+    
+}
+-(XKDetectView *)dectView
+{
+    
+    if (!_dectView) {
+        
+        _dectView = [[NSBundle mainBundle]loadNibNamed:@"XKDetectView" owner:self options:nil].firstObject;
+        
+        _dectView.x = 0;
+        
+        _dectView.y = 0;
+        
+        _dectView.width = KScreenWidth;
+        
+        _dectView.height = 45;
+    }
+    return _dectView;
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+    
+    [super viewWillAppear:animated];
+    
+    
+    [self loadData];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    
+    if (IS_IPHONE4S) {
+        self.webViewHeight.constant = 227.f;
+        self.bottomBeginBtn.constant = 10;
+    }else if (IS_IPHONE5)
+    {
+        self.webViewHeight.constant = 227;
+    }
+    else
+    {
+        self.webViewHeight.constant = 337;
+    }
+  
+    self.detectLab.layer.cornerRadius=self.detectLab.frame.size.height/2.0;
+    
+    self.detectLab.layer.masksToBounds=YES;
+    
+    self.manaulLab.layer.cornerRadius=self.manaulLab.frame.size.height/2.0;
+    
+    self.manaulLab.layer.masksToBounds=YES;
+    self.manaulLab.layer.borderWidth = 0.5;
+    self.manaulLab.layer.borderColor = NAVICOLOR.CGColor;
+    self.unHaveEquiptBtn.layer.cornerRadius=self.manaulLab.frame.size.height/2.0;
+    self.unHaveEquiptBtn.layer.masksToBounds=YES;
+    self.unHaveEquiptBtn.layer.borderWidth = 0.5;
+    self.unHaveEquiptBtn.layer.borderColor = NAVICOLOR.CGColor;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[[UIImage imageNamed:@"check_trend"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(pressPicture)];
+    
+    [self.detectLab setTitle:@"去绑定" forState:UIControlStateNormal];
+    
+    [self loadData];
+}
+
+
+-(void)pressPicture{
+    
+//    NewTrendDetailController *vc = [[NewTrendDetailController alloc] init];
+//    vc.PhysicalItemID = deviceDetailMod.PhysicalItemID;
+//    [self.navigationController  pushViewController:vc animated:YES];
+    
+}
+
+#pragma mark    获取用户身高
+-(void)getUserHeight
+{
+    
+//    [[XKLoadingView shareLoadingView]showLoadingText:nil];
+    
+    UserInfoModel *model = [UserInfoTool getLoginInfo];
+    NSDictionary *dic = @{@"Mobile":model.Mobile,
+                          @"Token":model.Token};
+    
+    [NetWorkTool postAction:checkHomeGetUserHeightUrl params:dic finishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed)
+        {
+            
+        }else if (response.code == CodeTypeFail)
+        {
+            
+        }
+        
+    }];
+//    [ProtosomaticHttpTool protosomaticPostWithURLString:@"836" parameters: success:^(id json) {
+//
+//        XKLOG(@"%@",json);
+//
+//        if ([json[@"Basis"][@"Status"] integerValue] == 200) {
+//            [[XKLoadingView shareLoadingView] hideLoding];
+//
+//
+//            XKLOG(@"获取用户身高成功");
+//
+//        }else{
+//            XKLOG(@"获取用户身高失败");
+//            [[XKLoadingView shareLoadingView] errorloadingText:@"获取用户身高失败"];
+//        }
+//
+//
+//    } failure:^(id error) {
+//
+//        XKLOG(@"%@获取用户身高失败",error);
+//        [[XKLoadingView shareLoadingView] errorloadingText:error];
+//    }];
+    
+    
+}
+
+/**
+ 手动输入页
+ 
+ @param sender <#sender description#>
+ */
+- (IBAction)manaulAction:(id)sender {
+    [UIView animateWithDuration:0.1 animations:^{
+        self.manualInputView.style = self.style;
+        
+        [self.view.window addSubview:self.manualInputView];
+    }];
+    
+    
+}
+/**
+ 跳转到商场页去购买设备
+ 
+ @param sender <#sender description#>
+ */
+- (IBAction)unHaveEquiptAction:(id)sender {
+    
+    
+    
+}
+
+
+/**
+ 已绑定跳转到检测设备页，未绑定跳转到绑定设备页
+ 
+ @param sender <#sender description#>
+ */
+- (IBAction)detectAction:(id)sender {
+    
+    if ([self.detectLab.titleLabel.text isEqualToString:@"去绑定"]) {//设备绑定页
+        XKBindToolsViewController *tool = [[XKBindToolsViewController alloc]init];
+        tool.title = self.model.Name;
+        tool.style = self.style;
+        tool.DeviceID = self.model.DeviceID;
+        [self.navigationController pushViewController:tool animated:YES];
+        
+        //        XKBindEquipmentViewController *bind = [[XKBindEquipmentViewController alloc]init];
+        //        bind.ProductID = 1;
+        //        [self.navigationController pushViewController:bind animated:YES];
+    }
+    else //检测设备页
+    {
+        
+        
+        
+        if (self.style == XKDetectWeightStyle) {
+            [UIView animateWithDuration:0.1 animations:^{
+                
+                
+                
+                
+                
+                [self.view.window addSubview:self.manualHematoryView];
+                
+                return ;
+            }];
+        }
+        CheckResultViewController *con =  [[CheckResultViewController alloc]init];
+        con.DectStyle = self.style;// XKDetectWeightStyle;//
+        
+        
+//        con.deviceMod = deviceDetailMod;
+        [self.navigationController pushViewController:con animated:YES];
+        
+    }
+    
+    
+    
+}
+
+#pragma mark   取消绑定
+- (IBAction)dectectBtnAction:(id)sender {
+    
+    [self dectUnableBind];
+}
+
+-(void)dectUnableBind;
+{
+    
+    
+//    [[XKLoadingView shareLoadingView]showLoadingText:nil];//,@"Mobile":[UserInfoTool getLoginInfo].Mobile
+    
+    
+    UserInfoModel *model = [UserInfoTool getLoginInfo];
+    
+    NSDictionary *paraDic = @{@"Token":model.Token,
+                              @"MemberID":model.MemberID,
+                              @"BindID":@(deviceDetailMod.BindID)};
+    
+    [NetWorkTool postAction:checkHomeUnBindDeviceUrl params:paraDic finishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed)
+        {
+            ShowSuccessStatus(@"解绑成功");
+            
+            [self loadData];
+            
+        }else
+        {
+            ShowErrorStatus(response.msg);
+        }
+        
+    }];
+//    [ProtosomaticHttpTool protosomaticPostWithURLString:@"812" parameters:paraDic  success:^(id json) {
+//
+//        XKLOG(@"810%@",json);
+//
+//        if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+//
+//            [[XKLoadingView shareLoadingView] hideLoding];
+//
+//            [IanAlert alertSuccess:@"解绑成功" length:1.0];
+//
+//
+//            [self loadData];
+//
+//        }else{
+//
+//            XKLOG(@"操作失败");
+//
+//            [[XKLoadingView shareLoadingView] errorloadingText:json[@"Basis"][@"Msg"]];
+//
+//
+//        }
+//
+//    } failure:^(id error) {
+//
+//        XKLOG(@"%@",error);
+//
+//        [[XKLoadingView shareLoadingView] errorloadingText:error];
+//
+//    }];
+    
+}
+
+-(void)birthDayPickerChange:(NSString *)dateStr andBtnTitle:(NSString *)title
+{
+    
+    if ([title isEqualToString:@"确定"] && dateStr.length > 0) {
+        XKLOG(@"生日时间 -- %@",dateStr);
+        
+    }
+}
+
+#pragma mark   XKManualInputViewDelegate
+-(void)selectIndex:(NSString *)title manualText:(NSString *)manualText manualTwoText:(NSString *)manualTwoText manualThreeText:(NSString *)manualThreeText manualFourText:(NSString *)manualFourText sugarTag:(NSInteger)sugarTag;
+{
+    
+    NSLog(@"manualText:%@",manualText);
+    
+    CheckResultViewController *con =  [[CheckResultViewController alloc]init];
+    con.DectStyle = self.style;
+    con.isOtherDect = YES;
+    con.manualText = manualText;
+    con.manualTwoText = manualTwoText;
+    con.manualThreeText = manualThreeText;
+    con.manualFourText = manualFourText;
+    con.BloodSugarType = (int)sugarTag;
+    [self.navigationController pushViewController:con animated:YES];
+    
+}
+
+-(void)selectSexIndex:(NSString *)title birthdayText:(NSString *)birthday heightText:(NSString *)height;
+{
+    
+    //性别(0:女 1:男)
+    CheckResultViewController *con =  [[CheckResultViewController alloc]init];
+    con.DectStyle = self.style;
+    con.isOtherDect = YES;
+    con.manualText = title;
+    con.manualTwoText = birthday;
+    con.manualThreeText = height;
+    con.BloodSugarType = 0;
+    [self.navigationController pushViewController:con animated:YES];
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)loadData{
+    
+    
+//    [[XKLoadingView shareLoadingView]showLoadingText:nil];//,@"Mobile":[UserInfoTool getLoginInfo].Mobile
+    
+    UserInfoModel *model = [UserInfoTool getLoginInfo];
+    NSDictionary *dic = @{@"Token":model.Token,
+                          @"DeviceID":@(self.model.DeviceID),
+                          @"MemberID":model.MemberID};
+    [NetWorkTool postAction:checkHomeGetDeviceMoreMessageUrl params:dic finishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed)
+        {
+            self->deviceDetailMod = [XKDeviceDetailMod mj_objectWithKeyValues:response.Result];
+            
+            self.introduceLab.text = self->deviceDetailMod.Description;
+            self.title = [NSString stringWithFormat:@"%@检测",self.model.Name];
+            
+            NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[self->deviceDetailMod.DeviceImg dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+            
+            //    self.dataLab.attributedText = attrStr;
+            
+            [self.weView loadHTMLString:attrStr.string baseURL:nil];
+            
+            if (self.model.IsBind == 1||self.style<=5||self->deviceDetailMod.BindID!=0)
+            {
+                self.unBindEquiptToolsView.hidden = YES;
+                
+                self.unHaveEquiptCenterX.constant = -10000;
+                
+                [self.detectLab setTitle:@"开始检测" forState:UIControlStateNormal];
+                
+                self.manaualInputCenterX.constant = 0;
+                
+                if (self.model.IsBind == 1)
+                {
+                    self.dectView.unbindBtn.hidden = NO;
+                }
+            }
+                
+        }else
+        {
+            XKLOG(@"居家检测----获取设备信息失败");
+        }
+    }];
+    
+//    [ProtosomaticHttpTool protosomaticPostWithURLString:@"811" parameters:@{@"Token":[UserInfoTool getLoginInfo].Token,@"DeviceID":@(self.model.DeviceID),@"MemberID":[UserInfoTool getLoginInfo].MemberID}  success:^(id json) {
+//
+//        XKLOG(@"811%@",json);
+//
+//        if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+//
+//            [[XKLoadingView shareLoadingView] hideLoding];
+//            deviceDetailMod = [XKDeviceDetailMod objectWithKeyValues:[json objectForKey:@"Result"]];
+//
+//
+//            self.introduceLab.text = deviceDetailMod.Description;
+//            self.title = [NSString stringWithFormat:@"%@检测",self.model.Name];
+//
+//            NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[deviceDetailMod.DeviceImg dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+//
+//            //    self.dataLab.attributedText = attrStr;
+//
+//            [self.weView loadHTMLString:attrStr.string baseURL:nil];
+//
+//            if (self.model.IsBind == 1||self.style<=5||deviceDetailMod.BindID!=0) {
+//                self.unBindEquiptToolsView.hidden = YES;
+//
+//
+//                self.unHaveEquiptCenterX.constant = -10000;
+//
+//                [self.detectLab setTitle:@"开始检测" forState:UIControlStateNormal];
+//
+//
+//                self.manaualInputCenterX.constant = 0;
+//
+//                if (self.model.IsBind == 1) {
+//                    self.dectView.unbindBtn.hidden = NO;
+//                }
+//
+//            }
+//
+//
+//        }else{
+//
+//            XKLOG(@"操作失败");
+//            [[XKLoadingView shareLoadingView] errorloadingText:@"加载失败"];
+//
+//
+//        }
+//
+//    } failure:^(id error) {
+//
+//        XKLOG(@"%@",error);
+//
+//        [[XKLoadingView shareLoadingView] errorloadingText:error];
+//
+//    }];
+    
+    
+    
+    
+    
+}
+
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

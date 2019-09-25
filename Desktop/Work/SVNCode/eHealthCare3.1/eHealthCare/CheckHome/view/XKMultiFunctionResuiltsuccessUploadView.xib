@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="XKMultiFunctionResuiltsuccessUploadView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wNr-5s-bwx">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gTh-E0-6Er">
+                    <rect key="frame" x="25" y="201" width="364" height="335"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F4V-TH-yQ5">
+                            <rect key="frame" x="30" y="261" width="137" height="40"/>
+                            <color key="backgroundColor" red="0.21960784310000001" green="0.80000000000000004" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <state key="normal" title="查看报告"/>
+                            <connections>
+                                <action selector="lookReportBtn:" destination="iN0-l3-epB" eventType="touchUpInside" id="gIh-qn-7jF"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0gi-qo-MbL">
+                            <rect key="frame" x="197" y="261" width="137" height="40"/>
+                            <color key="backgroundColor" red="0.21960784310000001" green="0.80000000000000004" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="CJK-bB-MO5"/>
+                            </constraints>
+                            <state key="normal" title="继续检测"/>
+                            <connections>
+                                <action selector="keepOndect:" destination="iN0-l3-epB" eventType="touchUpInside" id="fcJ-e9-MdM"/>
+                            </connections>
+                        </button>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bound_complete" translatesAutoresizingMaskIntoConstraints="NO" id="oFh-Fw-Xcs">
+                            <rect key="frame" x="104" y="42" width="156" height="156"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="上传成功" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aW6-IY-SsP">
+                            <rect key="frame" x="0.0" y="206" width="364" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.21960784310000001" green="0.80000000000000004" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="0gi-qo-MbL" firstAttribute="bottom" secondItem="F4V-TH-yQ5" secondAttribute="bottom" id="2BH-rG-Aov"/>
+                        <constraint firstAttribute="trailing" secondItem="aW6-IY-SsP" secondAttribute="trailing" id="82e-bE-jmu"/>
+                        <constraint firstItem="oFh-Fw-Xcs" firstAttribute="centerX" secondItem="gTh-E0-6Er" secondAttribute="centerX" id="OET-CP-dOs"/>
+                        <constraint firstItem="aW6-IY-SsP" firstAttribute="leading" secondItem="gTh-E0-6Er" secondAttribute="leading" id="OXd-Mv-aAu"/>
+                        <constraint firstItem="0gi-qo-MbL" firstAttribute="width" secondItem="F4V-TH-yQ5" secondAttribute="width" id="UGu-aJ-5oP"/>
+                        <constraint firstAttribute="bottom" secondItem="F4V-TH-yQ5" secondAttribute="bottom" constant="34" id="ZGU-br-NBd"/>
+                        <constraint firstItem="0gi-qo-MbL" firstAttribute="leading" secondItem="F4V-TH-yQ5" secondAttribute="trailing" constant="30" id="ZOn-LQ-BvY"/>
+                        <constraint firstAttribute="height" constant="335" id="cUL-AN-hqY"/>
+                        <constraint firstItem="0gi-qo-MbL" firstAttribute="height" secondItem="F4V-TH-yQ5" secondAttribute="height" id="t8V-Iz-NjP"/>
+                        <constraint firstItem="F4V-TH-yQ5" firstAttribute="leading" secondItem="gTh-E0-6Er" secondAttribute="leading" constant="30" id="u9x-PS-jhN"/>
+                        <constraint firstAttribute="trailing" secondItem="0gi-qo-MbL" secondAttribute="trailing" constant="30" id="uC5-mu-8W3"/>
+                        <constraint firstItem="oFh-Fw-Xcs" firstAttribute="top" secondItem="gTh-E0-6Er" secondAttribute="top" constant="42" id="vns-Y8-Ezi"/>
+                        <constraint firstItem="aW6-IY-SsP" firstAttribute="top" secondItem="oFh-Fw-Xcs" secondAttribute="bottom" constant="8" id="wdL-27-Yb0"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="wNr-5s-bwx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="DUe-vI-2xX"/>
+                <constraint firstAttribute="trailing" secondItem="wNr-5s-bwx" secondAttribute="trailing" id="NRL-07-VFT"/>
+                <constraint firstAttribute="bottom" secondItem="wNr-5s-bwx" secondAttribute="bottom" id="Tde-gu-mbH"/>
+                <constraint firstAttribute="trailing" secondItem="gTh-E0-6Er" secondAttribute="trailing" constant="25" id="Z2R-5l-ZJk"/>
+                <constraint firstItem="wNr-5s-bwx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bQS-hM-7B2"/>
+                <constraint firstItem="gTh-E0-6Er" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="gZ9-dL-Yu1"/>
+                <constraint firstItem="gTh-E0-6Er" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="zgG-x1-4uq"/>
+            </constraints>
+            <connections>
+                <outlet property="backView" destination="gTh-E0-6Er" id="REA-6I-CN3"/>
+                <outlet property="keepOnBtn" destination="0gi-qo-MbL" id="LIm-Wd-SgC"/>
+                <outlet property="lookReportButton" destination="F4V-TH-yQ5" id="V57-pw-bHr"/>
+            </connections>
+            <point key="canvasLocation" x="33.5" y="81.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bound_complete" width="156" height="156"/>
+    </resources>
+</document>

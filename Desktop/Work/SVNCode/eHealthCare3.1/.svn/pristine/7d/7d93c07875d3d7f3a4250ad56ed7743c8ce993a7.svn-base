@@ -1,0 +1,123 @@
+PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
+  - BaiduMapKit (4.1.1)
+  - DOUAudioStreamer (0.2.15)
+  - EGOCache (2.2.0)
+  - JCore (1.2.2)
+  - JPush (3.1.0):
+    - JCore (~> 1.2.0)
+  - Masonry (1.1.0)
+  - MBProgressHUD (1.1.0)
+  - MJExtension (3.0.15.1)
+  - MJRefresh (3.1.15.3)
+  - mob_sharesdk (4.1.2):
+    - mob_sharesdk/ShareSDK (= 4.1.2)
+    - MOBFoundation
+  - mob_sharesdk/ShareSDK (4.1.2):
+    - MOBFoundation
+  - mob_sharesdk/ShareSDKConfigFile (4.1.2):
+    - mob_sharesdk/ShareSDK
+    - MOBFoundation
+  - mob_sharesdk/ShareSDKExtension (4.1.2):
+    - mob_sharesdk/ShareSDK
+    - MOBFoundation
+  - mob_sharesdk/ShareSDKPlatforms/QQ (4.1.2):
+    - mob_sharesdk/ShareSDK
+    - MOBFoundation
+  - mob_sharesdk/ShareSDKPlatforms/SinaWeibo (4.1.2):
+    - mob_sharesdk/ShareSDK
+    - MOBFoundation
+  - mob_sharesdk/ShareSDKUI (4.1.2):
+    - mob_sharesdk/ShareSDK
+    - MOBFoundation
+  - MOBFoundation (3.1.6)
+  - MZTimerLabel (0.5.4)
+  - pop (1.0.10)
+  - Reachability (3.2)
+  - SDWebImage (4.4.1):
+    - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/Core (4.4.1)
+  - SVProgressHUD (2.2.5)
+  - WechatOpenSDK (1.8.2)
+
+DEPENDENCIES:
+  - AFNetworking
+  - BaiduMapKit
+  - DOUAudioStreamer
+  - EGOCache
+  - JPush
+  - Masonry
+  - MBProgressHUD
+  - MJExtension
+  - MJRefresh
+  - mob_sharesdk
+  - mob_sharesdk/ShareSDKConfigFile
+  - mob_sharesdk/ShareSDKExtension
+  - mob_sharesdk/ShareSDKPlatforms/QQ
+  - mob_sharesdk/ShareSDKPlatforms/SinaWeibo
+  - mob_sharesdk/ShareSDKUI
+  - MZTimerLabel
+  - pop
+  - Reachability
+  - SDWebImage
+  - SVProgressHUD
+  - WechatOpenSDK
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - BaiduMapKit
+    - DOUAudioStreamer
+    - EGOCache
+    - JCore
+    - JPush
+    - Masonry
+    - MBProgressHUD
+    - MJExtension
+    - MJRefresh
+    - mob_sharesdk
+    - MOBFoundation
+    - MZTimerLabel
+    - pop
+    - Reachability
+    - SDWebImage
+    - SVProgressHUD
+    - WechatOpenSDK
+
+SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  BaiduMapKit: 51bba432a28316680676b4d453a70e5031f3a7eb
+  DOUAudioStreamer: 14f217bab01b52171fc2bd7d96e1f8fdd50fce68
+  EGOCache: 191fd213da6804d487b49b1a91772ba904f3e324
+  JCore: f14c0549968a63c22e246a4875aa9d428446f373
+  JPush: 5921e25ad13e0386351079217b009f2039084eac
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
+  MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
+  mob_sharesdk: e859de6ace7542f3395ce055682f7cd40efdfaa1
+  MOBFoundation: a87c5f11fb87f873337189c3ec0add4d3ec6221a
+  MZTimerLabel: cd9bfb9304540ef2a9e163384fca9c978f0dbf83
+  pop: 82ca6b068ce9278fd350fd9dd09482a0ce9492e6
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  WechatOpenSDK: 676feec516a11173eafd1fe64b10d27babf28701
+
+PODFILE CHECKSUM: 9072a37594511f14f75a028c57a0c9c93a68f85c
+
+COCOAPODS: 1.5.3

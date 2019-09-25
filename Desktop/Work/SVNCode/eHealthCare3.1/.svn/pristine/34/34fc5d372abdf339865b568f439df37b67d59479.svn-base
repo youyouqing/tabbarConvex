@@ -1,0 +1,155 @@
+//
+//  XKHotTopicChildCell.m
+//  eHealthCare
+//
+//  Created by jamkin on 2017/6/13.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKHotTopicChildCell.h"
+
+@interface XKHotTopicChildCell ()
+
+/**
+ 头像视图
+ */
+@property (weak, nonatomic) IBOutlet UIImageView *iconImg;
+
+/**
+ 用户姓名标签
+ */
+@property (weak, nonatomic) IBOutlet UILabel *nameLab;
+
+/**
+ 点赞按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *priseBtn;
+
+/**
+ 话题内容标签
+ */
+@property (weak, nonatomic) IBOutlet UILabel *contentLab;
+
+/**
+ 话题时间标签
+ */
+@property (weak, nonatomic) IBOutlet UILabel *timaLab;
+
+/**
+话题评论人数标签
+ */
+@property (weak, nonatomic) IBOutlet UILabel *commentLab;
+@property (weak, nonatomic) IBOutlet UIButton *ReplyBtn;
+
+/**
+ 头像视图距离上部的约束
+ */
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *iconTopCons;
+
+@end
+
+@implementation XKHotTopicChildCell
+
+/**
+ 重写属性set方法
+ */
+-(void)setModel:(XKTopicModel *)model{
+    
+    _model = model;
+    
+    if (_model.HeadImg.length > 0) {
+       [self.iconImg sd_setImageWithURL:[NSURL URLWithString:_model.HeadImg] placeholderImage:[UIImage imageNamed:@"defaultHead"]];
+    }else{
+        self.iconImg.image = [UIImage imageNamed:@"defaultHead"];
+    }
+   
+    NSString *at = [NSString stringWithFormat:@"%@",_model.TopicContent];
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:at];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:6.0];//调整行间距
+    [attri addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [at length])];
+    [self.contentLab setAttributedText:attri];
+
+    Dateformat *dateFor = [[Dateformat alloc] init];
+    
+    NSString *timeStr=[dateFor DateFormatWithDate:[NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"%li",model.CreateTime]] withFormat:@"yyyy-MM-dd"];
+    NSLog(@"---timeStr:%@",timeStr);
+    self.timaLab.text = timeStr;
+    
+    self.commentLab.text = [NSString stringWithFormat:@"%li人已回答",_model.ReplyScount];
+    
+    [self.priseBtn setTitle:[NSString stringWithFormat:@" %li",_model.PraiseScount] forState:UIControlStateNormal];
+      [self.ReplyBtn setTitle:[NSString stringWithFormat:@" %li",_model.ReplyScount] forState:UIControlStateNormal];
+    self.nameLab.text = [NSString stringWithFormat:@"#%@#",model.TopicTypeName];
+    [self.priseBtn setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
+    if (_model.IsPraise == 1) { //已经点赞
+        [self.priseBtn setImage:[UIImage imageNamed:@"like2"] forState:UIControlStateNormal];
+    }else{//未点赞
+       [self.priseBtn setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal]; 
+    }
+    
+    [self layoutIfNeeded];
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.backgroundColor = kbackGroundGrayColor;
+
+    self.iconImg.layer.cornerRadius = 12.5;
+    self.iconImg.layer.masksToBounds = YES;
+    self.nameLab.textColor = kMainColor;
+    self.nameLab.font = [UIFont systemFontOfSize:(12)];
+   
+}
+
+/**
+ 点赞按钮的点击事件
+ */
+- (IBAction)priseAction:(id)sender {
+    
+    if (_model.IsPraise == 1) {//已经点赞  返回
+        return;
+    }else{//未点赞
+        [[XKLoadingView shareLoadingView] showLoadingText:nil];
+        //获取首页健康计划、热门话题数据
+        [ProtosomaticHttpTool protosomaticPostWithURLString:@"904" parameters:@{@"Token":[UserInfoTool getLoginInfo].Token,@"MemberID":@([UserInfoTool getLoginInfo].MemberID),@"ReplyID":@(self.model.TopicID),@"TypeID":@(1)} success:^(id json) {
+
+            NSLog(@"%@",json);
+            [[XKLoadingView shareLoadingView] hideLoding];
+            if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+                 ShowSuccessStatus(@"点赞成功");
+                //点赞成功 更换点赞按钮图片
+                [self.priseBtn setImage:[UIImage imageNamed:@"like2"] forState:UIControlStateNormal];
+
+                //1.点赞数量加一
+                self.model.PraiseScount++;
+                [self.priseBtn setTitle:[NSString stringWithFormat:@"%li",self.model.PraiseScount] forState:UIControlStateNormal];
+
+                //2.更换是否点赞的参数
+                self.model.IsPraise = 1;
+
+                if ([self.delegate respondsToSelector:@selector(changeTopicDataSoure:)]) {
+                    [self.delegate changeTopicDataSoure:self.model];
+                }
+
+            }else{
+                ShowErrorStatus(nil );
+            }
+
+
+        } failure:^(id error) {
+            [[XKLoadingView shareLoadingView] errorloadingText:@"点赞失败"];
+            NSLog(@"%@",error);
+
+        }];
+
+    }
+    
+}
+
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+}
+
+@end

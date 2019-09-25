@@ -1,0 +1,217 @@
+//
+//  SportMapViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/22.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "SportMapViewController.h"
+#import "XKSportDestinationController.h"
+#import "BaiduMap_SportViewController.h"
+#import <CoreLocation/CoreLocation.h>
+//定位头文件
+#import <BaiduMapAPI_Location/BMKLocationComponent.h>
+#import <BaiduMapAPI_Base/BMKBaseComponent.h>//引入base相关所有的头文件
+#import <BaiduMapAPI_Map/BMKMapComponent.h>//引入地图功能所有的头文件
+#import <BaiduMapAPI_Utils/BMKGeometry.h>//只引入所需的单个头文件,用于计算
+#import "SportDetailController.h"
+@interface SportMapViewController ()
+@property (strong, nonatomic) BMKMapView *mapView;
+@property(nonatomic,weak) BMKPointAnnotation *startAnnotation;
+@property(nonatomic,strong) BMKPolyline *polyLine;
+@property(nonatomic,strong) BMKLocationService *locationService;
+
+@end
+
+@implementation SportMapViewController
+- (BMKMapView *)mapView
+{
+    if (!_mapView) {
+        
+        _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, PublicY, KScreenWidth, KScreenHeight )];
+        
+        [_mapView setZoomLevel:20];
+        _mapView.mapType = BMKMapTypeStandard;
+        _mapView.rotateEnabled = YES;
+        _mapView.showsUserLocation = YES;
+        
+        //设置地图定位模式
+        _mapView.userTrackingMode = BMKUserTrackingModeFollow;
+    }
+    return _mapView;
+}
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //[self addOneView];
+    [self.mapView viewWillAppear];
+    self.mapView.delegate = self;
+     self.locationService.delegate = self;
+
+}
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.mapView viewWillDisappear];
+    self.mapView.delegate = nil;
+     self.locationService.delegate = nil;
+  
+}
+- (void)initBaiduMap
+{
+    _locationService = [[BMKLocationService alloc]init];
+    _locationService.distanceFilter = 5;
+    _locationService.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationService startUserLocationService];
+    
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.headerView.backgroundColor= [UIColor whiteColor];
+    self.myTitle = @"跑步";
+    self.titleLab.textColor = [UIColor getColor:@"2C4667"];
+    [self.leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [self.rightBtn setImage:[UIImage imageNamed:@"icon_target"] forState:UIControlStateNormal];
+    [self.rightBtn addTarget:self action:@selector(clickDestination) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightBtn setTitleColor:[UIColor getColor:@"03C7FF"] forState:UIControlStateNormal];
+    [self.rightBtn setTitle:@"目标" forState:UIControlStateNormal];
+    [self.view addSubview:self.mapView];
+    self.mapView.showsUserLocation = NO;
+    self.mapView.userTrackingMode = BMKUserTrackingModeNone;
+    self.mapView.showsUserLocation = YES;
+   
+    BMKLocationViewDisplayParam *displayParam = [[BMKLocationViewDisplayParam alloc] init];
+    displayParam.isRotateAngleValid = YES;//跟随角度生效果
+    displayParam.isAccuracyCircleShow = YES;//不显示精度圈
+    displayParam.locationViewOffsetX = 0; //定位偏移量【经度】
+    displayParam.locationViewOffsetY = 0;//定位偏移量【纬度】
+    displayParam.locationViewImgName = @"icon_nav";
+    [self.mapView updateLocationViewWithParam:displayParam];
+    [self initBaiduMap];
+    
+    //开始按钮
+    UIButton *startButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [startButton setImage:[UIImage imageNamed:@"btn_start"] forState:UIControlStateNormal];
+     [startButton setImage:[UIImage imageNamed:@"btn_start"] forState:UIControlStateSelected];
+    [startButton addTarget:self action:@selector(startAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:startButton];
+    [startButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.bottom.mas_equalTo( - KHeight(43));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(120), KWidth(120)));
+    }];
+    
+}
+-(void)startAction
+{
+    
+    SportDetailController *sport = [[SportDetailController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:sport animated:YES];
+    
+}
+-(void)clickDestination
+{
+    
+    XKSportDestinationController *sport = [[XKSportDestinationController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:sport animated:YES];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+//在地图上添加一个大头针
+-(BMKPointAnnotation *)createPointWithLocation:(CLLocation *)location title:(NSString *)title {
+    BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
+    point.coordinate = location.coordinate;
+    point.title = title;
+    [self.mapView addAnnotation:point];
+    return point;
+}
+-(void)mapViewDidFinishLoading:(BMKMapView *)mapView {
+    NSLog(@"地图加载完毕");
+}
+
+-(BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id<BMKOverlay>)overlay {
+    if([overlay isKindOfClass:[BMKPolyline class]]) {
+        BMKPolylineView *polylineView = [[BMKPolylineView alloc] initWithOverlay:overlay];
+        polylineView.strokeColor = kMainColor;
+        polylineView.lineWidth = 10;
+        return polylineView;
+    }
+    return nil;
+}
+//原作者说添加大头针的时候调用,viewDidLoad中不会调用
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation {
+    if([annotation isKindOfClass:[BMKPointAnnotation class]]) {
+        BMKPinAnnotationView *annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
+        if([[annotation title] isEqualToString:@"起点"]) {
+            annotationView.pinColor = BMKPinAnnotationColorGreen;
+        }else if ([[annotation title] isEqualToString:@"终点"]) {
+            annotationView.pinColor = BMKPinAnnotationColorRed;
+        }else {
+            annotationView.pinColor = BMKPinAnnotationColorPurple;
+        }
+        //从天上xiu掉下来的动画
+        annotationView.animatesDrop = YES;
+        //不可拖拽
+        annotationView.draggable = NO;
+        return annotationView;
+    }
+    return nil;
+}
+#pragma mark - BMKLocationServiceDelegate
+//是否正确定位
+-(void)didFailToLocateUserWithError:(NSError *)error {
+    NSLog(@"定位失败 error : %@",error);
+}
+/**
+ *  用户位置更新后，会调用此函数
+ *  @param userLocation 新的用户位置
+ */
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    [self.mapView updateLocationData:userLocation];
+    NSLog(@"La:%f, Lo:%f", userLocation.location.coordinate.latitude, userLocation.location.coordinate.longitude);
+    _mapView.centerCoordinate = userLocation.location.coordinate;
+    
+    CLLocationCoordinate2D loc = [userLocation.location coordinate];
+    
+    //放大地图到自身的经纬度位置。
+    BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake(loc, BMKCoordinateSpanMake(0.02f,0.02f));
+    BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+    [_mapView setRegion:adjustedRegion animated:YES];
+    
+    
+    // 3. 如果精准度不在100米范围内
+    if (userLocation.location.horizontalAccuracy > kCLLocationAccuracyNearestTenMeters) {
+        NSLog(@"userLocation.location.horizontalAccuracy is %f",userLocation.location.horizontalAccuracy);
+        
+//        [self showRemindText:@"GPS很弱，请移动到开阔地带" hasNavigation:NO];
+        
+        //        return;
+    }else
+    {
+        [self hiddenRemindText];
+    }
+
+}
+- (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
+{
+    // 动态更新我的位置数据
+    [self.mapView updateLocationData:userLocation];
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

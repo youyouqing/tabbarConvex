@@ -1,0 +1,851 @@
+//
+//  BaiduMap_SportViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/10.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "BaiduMap_SportViewController.h"
+
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
+#import <BaiduMapAPI_Location/BMKLocationComponent.h>
+#import <BaiduTraceSDK/BaiduTraceSDK.h>
+
+#import <CoreLocation/CoreLocation.h>
+
+#import <MapKit/MapKit.h>
+#import <stdlib.h>
+
+#import <dispatch/object.h>
+
+#import "SportMessageView.h"
+
+#import "SportViewModel.h"
+
+static NSString * entityName;
+//static BTRACE * traceInstance = NULL;
+double latitudeOfEntity;
+double longitudeOfEntity;
+
+@interface BaiduMap_SportViewController () <BMKMapViewDelegate,BMKLocationServiceDelegate,BTKTrackDelegate,SportMessageDelegate,BTKTrackDelegate,BTKEntityDelegate,BMKLocationServiceDelegate>
+
+///是否开始运动
+@property (nonatomic, assign) BOOL isStart;
+
+///地图
+@property (nonatomic, strong) BMKMapView *mapView;
+
+///定位服务
+@property (nonatomic, strong) BMKLocationService *locationService;
+
+@property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
+
+@property (nonatomic, strong) BMKPointAnnotation* lockedScreenAnnotation;
+
+///显示运动信息的视图
+@property (nonatomic,strong) SportMessageView *sportView;
+
+///记录上一次的位置
+@property (nonatomic, strong) CLLocation *preLocation;
+
+///位置数组
+@property (nonatomic, strong) NSMutableArray *locationArrayM;
+
+///轨迹线
+@property (nonatomic, strong) BMKPolyline *polyLine;
+
+///轨迹记录状态
+@property (nonatomic, assign) TrailType trailtype;
+
+///起点大头针
+@property (nonatomic, strong) BMKPointAnnotation *startPoint;
+
+///终点大头针
+@property (nonatomic, strong) BMKPointAnnotation *endPoint;
+
+///累计步行时间
+@property (nonatomic,assign) NSInteger sumTime;
+
+///累计步行距离
+@property (nonatomic,assign) CGFloat sumDistance;
+
+///GPS标识
+@property (nonatomic, strong) UIButton *gpsButton;
+
+/**
+ 使用点标注表示最新位置的坐标位置
+ */
+@property (nonatomic, strong) BMKPointAnnotation *locationPointAnnotation;
+/**
+ 使用圆形覆盖物表示最新位置的定位精度
+ */
+@property (nonatomic, strong) BMKCircle *locationAccuracyCircle;
+
+///开始时间
+@property (nonatomic, strong) NSDate *startDate;
+
+///结束时间
+@property (nonatomic, strong) NSDate *endDate;
+
+@end
+
+@implementation BaiduMap_SportViewController
+
+#pragma mark life cycle
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    //把设备的uuid作为entityName
+    entityName = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    
+    [self createUI];
+    
+    [self initBaiduMap];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self clean];
+    [_mapView viewWillAppear];
+    _mapView.delegate = self;
+    self.locationService.delegate = self;
+    self.isStart = NO;
+    
+    NSData *locationData = [[NSUserDefaults standardUserDefaults] objectForKey:@"latest_location"];
+    
+    if (locationData) {
+        CLLocation *position = [NSKeyedUnarchiver unarchiveObjectWithData:locationData];
+        [self updateMapViewWithLocation:position];
+    }
+    [self localLocation];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [_mapView viewWillDisappear];
+    _mapView.delegate = nil;
+    self.locationService.delegate = nil;
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    [self.view addSubview:self.mapView];
+    
+    //返回按钮
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [backButton setImage:[UIImage imageNamed:@"sport_back"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backToUpView) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.mapView addSubview:backButton];
+    [backButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(KHeight(30));
+        make.left.mas_equalTo(KWidth(12));
+        make.size.mas_equalTo(CGSizeMake(KWidth(60), KWidth(60)));
+        
+    }];
+    
+    //GPS标识
+    UIButton *gpsButton = [[UIButton alloc]init];
+    
+    [gpsButton setTitle:@"GPS" forState:UIControlStateNormal];
+    gpsButton.titleLabel.font = Kfont(14);
+    [gpsButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [gpsButton sizeToFit];
+    
+    [gpsButton setImage:[UIImage imageNamed:@"gps-zhong"] forState:UIControlStateNormal];
+    gpsButton.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:42.0f/255.0f blue:47.0f/255.0f alpha:0.5f] ;
+    
+    gpsButton.layer.cornerRadius = 12;
+    gpsButton.clipsToBounds = YES;
+    gpsButton.x = [UIScreen mainScreen].bounds.size.width-15-63;
+    gpsButton.y = 36;
+    gpsButton.width = 63;
+    gpsButton.height = 23;
+    
+    CGFloat gpsImageWidth = CGRectGetWidth(gpsButton.imageView.frame);
+    gpsButton.titleEdgeInsets = UIEdgeInsetsMake(0, - gpsImageWidth * 2 - 3, 0, 0);
+    
+    CGFloat titleWidth = CGRectGetWidth(gpsButton.titleLabel.frame);
+    gpsButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, - titleWidth * 2 - 3);
+    
+    [self.view addSubview:gpsButton];
+    self.gpsButton = gpsButton;
+    
+    SportMessageView *sportView = [[SportMessageView alloc]initWithType:self.sportType];
+    
+    [self.view addSubview:sportView];
+    self.sportView = sportView;
+    self.sportView.delegate = self;
+    
+    [sportView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(self.mapView.mas_bottom);
+        make.left.bottom.right.mas_equalTo(0);
+        
+    }];
+}
+
+#pragma mark Private
+- (void)initBaiduMap
+{
+    _locationService = [[BMKLocationService alloc]init];
+    _locationService.distanceFilter = 5;
+    _locationService.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationService startUserLocationService];
+    
+}
+
+- (void)localLocation
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BTKQueryTrackProcessOption *option = [[BTKQueryTrackProcessOption alloc]init];
+        option.radiusThreshold = 100;
+        BTKQueryTrackLatestPointRequest *request = [[BTKQueryTrackLatestPointRequest alloc] initWithEntityName:entityName processOption:option outputCootdType:BTK_COORDTYPE_BD09LL serviceID:serviceID tag:0];
+        [[BTKTrackAction sharedInstance] queryTrackLatestPointWith:request delegate:self];
+    });
+}
+
+/**
+ *  开启百度地图定位服务
+ */
+- (void)startTrack
+{
+    [self clean];
+    
+    //启动鹰眼轨迹
+    [self doWork];
+    
+    BMKCoordinateRegion adjustRegion = [self.mapView regionThatFits:BMKCoordinateRegionMake(self.locationService.userLocation.location.coordinate, BMKCoordinateSpanMake(0.02f,0.02f))];
+
+    [self.mapView setRegion:adjustRegion animated:YES];
+    
+    if ([self.sportView.timerLabel counting] || self.sportView.timerLabel.text != nil) {
+        [self.sportView.timerLabel reset];
+    }
+    
+    [self.sportView.timerLabel start];
+    
+    self.trailtype = TrailStart;
+    
+    [[BaiduMapTrackManager shareInstance] startGather];
+}
+
+/**
+ *  停止百度地图定位服务
+ */
+- (void)stopTrack
+{
+    [self.sportView.timerLabel pause];
+    NSLog(@"累计计时为：%@",self.sportView.timerLabel.text);
+    
+    self.trailtype = TrailEnd;
+    
+    [self.locationService stopUserLocationService];
+    
+    if (self.startPoint) {
+        self.endPoint = [self creatPointWithLocaiton:self.preLocation title:@"终点"];
+    }
+    
+    [[BaiduMapTrackManager shareInstance] stopGather];
+}
+
+-(void)doWork {
+    
+//    traceInstance = [[BTRACE alloc] initWithAk:baiduMapAppKey mcode:MCODE serviceId:serviceID entityName: entityName operationMode: 2];
+    _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
+    _mapView.mapType = BMKMapTypeStandard;
+    
+    //视图加载之后就请求实时位置
+    [self queryEntityList];
+    
+}
+
+//添加固定屏幕位置的标注
+- (void)addLockScreenAnnotation
+{
+    if (_lockedScreenAnnotation == nil) {
+        _lockedScreenAnnotation = [[BMKPointAnnotation alloc]init];
+        _lockedScreenAnnotation.isLockedToScreen = YES;
+        _lockedScreenAnnotation.screenPointToLock = CGPointMake(100, 100);
+        _lockedScreenAnnotation.title = @"起点";
+    }
+    [_mapView addAnnotation:_lockedScreenAnnotation];
+}
+
+// 添加动画Annotation
+- (void)addAnimatedAnnotation {
+    if (_pointAnnotation == nil) {
+        _pointAnnotation = [[BMKPointAnnotation alloc]init];
+        CLLocationCoordinate2D coor;
+        coor.latitude = 40.115;
+        coor.longitude = 116.404;
+        _pointAnnotation.coordinate = coor;
+        _pointAnnotation.title = @"当前位置";
+    }
+    [_mapView addAnnotation:_pointAnnotation];
+}
+
+//请求实时位置
+- (void)queryEntityList {
+    
+    BTKQueryTrackProcessOption *option = [[BTKQueryTrackProcessOption alloc]init];
+    option.radiusThreshold = 100;
+    BTKQueryTrackLatestPointRequest *request = [[BTKQueryTrackLatestPointRequest alloc]initWithEntityName:entityName processOption:option outputCootdType:BTK_COORDTYPE_GCJ02 serviceID:serviceID tag:0];
+    
+    [[BTKTrackAction sharedInstance] queryTrackLatestPointWith:request delegate:self];
+    
+//    [[BTRACEAction shared] queryEntityList:self serviceId:serviceID entityNames:entityName columnKey:nil activeTime:0 returnType:0 pageSize:0 pageIndex:0];
+    
+}
+
+
+
+#pragma mark - Entity相关的回调方法
+
+- (void)onQueryEntityList:(NSData *)data {
+    NSString *entityListResult = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"实时位置查询结果: %@", entityListResult);
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:[entityListResult dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    NSNumber *status = [dic objectForKey:@"status"];
+    if (0 == [status longValue]) {
+        NSArray *entities = [dic objectForKey:@"entities"];
+        NSDictionary *entity = [entities objectAtIndex:0];
+        NSDictionary *realtimePoint = [entity objectForKey:@"realtime_point"];
+        NSArray *location = [realtimePoint objectForKey:@"location"];
+        longitudeOfEntity = [[location objectAtIndex:0] doubleValue];
+        latitudeOfEntity = [[location objectAtIndex:1] doubleValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self->_mapView removeOverlays:self->_mapView.overlays];
+            [self->_mapView removeAnnotations:self->_mapView.annotations];
+        });
+        [self addPointAnnotation];
+    }
+}
+
+
+//添加当前位置的标注
+-(void)addPointAnnotation {
+    CLLocationCoordinate2D coord;
+    coord.latitude = latitudeOfEntity;
+    coord.longitude = longitudeOfEntity;
+    if (nil == _pointAnnotation) {
+        _pointAnnotation = [[BMKPointAnnotation alloc] init];
+    }
+    _pointAnnotation.coordinate = coord;
+    
+    CLLocationCoordinate2D pt=(CLLocationCoordinate2D){0,0};
+    pt=(CLLocationCoordinate2D){latitudeOfEntity,longitudeOfEntity};
+    _pointAnnotation.title = @"最新位置";
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self->_mapView setCenterCoordinate:coord animated:true];
+        [self->_mapView addAnnotation:self->_pointAnnotation];
+    });
+}
+
+
+
+
+
+#pragma mark Action
+- (void)backToUpView
+{
+    self.hidesBottomBarWhenPushed = NO;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - BMKLocationServiceDelegate
+/**
+ *在地图View将要启动定位时，会调用此函数
+ */
+- (void)willStartLocatingUser
+{
+    NSLog(@"start locate");
+}
+
+/**
+ *在地图View停止定位后，会调用此函数
+ */
+- (void)didStopLocatingUser
+{
+    NSLog(@"stop locate");
+}
+
+/**
+ *  定位失败会调用该方法
+ *
+ *  @param error 错误信息
+ */
+- (void)didFailToLocateUserWithError:(NSError *)error
+{
+    NSLog(@"定位失败：%@",[error localizedDescription]);
+
+    [AlertView showMessage:@"请您去设置里开启定位权限" withTitle:@"提示" sureButtonTitle:@"确定" cancelTitle:@"取消" buttonClickAttachValue:^(NSInteger buttonIndex) {
+        
+        if (buttonIndex == 1) {
+            
+            NSURL *url = [[NSURL alloc] initWithString:UIApplicationOpenSettingsURLString];
+            
+            if( [[UIApplication sharedApplication] canOpenURL:url]) {
+                
+                [[UIApplication sharedApplication] openURL:url];
+                
+            }
+        }
+        
+    }];
+}
+
+/**
+ *  用户位置更新后，会调用此函数
+ *  @param userLocation 新的用户位置
+ */
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    [self.mapView updateLocationData:userLocation];
+    NSLog(@"La:%f, Lo:%f", userLocation.location.coordinate.latitude, userLocation.location.coordinate.longitude);
+    _mapView.centerCoordinate = userLocation.location.coordinate;
+    
+    CLLocationCoordinate2D loc = [userLocation.location coordinate];
+    
+    //放大地图到自身的经纬度位置。
+    BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake(loc, BMKCoordinateSpanMake(0.02f,0.02f));
+    BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+    [_mapView setRegion:adjustedRegion animated:YES];
+    
+    
+    // 3. 如果精准度不在100米范围内
+    if (userLocation.location.horizontalAccuracy > kCLLocationAccuracyNearestTenMeters) {
+        NSLog(@"userLocation.location.horizontalAccuracy is %f",userLocation.location.horizontalAccuracy);
+        
+        [self showRemindText:@"GPS很弱，请移动到开阔地带" hasNavigation:NO];
+        
+//        return;
+    }else
+    {
+        [self hiddenRemindText];
+    }
+    //else if (TrailStart == self.trail) { // 开始记录轨迹
+    [self startTrailRouteWithUserLocation:userLocation];
+    //}
+}
+
+/**
+ *  用户方向更新后，会调用此函数
+ *  @param userLocation 新的用户位置
+ */
+- (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
+{
+    // 动态更新我的位置数据
+    [self.mapView updateLocationData:userLocation];
+}
+
+
+#pragma mark - Selector for didUpdateBMKUserLocation:
+/**
+ *  开始记录轨迹
+ *
+ *  @param userLocation 实时更新的位置信息
+ */
+- (void)startTrailRouteWithUserLocation:(BMKUserLocation *)userLocation
+{
+    if (self.preLocation) {
+       
+        NSArray *timeArray = [self.sportView.timerLabel.text componentsSeparatedByString:@":"];
+        
+        self.sumTime = [timeArray[0] integerValue] * 60 + [timeArray[1] integerValue] * 60 + [timeArray[2] integerValue];
+        
+        // 计算本次定位数据与上次定位数据之间的距离
+        CGFloat distance = [userLocation.location distanceFromLocation:self.preLocation];
+        NSLog(@"与上一位置点的距离为:%f",distance);
+        
+        // (5米门限值，存储数组划线) 如果距离少于 5 米，则忽略本次数据直接返回该方法
+        if (distance < 5) {
+            NSLog(@"与前一更新点距离小于5m，直接返回该方法");
+            return;
+        }
+        
+        if (self.isStart == YES)
+        {
+//            // 累加步行距离
+//            self.sumDistance += distance;
+//            self.sportView.distance.text = [NSString stringWithFormat:@"%.2f",self.sumDistance / 1000.0];
+//            NSLog(@"步行总距离为:%f",self.sumDistance);
+//
+//            // 计算移动速度
+//            CGFloat speed = distance / self.sumTime;
+//            self.sportView.currSpeed.text = [NSString stringWithFormat:@"%.2f",speed];
+//
+//            // 计算平均速度
+//            CGFloat avgSpeed  = self.sumDistance / self.sumTime / 3600;
+//            self.sportView.avgSpeed.text = [NSString stringWithFormat:@"%.2f",avgSpeed];
+//
+//            //热量消耗
+//            CGFloat energy = distance * 70 * 1.05 / 1000;
+//            self.sportView.EnergyLabel.text = [NSString stringWithFormat:@"%.2f",energy];
+        }
+        
+    }
+    
+    // 2. 将符合的位置点存储到数组中
+    [self.locationArrayM addObject:userLocation.location];
+    self.preLocation = userLocation.location;
+    
+    // 3. 绘图
+    [self drawWalkPolyline];
+    
+}
+
+/**
+ *  绘制步行轨迹路线
+ */
+- (void)drawWalkPolyline
+{
+    //轨迹点
+    NSUInteger count = self.locationArrayM.count;
+    
+    // 手动分配存储空间，结构体：地理坐标点，用直角地理坐标表示 X：横坐标 Y：纵坐标
+    BMKMapPoint *tempPoints = new BMKMapPoint[count];
+    
+    [self.locationArrayM enumerateObjectsUsingBlock:^(CLLocation *location, NSUInteger idx, BOOL *stop) {
+        
+        BMKMapPoint locationPoint = BMKMapPointForCoordinate(location.coordinate);
+        tempPoints[idx] = locationPoint;
+        NSLog(@"idx = %lu,tempPoints X = %f Y = %f",(unsigned long)idx,tempPoints[idx].x,tempPoints[idx].y);
+
+        // 放置起点旗帜
+        if (0 == idx && TrailStart == self.trailtype && self.startPoint == nil) {
+            self.startPoint = [self creatPointWithLocaiton:location title:@"起点"];
+        }
+    }];
+    
+    //移除原有的绘图
+    if (self.polyLine) {
+        [self.mapView removeOverlay:self.polyLine];
+    }
+    
+    // 通过points构建BMKPolyline
+    self.polyLine = [BMKPolyline polylineWithPoints:tempPoints count:count];
+    
+    //添加路线,绘图
+    if (self.polyLine) {
+        [self.mapView addOverlay:self.polyLine];
+    }
+    
+    // 清空 tempPoints 内存
+    delete []tempPoints;
+    
+    [self mapViewFitPolyLine:self.polyLine];
+}
+
+/**
+ *  添加一个大头针
+ *
+ *  @param location ...
+ */
+- (BMKPointAnnotation *)creatPointWithLocaiton:(CLLocation *)location title:(NSString *)title;
+{
+    BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
+    point.coordinate = location.coordinate;
+    point.title = title;
+    [self.mapView addAnnotation:point];
+    
+    return point;
+}
+
+/**
+ *  清空数组以及地图上的轨迹
+ */
+- (void)clean
+{
+    // 清空状态栏信息
+    self.sportView.distance.text = @"0.00";
+    self.sportView.avgSpeed.text = @"00'00''";
+    self.sportView.currSpeed.text = @"0.00";
+    self.sportView.sumTime.text = @"00:00";
+    self.sportView.distanceWithPreLoc.text = nil;
+    self.sportView.startPointLabel.text = @"NO";
+    self.sportView.stopPointLabel.text = @"NO";
+    
+    //清空数组
+    [self.locationArrayM removeAllObjects];
+    
+    //清屏，移除标注点
+    if (self.startPoint) {
+        [self.mapView removeAnnotation:self.startPoint];
+        self.startPoint = nil;
+    }
+    if (self.endPoint) {
+        [self.mapView removeAnnotation:self.endPoint];
+        self.endPoint = nil;
+    }
+    if (self.polyLine) {
+        [self.mapView removeOverlay:self.polyLine];
+        self.polyLine = nil;
+    }
+}
+
+/**
+ 根据polyline设置地图范围
+
+ @param polyLine ...
+ */
+- (void)mapViewFitPolyLine:(BMKPolyline *) polyLine {
+    CGFloat ltX, ltY, rbX, rbY;
+    if (polyLine.pointCount < 1) {
+        return;
+    }
+    BMKMapPoint pt = polyLine.points[0];
+    static_cast<void>(ltX = pt.x), ltY = pt.y;
+    static_cast<void>(rbX = pt.x), rbY = pt.y;
+    for (int i = 1; i < polyLine.pointCount; i++) {
+        BMKMapPoint pt = polyLine.points[i];
+        if (pt.x < ltX) {
+            ltX = pt.x;
+        }
+        if (pt.x > rbX) {
+            rbX = pt.x;
+        }
+        if (pt.y > ltY) {
+            ltY = pt.y;
+        }
+        if (pt.y < rbY) {
+            rbY = pt.y;
+        }
+    }
+    BMKMapRect rect;
+    rect.origin = BMKMapPointMake(ltX , ltY);
+    rect.size = BMKMapSizeMake(rbX - ltX, rbY - ltY);
+    [self.mapView setVisibleMapRect:rect];
+    self.mapView.zoomLevel = self.mapView.zoomLevel - 0.3;
+}
+
+
+#pragma mark - BMKMapViewDelegate
+
+/**
+ *  根据overlay生成对应的View
+ *  @param mapView 地图View
+ *  @param overlay 指定的overlay
+ *  @return 生成的覆盖物View
+ */
+- (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id<BMKOverlay>)overlay
+{
+    if ([overlay isKindOfClass:[BMKPolyline class]]) {
+        BMKPolylineView* polylineView = [[BMKPolylineView alloc] initWithOverlay:overlay];
+        polylineView.fillColor = [[UIColor clearColor] colorWithAlphaComponent:0.7];
+        polylineView.strokeColor = [[UIColor greenColor] colorWithAlphaComponent:0.7];
+        polylineView.lineWidth = 10.0;
+        return polylineView;
+    }
+    return nil;
+}
+
+//- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
+//{
+//    //普通annotation
+//    if ([annotation isKindOfClass:[BMKPointAnnotation class]]) {
+//        NSString *AnnotationViewID = @"renameMark";
+//        BMKPinAnnotationView *annotationView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
+//        if (annotationView == nil) {
+//            annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
+//            if (annotation == _lockedScreenAnnotation) {
+//                // 设置颜色
+//                annotationView.pinColor = BMKPinAnnotationColorGreen;
+//                // 设置可拖拽
+//                annotationView.draggable = NO;
+//            } else {
+//                // 设置可拖拽
+//                annotationView.draggable = YES;
+//            }
+//            // 从天上掉下效果
+//            annotationView.animatesDrop = YES;
+//        }
+//        return annotationView;
+//    }
+//    return nil;
+//}
+
+#pragma mark BTKTrack delegate
+-(void)onQueryTrackDistance:(NSData *)response
+{
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+    if (nil == dict) {
+        NSLog(@"查询格式转换出错");
+        return;
+    }
+    if ([dict[@"status"] intValue] != 0) {
+        NSLog(@"onQueryTrackDistance");
+        return;
+    }
+    double kilmeter = [dict[@"distance"] doubleValue];
+    self.sumDistance = kilmeter;
+    self.sportView.distance.text = [NSString stringWithFormat:@"%.2f",kilmeter / 1000];
+}
+-(void)onQueryTrackLatestPoint:(NSData *)response
+{
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+    if (nil == dict) {
+        NSLog(@"Entity List查询格式转换出错");
+        return;
+    }
+    if (0 != [dict[@"status"] intValue]) {
+        NSLog(@"实时位置查询返回错误");
+        return;
+    }
+
+    NSDictionary *latestPoint = dict[@"latest_point"];
+    double latitude = [latestPoint[@"latitude"] doubleValue];
+    double longitude = [latestPoint[@"longitude"] doubleValue];
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+    double horizontalAccuracy = [latestPoint[@"radius"] doubleValue];
+    double loctime = [latestPoint[@"loc_time"] doubleValue];
+    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:loctime];
+    CLLocation *latestLocation = [[CLLocation alloc] initWithCoordinate:coordinate altitude:0 horizontalAccuracy:horizontalAccuracy verticalAccuracy:0 timestamp:timestamp];
+   
+    // 存储最新的实时位置只是为了在地图底图一开始加载的时候，以上一次最新的实时位置作为底图的中心点
+    [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:latestLocation] forKey:@"latest_location"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+   
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (horizontalAccuracy >65) {
+                
+                [self.gpsButton setImage:[UIImage imageNamed:@"gps-ruo"] forState:UIControlStateNormal];
+                
+            }else if(20>horizontalAccuracy >0)
+            {
+                
+                [self hiddenRemindText];
+                [self.gpsButton setImage:[UIImage imageNamed:@"gps-qiang"] forState:UIControlStateNormal];
+            }else if( 65 > horizontalAccuracy )
+            {
+                
+                [self hiddenRemindText];
+                [self.gpsButton setImage:[UIImage imageNamed:@"gps-zhong"] forState:UIControlStateNormal];
+            }
+            
+            float speed = self.sumDistance /  self.sumTime / 3600;
+            int speedMinuter = (int)speed/60;int speedSecond = (int)speed % 60;
+            self.sportView.avgSpeed.text = [NSString stringWithFormat:@"%d',%.d''",speedMinuter,speedSecond];
+            self.sportView.EnergyLabel.text = [NSString stringWithFormat:@"%.2f",self.sumDistance * 70 * 1.05];
+
+        });
+    
+    [self updateMapViewWithLocation:latestLocation];
+}
+
+-(void)updateMapViewWithLocation:(CLLocation *)latestLocation {
+    CLLocationCoordinate2D centerCoordinate = latestLocation.coordinate;
+    // 原点代表最新位置
+    dispatch_async(MAIN_QUEUE, ^{
+        self.locationPointAnnotation.coordinate = centerCoordinate;
+        self.locationPointAnnotation.title = entityName;
+        [self.mapView removeAnnotations:self.mapView.annotations];
+        [self.mapView addAnnotation:self.locationPointAnnotation];
+    });
+    
+    // 填充圆代表定位精度
+    dispatch_async(MAIN_QUEUE, ^{
+        self.locationAccuracyCircle.coordinate = centerCoordinate;
+        self.locationAccuracyCircle.radius = latestLocation.horizontalAccuracy;
+        [self.mapView removeOverlays:self.mapView.overlays];
+        [self.mapView addOverlay:self.locationAccuracyCircle];
+    });
+    
+    // 移动地图中心点
+    dispatch_async(MAIN_QUEUE, ^{
+        [self.mapView setCenterCoordinate:centerCoordinate animated:TRUE];
+    });
+}
+
+#pragma mark SportMessageDelegate
+- (void)sportStart
+{
+    self.isStart = YES;
+    [self.sportView.timerLabel start];
+    [self startTrack];
+    self.startDate = [NSDate date];
+}
+
+- (void)sportPauseOrReStart:(BOOL)isStart
+{
+    self.isStart = isStart;
+}
+
+- (void)sportFinish
+{
+    self.isStart = NO;
+    [self stopTrack];
+    self.endDate = [NSDate date];
+}
+
+#pragma mark NetWork
+- (void)updateSprotMessageToServer
+{
+    NSInteger PatternType;
+    if (self.sportType == sportTypeRun) {
+        PatternType = 2;
+    }else
+    {
+        PatternType = 3;
+    }
+    NSString *totalTime = [NSString stringWithFormat:@"%ld:%ld",self.sumTime / 60,self.sumTime % 60];
+    
+    NSDictionary *dic = @{@"MemberID":[UserInfoTool getLoginInfo].MemberID,
+                          @"Token":[SingleTon shareInstance].token,
+                          @"KilometerCount":@(self.sumDistance),
+                          @"KilocalorieCount":self.sportView.EnergyLabel.text,
+                          @"AvgPace":self.sportView.avgSpeed.text,
+                          @"TotalUseTime":totalTime,
+                          @"PatternType":@(PatternType),
+                          @"StartTime":@([self.startDate timeIntervalSince1970] * 1000),
+                          @"EndTime":@([self.endDate timeIntervalSince1970] * 1000),
+                          };
+    
+    [SportViewModel updateSprotMessageWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        
+        
+    }];
+}
+
+#pragma mark lazy load
+- (BMKMapView *)mapView
+{
+    if (!_mapView) {
+        
+        _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight / 3 * 2 - 20)];
+        
+        [_mapView setZoomLevel:17];
+        _mapView.mapType = BMKMapTypeStandard;
+        _mapView.rotateEnabled = YES;
+        _mapView.showsUserLocation = YES;
+        
+        //设置地图定位模式
+        _mapView.userTrackingMode = BMKUserTrackingModeFollow;
+    }
+    return _mapView;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

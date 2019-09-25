@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="jll-1p-9Z3" customClass="XKHealthIntegralTaskSuccessView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YTT-he-0VW">
+                    <rect key="frame" x="37" y="104" width="300" height="420"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vih-Br-bZ4">
+                            <rect key="frame" x="0.0" y="373" width="300" height="47"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="47" id="XMC-KY-LBc"/>
+                            </constraints>
+                            <state key="normal" title="去看看我的健康树">
+                                <color key="titleColor" red="0.0" green="0.72549019607843135" blue="0.88235294117647056" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="clickContinueTask:" destination="jll-1p-9Z3" eventType="touchUpInside" id="S3G-1g-d9S"/>
+                            </connections>
+                        </button>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aMh-nA-pri">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="373"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CsH-w4-JdH">
+                            <rect key="frame" x="0.0" y="43" width="290" height="330"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F0b-KP-tMA">
+                            <rect key="frame" x="268" y="15" width="17" height="22"/>
+                            <state key="normal" image="icon_colse_white"/>
+                            <connections>
+                                <action selector="clickTaskClose:" destination="jll-1p-9Z3" eventType="touchUpInside" id="3a4-Cc-l1B"/>
+                            </connections>
+                        </button>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iv_testdone_tree" translatesAutoresizingMaskIntoConstraints="NO" id="OyE-bI-x4m">
+                            <rect key="frame" x="10" y="46" width="280" height="327"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="OyE-bI-x4m" secondAttribute="height" multiplier="516:603" id="CmL-QS-C7R"/>
+                            </constraints>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iv_testone_header" highlightedImage="iv_testone_header" translatesAutoresizingMaskIntoConstraints="NO" id="PgB-Ad-9Gm">
+                            <rect key="frame" x="77" y="0.0" width="146" height="59"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="PgB-Ad-9Gm" secondAttribute="height" multiplier="640:258" id="8zi-Sd-LUh"/>
+                                <constraint firstAttribute="height" constant="59" id="m2z-RS-JZe"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="vih-Br-bZ4" secondAttribute="trailing" id="4V5-ie-bVw"/>
+                        <constraint firstItem="vih-Br-bZ4" firstAttribute="leading" secondItem="YTT-he-0VW" secondAttribute="leading" id="5vG-mO-h4p"/>
+                        <constraint firstItem="aMh-nA-pri" firstAttribute="leading" secondItem="YTT-he-0VW" secondAttribute="leading" id="8TJ-WV-A1Y"/>
+                        <constraint firstAttribute="trailing" secondItem="OyE-bI-x4m" secondAttribute="trailing" constant="10" id="FAy-gY-gkZ"/>
+                        <constraint firstItem="PgB-Ad-9Gm" firstAttribute="centerX" secondItem="YTT-he-0VW" secondAttribute="centerX" id="HhX-DO-Q8Y"/>
+                        <constraint firstAttribute="width" constant="300" id="KL1-2a-FMQ"/>
+                        <constraint firstItem="F0b-KP-tMA" firstAttribute="top" secondItem="YTT-he-0VW" secondAttribute="top" constant="15" id="MQX-ei-IHl"/>
+                        <constraint firstAttribute="trailing" secondItem="aMh-nA-pri" secondAttribute="trailing" id="Mbq-ti-4mO"/>
+                        <constraint firstItem="CsH-w4-JdH" firstAttribute="top" secondItem="YTT-he-0VW" secondAttribute="top" constant="43" id="TI2-bb-7NX"/>
+                        <constraint firstItem="CsH-w4-JdH" firstAttribute="leading" secondItem="YTT-he-0VW" secondAttribute="leading" id="Zfe-3L-gR1"/>
+                        <constraint firstItem="PgB-Ad-9Gm" firstAttribute="top" secondItem="YTT-he-0VW" secondAttribute="top" id="bO6-tE-3qb"/>
+                        <constraint firstAttribute="trailing" secondItem="CsH-w4-JdH" secondAttribute="trailing" constant="10" id="bnM-lh-Tl3"/>
+                        <constraint firstAttribute="height" constant="420" id="cS9-Og-o07"/>
+                        <constraint firstAttribute="trailing" secondItem="F0b-KP-tMA" secondAttribute="trailing" constant="15" id="cpR-gq-VfR"/>
+                        <constraint firstItem="OyE-bI-x4m" firstAttribute="bottom" secondItem="CsH-w4-JdH" secondAttribute="bottom" id="fFk-dV-sHM"/>
+                        <constraint firstItem="OyE-bI-x4m" firstAttribute="leading" secondItem="YTT-he-0VW" secondAttribute="leading" constant="10" id="gJz-TW-b3N"/>
+                        <constraint firstAttribute="bottom" secondItem="vih-Br-bZ4" secondAttribute="bottom" id="qcc-vF-fE9"/>
+                        <constraint firstItem="vih-Br-bZ4" firstAttribute="top" secondItem="aMh-nA-pri" secondAttribute="bottom" id="s9N-If-ya4"/>
+                        <constraint firstItem="vih-Br-bZ4" firstAttribute="top" secondItem="CsH-w4-JdH" secondAttribute="bottom" id="sGg-SM-SCZ"/>
+                        <constraint firstItem="aMh-nA-pri" firstAttribute="top" secondItem="YTT-he-0VW" secondAttribute="top" id="vc1-Mw-bqF"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.075569234788417816" green="0.019132470712065697" blue="0.031088009476661682" alpha="0.067612206375838924" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="YTT-he-0VW" firstAttribute="centerY" secondItem="jll-1p-9Z3" secondAttribute="centerY" constant="-20" id="Nzy-qr-Jzd"/>
+                <constraint firstItem="YTT-he-0VW" firstAttribute="centerX" secondItem="jll-1p-9Z3" secondAttribute="centerX" id="rQI-D7-6Of"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <connections>
+                <outlet property="bigContainerView" destination="YTT-he-0VW" id="Wai-xf-hRZ"/>
+                <outlet property="kangImg" destination="OyE-bI-x4m" id="beK-eE-eKA"/>
+                <outlet property="transparentBackImg" destination="CsH-w4-JdH" id="YWv-Za-Pt1"/>
+            </connections>
+            <point key="canvasLocation" x="121.5" y="95.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon_colse_white" width="17" height="17"/>
+        <image name="iv_testdone_tree" width="258" height="301"/>
+        <image name="iv_testone_header" width="320" height="129"/>
+    </resources>
+</document>

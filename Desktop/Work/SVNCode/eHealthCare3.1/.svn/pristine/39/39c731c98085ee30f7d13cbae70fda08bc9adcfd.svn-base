@@ -1,0 +1,111 @@
+//
+//  MineElectronMedicController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "MineElectronMedicController.h"
+#import "MineElectronicMedicCell.h"
+#import "XKMedicalRecordDetailController.h"
+#import "XKAddMedicalRecordController.h"
+@interface MineElectronMedicController ()<UITableViewDelegate,UITableViewDataSource>
+
+@end
+
+@implementation MineElectronMedicController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.myTitle = @"我的电子病历";
+    self.titleLab.textColor = [UIColor getColor:@"2C4667"];
+     self.headerView.backgroundColor = [UIColor whiteColor];
+    [self.leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [self.rightBtn setImage:[UIImage imageNamed:@"icon_medicalcase_add"] forState:UIControlStateNormal];
+    [self.rightBtn setTitle:@"添加" forState:UIControlStateNormal];
+    [self.rightBtn addTarget:self action:@selector(clickEdit) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightBtn setTitleColor:kMainColor forState:UIControlStateNormal];
+    UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
+    
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    self.view.backgroundColor = [UIColor getColor:@"edf8ff"];
+    tableView.backgroundColor = [UIColor getColor:@"edf8ff"];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableView registerNib:[UINib nibWithNibName:@"MineElectronicMedicCell" bundle:nil] forCellReuseIdentifier:@"MineElectronicMedicCell"];
+    [self.view addSubview:tableView];
+    
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(PublicY);//CGRectMake(10, 10+PublicY, KScreenWidth-20, KScreenHeight-PublicY-20)
+        make.left.mas_equalTo(0 );
+        make.bottom.mas_equalTo(0);
+        make.width.mas_equalTo( KScreenWidth);
+    }];
+
+
+}
+-(void)clickEdit
+{
+    
+    XKAddMedicalRecordController *addRecord = [[XKAddMedicalRecordController alloc]initWithType:pageTypeNormal];
+      addRecord.myTitle = @"添加病历";
+    [self.navigationController pushViewController:addRecord animated:YES];
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    
+    return 0.01;
+    
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    
+    return 3;
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *cellid = @"MineElectronicMedicCell";
+    MineElectronicMedicCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return 125;
+    
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    XKMedicalRecordDetailController *add = [[XKMedicalRecordDetailController alloc]initWithType:pageTypeNormal];
+     add.myTitle = @"查看病历";
+    [self.navigationController pushViewController:add animated:YES];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

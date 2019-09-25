@@ -1,0 +1,663 @@
+//
+//  HealthExamineController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/17.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthExamineController.h"
+#import "HealthPlanView.h"
+#import "ExamineReportViewController.h"
+#import "HealthTopScrollHeaderView.h"
+#import "HealthTopScrollHeaderView.h"
+#import "Health+ViewController.h"
+#import "ExamineReportCell.h"
+#import "HealthExamineView.h"
+#import "ExamineReportDetailController.h"
+#import "ExamDetailReportViewController.h"
+#import "CheerYourselfUpViewController.h"
+#import "TrainWithMusicViewController.h"
+#import "ShareView.h"
+#import "EPluseFooterView.h"
+#import "EPluseTemperView.h"
+#import "EPluseWeightView.h"
+#import "EPluseHeaderView.h"
+#import "EPluseCell.h"
+#import "EPluseSugarView.h"
+#import "NewTrendDetailController.h"
+#import "SportViewController.h"
+#import "ProtosomaticHttpTool.h"
+#import "HealthRecordViewModel.h"
+#import "FamilyObject.h"
+#import "AddFamilyViewController.h"
+#import "PhysicalList.h"
+#import "HomeInspectionListModel.h"
+#import "XKHouseHoldModel.h"
+@interface HealthExamineController ()<UITableViewDelegate,UITableViewDataSource>
+@property(assign,nonatomic) NSInteger  userMemberID;
+@property (nonatomic, strong) NSArray *homeArr;//绑定设备ID
+@property (strong, nonatomic)  UITableView *tableView;
+@property (strong, nonatomic)  UITableView *ePlusetableView;
+///页码
+@property (nonatomic, assign) NSInteger pageIndex;
+/**
+ 区头 头部试图
+ */
+@property (nonatomic,strong)HealthExamineView *headView;
+@property (strong, nonatomic) EPluseFooterView *FooterView;
+@property (strong, nonatomic)  NSArray *dataArray;
+@property (nonatomic, strong) NSArray *PhysicalList;//根据用户ID获取最新的居家检测信息体检数据明细信息
+@property (strong, nonatomic)  NSMutableArray *ExanubeReportdataArray;
+@property (strong, nonatomic) HealthPlanView *planView;
+@property (nonatomic, strong)HealthTopScrollHeaderView *HeaderTopScrollView;
+@end
+
+@implementation HealthExamineController
+-(HealthTopScrollHeaderView *)HeaderTopScrollView
+{
+    
+    if (!_HeaderTopScrollView) {
+        _HeaderTopScrollView = [[[NSBundle mainBundle] loadNibNamed:@"HealthTopScrollHeaderView" owner:self options:nil] firstObject];
+        _HeaderTopScrollView.delegate = self;
+        _HeaderTopScrollView.left=0;
+        _HeaderTopScrollView.top=PublicY;
+        _HeaderTopScrollView.width=KScreenWidth;
+        
+        _HeaderTopScrollView.height=180-(PublicY);
+    }
+    return _HeaderTopScrollView;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.myTitle = @"健康监测";
+    self.pageIndex = 1;
+    _ExanubeReportdataArray = [[NSMutableArray alloc]init];
+    self.view.frame = [UIScreen mainScreen].bounds;
+    [self.view addSubview:self.HeaderTopScrollView];
+    [self getHealthSportCategoryArray];
+    
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self getRecordFamilyPersonWithNetWorking];
+    
+}
+#pragma mark  HealthTopScrollHeaderView代理
+-(void)addFamilyTools;
+{
+    
+    AddFamilyViewController *detail = [[AddFamilyViewController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:detail animated:YES];
+}
+
+#pragma mark Private Methoud
+- (void)addSubViewController
+{
+    UIScrollView *scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0,180, KScreenWidth, KScreenHeight - (PublicY))];
+    
+    scrollView.delegate = self;
+    scrollView.pagingEnabled = YES;
+    scrollView.contentSize = CGSizeMake(KScreenWidth * self.dataArray.count,KScreenHeight - (PublicY) );// KScreenHeight - (PublicY) - KHeight(45)
+    
+    [self.view addSubview:scrollView];
+    
+    
+    //头部分类视图
+    HealthPlanHead *headView = [[HealthPlanHead alloc]init];
+    headView.itemWidth = self.view.frame.size.width / self.dataArray.count;
+    HealthPlanView *planView = [[HealthPlanView alloc]initWithFrame:CGRectMake(0, 180,KScreenWidth, KHeight(45))];
+    planView.tapAnimation = YES;
+    planView.headView = headView;
+    planView.titleArray = self.dataArray;
+    planView.backgroundColor = [UIColor whiteColor];
+    __weak typeof (scrollView)weakScrollView = scrollView;
+    [planView setItemHasBeenClickBlcok:^(NSInteger index,BOOL animation){
+        
+        //将两个scrollView联动起来
+        [weakScrollView scrollRectToVisible:CGRectMake(index * CGRectGetWidth(weakScrollView.frame), 0.0, CGRectGetWidth(weakScrollView.frame),CGRectGetHeight(weakScrollView.frame)) animated:animation];
+        
+    }];
+    [self.view addSubview:planView];
+    self.planView = planView;
+    
+    for (int i = 0; i < self.dataArray.count; i++)
+    {
+        
+        if (i == 0) {
+            //            ExamineReportViewController *subVC = [[ExamineReportViewController alloc]initWithType:pageTypeNoNavigation];
+            //
+            //            [scrollView addSubview:subVC.view];
+            //            [self addChildViewController:subVC];
+            //
+            //            subVC.view.frame = CGRectMake(0 + i * KScreenWidth,CGRectGetHeight(self.planView.frame), CGRectGetWidth(scrollView.frame), KScreenHeight - (PublicY) - KHeight(45)-(self.planView.frame.size.height)-(self.HeaderTopScrollView.frame.size.height));
+            
+            self.tableView= [[UITableView alloc]initWithFrame: CGRectMake(0 + i * KScreenWidth,CGRectGetHeight(self.planView.frame), CGRectGetWidth(scrollView.frame), KScreenHeight-180-(KHeight(45)) ) style:UITableViewStyleGrouped];
+            self.tableView.delegate = self;
+            self.tableView.dataSource = self;
+            self.tableView.backgroundColor = kbackGroundGrayColor;
+            self.view.backgroundColor =  kbackGroundGrayColor;
+            [scrollView addSubview:self.tableView];
+            self.tableView.estimatedRowHeight = 110;
+            self.tableView.rowHeight = UITableViewAutomaticDimension;
+            self.tableView.showsVerticalScrollIndicator=NO;
+            self.tableView.showsHorizontalScrollIndicator=NO;
+            self.tableView.separatorColor=[UIColor clearColor];
+            [self.tableView registerNib:[UINib nibWithNibName:@"ExamineReportCell" bundle:nil] forCellReuseIdentifier:@"ExamineReportCell"];
+            self.userMemberID  = [UserInfoTool getLoginInfo].MemberID;
+            [self getHealthPlanListWithNetWorking:[UserInfoTool getLoginInfo].MemberID];
+            //添加上拉和下拉
+            WEAKSELF
+            self.tableView.mj_header = [MJRefreshGifHeader headerWithRefreshingBlock:^{
+                
+                self.pageIndex = 1;
+                [self getHealthPlanListWithNetWorking:weakSelf.userMemberID];
+                [self.tableView.mj_header endRefreshing];
+            }];
+            
+            self.tableView.mj_footer = [MJRefreshAutoGifFooter footerWithRefreshingBlock:^{
+                
+                self.pageIndex = self.pageIndex + 1;
+                [self getHealthPlanListWithNetWorking:weakSelf.userMemberID];
+                [self.tableView.mj_footer endRefreshing];
+            }];
+        }else
+        {
+            //            Health_ViewController *subVC = [[Health_ViewController alloc]initWithType:pageTypeNoNavigation];
+            //             subVC.isHealthPluse = NO;
+            //
+            //            [scrollView addSubview:subVC.view];
+            //            [self addChildViewController:subVC];
+            //
+            //            subVC.view.frame = CGRectMake(0 + i * KScreenWidth,CGRectGetHeight(self.planView.frame), CGRectGetWidth(scrollView.frame), CGRectGetHeight(scrollView.frame)-(self.planView.frame.size.height)-(self.HeaderTopScrollView.frame.size.height));
+            self.ePlusetableView= [[UITableView alloc]initWithFrame: CGRectMake(0 + i * KScreenWidth,CGRectGetHeight(self.planView.frame), CGRectGetWidth(scrollView.frame), KScreenHeight-180-(KHeight(45))) style:UITableViewStylePlain];
+            self.ePlusetableView.delegate = self;
+            self.ePlusetableView.dataSource = self;
+            [scrollView addSubview:self.ePlusetableView];
+            self.ePlusetableView.estimatedRowHeight = 110;
+            self.ePlusetableView.rowHeight = UITableViewAutomaticDimension;
+            self.ePlusetableView.showsVerticalScrollIndicator=NO;
+            self.ePlusetableView.showsHorizontalScrollIndicator=NO;
+            self.ePlusetableView.separatorColor=[UIColor clearColor];
+            [self.ePlusetableView registerNib:[UINib nibWithNibName:@"EPluseCell" bundle:nil] forCellReuseIdentifier:@"EPluseCell"];
+          
+        }
+    }
+}
+#pragma mark NetWorking
+
+- (void)getHealthSportCategoryArray
+{
+    
+    
+    self.dataArray = @[@"检测报告",@"居家测量"];
+    [self addSubViewController];
+    [self hiddenPlaceHoldImage];
+    
+}
+#pragma mark  家庭成员
+- (void)getRecordFamilyPersonWithNetWorking
+{
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                          @"MemberID":@([UserInfoTool getLoginInfo].MemberID)};
+    [[XKLoadingView shareLoadingView]showLoadingText:nil];
+
+    [HealthRecordViewModel getRecordFamilyPersonWithParmas:dic FinishedBlock:^(ResponseObject *response) {
+         [[XKLoadingView shareLoadingView] hideLoding];
+        if (response.code == CodeTypeSucceed) {
+            
+            self.HeaderTopScrollView.userMemberID = self.userMemberID;
+            self.HeaderTopScrollView.familyArr = [FamilyObject mj_objectArrayWithKeyValuesArray:response.Result];
+            NSLog(@"326%@",self.HeaderTopScrollView.familyArr);
+            [self.tableView reloadData];
+        }else
+        {
+            ShowErrorStatus(response.msg);
+        }
+    }];
+}
+#pragma mark  居家监测
+-(void)loadHomeTestData:(NSInteger)MemberID{
+    
+    
+    NSDictionary *dic = @{@"Token":[SingleTon shareInstance].token,
+                          @"MemberID":@(MemberID)};
+    [[XKLoadingView shareLoadingView]showLoadingText:nil];
+
+    [NetWorkTool postAction:checkHomeTestGetReportUrl params:dic finishedBlock:^(ResponseObject *response) {
+        
+        [[XKLoadingView shareLoadingView] hideLoding];
+
+        if (response.code == CodeTypeSucceed) {
+            NSLog(@"815%@",response.Result);
+            self.PhysicalList = (NSMutableArray *)[PhysicalList mj_objectArrayWithKeyValuesArray:response.Result[@"PhysicalDetailList"]];
+           
+            
+            self.homeArr =  [XKHouseHoldModel mj_objectArrayWithKeyValuesArray:response.Result[@"HomeInspectionList"]];
+            
+             [self.ePlusetableView reloadData];
+        }else{
+            
+            ShowErrorStatus(response.msg);
+        }
+    }];
+
+}
+-(void)replaceRelationData:(NSInteger )dataInt;//切换数据
+{
+    self.userMemberID  = dataInt;
+    self.pageIndex = 1;
+    [self getHealthPlanListWithNetWorking:dataInt];
+    [self loadHomeTestData:dataInt];
+}
+//获取列表数据
+- (void)getHealthPlanListWithNetWorking:(NSInteger)MemberID
+{
+    NSDictionary *dict = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                           
+                           @"MemberID":@(MemberID),
+                           @"PageIndex":@(self.pageIndex),
+                           @"PageSize":@(10)};
+    
+    NSLog(@"301%@",dict);
+    [[XKLoadingView shareLoadingView] showLoadingText:nil];
+    [ProtosomaticHttpTool protosomaticPostWithURLString:@"301" parameters:dict success:^(id json) {
+        NSLog(@"检测报告301：%@",json);
+        [[XKLoadingView shareLoadingView] hideLoding];
+        if ([[NSString stringWithFormat:@"%@",json[@"Basis"][@"Status"]] isEqualToString:@"200"])
+        {
+            NSArray *array = json[@"Result"];
+            NSMutableArray *tempArr = [NSMutableArray arrayWithArray:[ExanubeReportModel  mj_objectArrayWithKeyValuesArray:array]];
+            
+            if (self.pageIndex == 1)
+            {
+                self.ExanubeReportdataArray = tempArr;
+            }else
+            {
+                [self.ExanubeReportdataArray addObjectsFromArray:tempArr];
+            }
+            
+            if (self.ExanubeReportdataArray.count == 0)
+            {
+                UIImageView *imgview = [self.tableView viewWithTag:10090];
+                if (imgview) {
+                    [imgview removeFromSuperview];
+                }
+                [self.tableView showPlaceHoldImageAtCenterOfView:healthPlanNoDataImage];
+            }else
+                [self.tableView hiddenPlaceHoldImage];
+            
+            
+            [self.tableView reloadData];
+            
+            
+            //            if (self.ExanubeReportdataArray.count == 0)
+            //            {
+            //                [self.tableView showPlaceHoldImageAtCenterOfView:healthPlanNoDataImage];
+            //            }else
+            //                [self.tableView hiddenPlaceHoldImage];
+            //            if (self.pageIndex == 1) {
+            //                [self.ExanubeReportdataArray removeAllObjects];
+            //
+            //            }
+            //            [self.ExanubeReportdataArray addObjectsFromArray:tempArr];
+            //            [self.tableView reloadData];
+        }else
+        {
+            if (self.ExanubeReportdataArray.count == 0)
+            {
+                UIImageView *imgview = [self.tableView viewWithTag:10090];
+                if (imgview) {
+                    [imgview removeFromSuperview];
+                }
+                [self.tableView showPlaceHoldImageAtCenterOfView:healthPlanNoDataImage];
+            }
+        }
+    }
+                                                failure:^(id error) {
+                                                    [[XKLoadingView shareLoadingView] errorloadingText:error];
+                                                    
+                                                }];
+}
+#pragma mark ScrollView Delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (![scrollView isKindOfClass:[UITableView class]]) {
+        float offset = scrollView.contentOffset.x;
+        offset = offset/CGRectGetWidth(scrollView.frame);
+        [self.planView moveToIndex:offset];
+        NSInteger tempIndex = [self.planView changeProgressToInteger:offset];
+        if (tempIndex == 1) {
+              [self loadHomeTestData:self.userMemberID];
+        }else
+            self.pageIndex = 1;
+           [self getHealthPlanListWithNetWorking:self.userMemberID];
+    }
+    
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (![scrollView isKindOfClass:[UITableView class]]) {
+        float offset = scrollView.contentOffset.x;
+        offset = offset/CGRectGetWidth(scrollView.frame);
+        [self.planView endMoveToIndex:offset];
+    }
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if (tableView == self.ePlusetableView) {
+        return 6;
+    }
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (tableView == self.ePlusetableView) {
+        if (section == 0) {
+            return 0;
+        }
+        return 0;
+    }else
+    {
+        return self.self.ExanubeReportdataArray.count;
+    }
+    
+    
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView == self.ePlusetableView) {
+        if (indexPath.section == 0) {
+            return 117+5;
+        }
+        else
+            return 0.01;
+    }else
+    {
+        return 88+20;
+    }
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView == self.ePlusetableView) {
+        
+        NSString *cellid = @"UITableViewCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+        
+        
+    }else
+    {
+        NSString *cellid = @"ExamineReportCell";
+        ExamineReportCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.examModel =  self.ExanubeReportdataArray[indexPath.row];
+        return cell;
+        
+    }
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if (tableView == self.ePlusetableView) {
+        XKHouseHoldModel *mode = [[XKHouseHoldModel alloc]init];
+        if (section == 1){
+            EPluseHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseHeaderView" owner:self options:nil]  firstObject];
+            headV.titleLab.text=@"血压(mmHg)";
+            headV.delegate = self;
+            for (XKHouseHoldModel *hmode in  self.homeArr) {
+                if ([headV.titleLab.text containsString:hmode.Name]) {
+                    mode = hmode;
+                    break;
+                }
+            }
+            headV.moreLab.text = (mode.IsBind==1?@"已绑定":@"未绑定");
+            return headV;
+        }else if (section == 2){
+            EPluseHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseHeaderView" owner:self options:nil]  firstObject];
+            headV.titleLab.text=@"体温(℃)";
+            headV.delegate = self;
+            headV.arrowImg.hidden = NO;
+            for (XKHouseHoldModel *hmode in  self.homeArr) {
+                if ([headV.titleLab.text containsString:hmode.Name]) {
+                    mode = hmode;
+                    break;
+                }
+            }
+            headV.moreLab.text = (mode.IsBind==1?@"已绑定":@"未绑定");
+            return headV;
+        }
+        else if (section == 3){
+            EPluseHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseHeaderView" owner:self options:nil]  firstObject];
+            headV.titleLab.text=@"体重(kg)";
+            headV.delegate = self;
+            for (XKHouseHoldModel *hmode in  self.homeArr) {
+                if ([headV.titleLab.text containsString:hmode.Name]) {
+                    mode = hmode;
+                    break;
+                }
+            }
+            headV.moreLab.text = (mode.IsBind==1?@"已绑定":@"未绑定");
+            return headV;
+        }
+        else if (section == 4){
+            EPluseHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseHeaderView" owner:self options:nil]  firstObject];
+            headV.titleLab.text=@"血糖(mmol/L)";
+            headV.delegate = self;
+            for (XKHouseHoldModel *hmode in  self.homeArr) {
+                if ([headV.titleLab.text containsString:hmode.Name]) {
+                    mode = hmode;
+                    break;
+                }
+            }
+            headV.moreLab.text = (mode.IsBind==1?@"已绑定":@"未绑定");
+            return headV;
+        }
+        else if (section == 5) {
+            EPluseHeaderView *headV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseHeaderView" owner:self options:nil]  firstObject];
+            headV.titleLab.text=@"血脂(mmol/L)";
+            headV.delegate = self;
+            for (XKHouseHoldModel *hmode in  self.homeArr) {
+                if ([headV.titleLab.text containsString:hmode.Name]) {
+                    mode = hmode;
+                    break;
+                }
+            }
+            headV.moreLab.text = (mode.IsBind==1?@"已绑定":@"未绑定");
+            return headV;
+        }
+        else {
+            UIView *headV=[[UIView alloc]init];
+            return headV;
+        }
+    }else
+    {
+        
+        UIView *headV=[[UIView alloc]init];
+        return headV;
+    }
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == self.ePlusetableView) {
+        
+    }else
+    {
+        ExamDetailReportViewController *Examine = [[ExamDetailReportViewController alloc]initWithType:pageTypeNormal];
+        
+        ExanubeReportModel *model =  self.ExanubeReportdataArray[indexPath.row];
+        Examine.PhysicalExaminationModel = model;
+        FamilyObject *objFamily = [[FamilyObject alloc]init];
+        for (FamilyObject *objF in  self.HeaderTopScrollView.familyArr) {
+            if ( objF.FamilyMemberID == self.userMemberID) {
+                objFamily = objF;
+                
+                break;
+            }
+        }
+        Examine.personal = objFamily;
+        [self.navigationController pushViewController:Examine animated:YES];
+        
+    }
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (tableView == self.ePlusetableView) {
+        if (section == 0) {
+            return 0.01;
+        }else  if (section <=5) {
+            return 45+5;
+        }
+        else
+        {
+            
+            return 0.01;
+        }
+    }else
+    {
+        return 0.01;
+    }
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (tableView == self.ePlusetableView) {
+        if (section == 0){
+            return 0.01;//UITableViewAutomaticDimension;
+        }
+        else if (section == 1||section == 4)
+        {
+            
+            return 292;
+        }
+        else if (section == 5)
+        {
+            
+            return 370;
+        }
+        else
+        {
+            return 282;
+            
+        }
+    }else
+    {
+        return 0.01;
+    }
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    if (tableView == self.ePlusetableView) {
+        if (section == 1){
+            EPluseSugarView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseSugarView" owner:self options:nil]  firstObject];
+            footerV.isSugar = NO;
+            footerV.PhysicalMod = self.PhysicalList;
+            return footerV;
+        }
+        else if (section == 3){
+            EPluseWeightView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseWeightView" owner:self options:nil]  firstObject];
+            footerV.PhysicalMod = self.PhysicalList;
+            return footerV;
+        }
+        else if (section == 2){
+            EPluseTemperView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseTemperView" owner:self options:nil]  firstObject];
+              footerV.PhysicalMod = self.PhysicalList;
+            return footerV;
+        }
+        else if (section == 4){
+            EPluseSugarView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseSugarView" owner:self options:nil]  firstObject];
+            footerV.isSugar = YES;
+            footerV.PhysicalMod = self.PhysicalList;
+            return footerV;
+        }
+        else if (section == 5){
+            EPluseFooterView *footerV=[[[NSBundle mainBundle]loadNibNamed:@"EPluseFooterView" owner:self options:nil]  firstObject];
+             footerV.PhysicalModeld = self.PhysicalList;
+            return footerV;
+        }
+        else {
+            UIView *headV=[[UIView alloc]init];
+            return headV;
+        }
+    }else
+    {
+        UIView *headV=[[UIView alloc]init];
+        return headV;
+    }
+    
+    
+}
+- (void)buttonClickEPluseHeaderViewAtIndex:(NSString *)url title:(NSString *)title index:(NSInteger)tag;
+{
+    if (self.userMemberID != [UserInfoTool getLoginInfo].MemberID) {
+        return;
+        
+    }
+    XKHouseHoldModel *mode = [[XKHouseHoldModel alloc]init];
+    for (XKHouseHoldModel *hmode in  self.homeArr) {
+        if ([title containsString:@"血压"]&&[hmode.Name isEqualToString:@"血压"]) {
+            mode = hmode;
+            mode.DeviceClass = 6;
+            break;
+        }
+        else if ([title containsString:@"体温"]&&[hmode.Name isEqualToString:@"体温"]) {
+            mode = hmode;
+            mode.DeviceClass = 12;
+            break;
+        }
+        else  if ([title containsString:@"体重"]&&[hmode.Name isEqualToString:@"体重"]) {
+            mode = hmode;
+            mode.DeviceClass = 7;
+            break;
+        }
+        else if ([title containsString:@"血糖"]&&[hmode.Name isEqualToString:@"血糖"]) {
+            mode = hmode;
+            mode.DeviceClass = 8;
+            break;
+        }
+        else if ([title containsString:@"血脂"]&&[hmode.Name isEqualToString:@"血脂"]) {
+            mode = hmode;
+            mode.DeviceClass = 9;
+            break;
+        }
+    }
+    XKDectingViewController *connection=[[XKDectingViewController alloc]initWithType:pageTypeNormal];
+    connection.style = mode.DeviceClass;
+    connection.model = mode;
+    connection.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:connection animated:YES];
+    
+    
+//    HouseholdCheckHomeController *house=[[HouseholdCheckHomeController alloc]init];
+//    house.tagLeft = 200;
+//    house.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:house animated:YES];
+}
+
+#pragma mark   EPluseDelegate
+- (void)sportEPluseCellbuttonClick:(NSString *)titleStr;
+{
+    if ([titleStr isEqualToString:@"去运动"]) {
+        SportViewController *sport = [[SportViewController alloc]initWithType:pageTypeNormal];
+        [self.navigationController pushViewController:sport animated:YES];
+    }
+  
+    
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+
+@end

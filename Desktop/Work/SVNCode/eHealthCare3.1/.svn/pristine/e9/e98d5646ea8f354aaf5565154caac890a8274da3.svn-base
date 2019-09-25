@@ -1,0 +1,73 @@
+//
+//  XKValidationAndAddScoreTools.m
+//  eHealthCare
+//
+//  Created by mac on 2017/11/2.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKValidationAndAddScoreTools.h"
+//#import "XKHealthIntegralTaskSuccessView.h"
+#import "XKCompleteTaskModel.h"
+
+@interface XKValidationAndAddScoreTools()
+
+@property (nonatomic,strong) XKCompleteTaskModel *data;
+
+@end
+
+@implementation XKValidationAndAddScoreTools
+
+-(XKCompleteTaskModel *)validationAndAddScore:(NSDictionary *)validationDict withAdd:(NSDictionary *)addScoreDcit{
+    self.data = nil;
+    XKLOG(@"配置的参数%@--%@",validationDict,addScoreDcit);
+    [ProtosomaticHttpTool protosomaticPostWithURLString:@"943" parameters:validationDict success:^(id json) {
+        XKLOG(@"943验证当前任务是否完成--:%@",json);
+        if ([json[@"Basis"][@"Msg"] isEqualToString:@"操作成功"]) {
+            
+            if ([json[@"Result"][@"Iscomplete"] integerValue] == 0 && [json[@"Result"][@"IsExistsTask"] integerValue] == 1) {//未完成
+                [ProtosomaticHttpTool protosomaticPostWithURLString:@"940" parameters:addScoreDcit success:^(id json) {
+                    XKLOG(@"940完成任务加分--:%@",json);
+                    if ([json[@"Basis"][@"Msg"] isEqualToString:@"操作成功"]) {
+                        [[XKLoadingView shareLoadingView] hideLoding];
+                        
+                        self.data = [XKCompleteTaskModel objectWithKeyValues:json[@"Result"]];
+                        
+//                        XKHealthIntegralTaskSuccessView *taskV = [[[NSBundle mainBundle] loadNibNamed:@"XKHealthIntegralTaskSuccessView" owner:self options:nil] firstObject];
+                        if ([validationDict[@"TaskType"] integerValue] == 1) {//每日任务
+//                            taskV.kangImg.hidden = YES;
+//                            taskV.tatolKValueLab.hidden = NO;
+//                            taskV.kmarkLab.hidden = NO;
+                        }else{//福利任务
+//                            taskV.kangImg.hidden = NO;
+//                            taskV.tatolKValueLab.hidden = YES;
+//                            taskV.kmarkLab.hidden = YES;
+                        }
+//                        taskV.frame = AppFrame;
+//                        [[UIApplication sharedApplication].delegate.window addSubview:taskV];
+//                        taskV.completeModel = self.data;
+                        XKLOG(@"完成任务加分成功😆😆😆😆😆😆😆😆😆");
+//                         [[NSNotificationCenter defaultCenter] postNotificationName:@"reGetUserMsg" object:nil];注销个人信息的加载刷新
+                    }else{
+//                        XKLOG(@"任务失败加分失败");
+//                        [SVProgressHUD showErrorWithStatus:@"加分失败"];
+                    }
+                } failure:^(id error) {
+                    XKLOG(@"任务失败加分失败");
+                    [SVProgressHUD showErrorWithStatus:@"任务失败"];
+                }];
+            }
+            XKLOG(@"签到成功😆😆😆😆😆😆😆😆😆");
+        }else{
+            XKLOG(@"验证当前任务是否完成失败");
+            [SVProgressHUD showErrorWithStatus:@"任务失败"];
+        }
+    } failure:^(id error) {
+        XKLOG(@"验证当前任务是否完成失败");
+         [SVProgressHUD showErrorWithStatus:@"任务失败"];
+    }];
+    
+    return self.data;
+}
+
+@end

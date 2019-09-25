@@ -1,0 +1,287 @@
+//
+//  RecordDetalInfoViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "RecordDetalInfoViewController.h"
+#import "PersonalCellHeadView.h"
+#import "PersonalArchiveCell.h"
+#import "PersonArchiveSinglePopView.h"
+#import "HealthRecordViewModel.h"
+#import "PersonalDictionaryMsg.h"
+#import "PersonArchiveTextPutView.h"
+@interface RecordDetalInfoViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property(strong,nonatomic) PersonArchiveSinglePopView *popBottomView;
+@property (nonatomic,strong)PersonalDictionaryMsg *personalDictionaryMsg;
+@property(strong,nonatomic) PersonArchiveTextPutView *popInputTextView;
+@property(strong,nonatomic)UITableView *tableView;
+@end
+
+@implementation RecordDetalInfoViewController
+
+-(PersonArchiveTextPutView*)popInputTextView
+{
+    if (!_popInputTextView) {
+        _popInputTextView = [[[NSBundle mainBundle]loadNibNamed:@"PersonArchiveTextPutView" owner:self options:nil]  firstObject];
+        _popInputTextView.left = 0;
+        _popInputTextView.top=0;
+        _popInputTextView.width=KScreenWidth;
+        _popInputTextView.height=KScreenHeight;
+        _popInputTextView.delegate = self;
+    }
+    return _popInputTextView    ;
+}
+-(PersonArchiveSinglePopView *)popBottomView
+{
+    if (!_popBottomView) {
+        _popBottomView = [[[NSBundle mainBundle]loadNibNamed:@"PersonArchiveSinglePopView" owner:self options:nil]  firstObject];
+        _popBottomView.left = 0;
+        _popBottomView.top=0;
+        _popBottomView.width=KScreenWidth;
+        _popBottomView.height=KScreenHeight;
+        _popBottomView.delegate = self;
+    }
+    return _popBottomView    ;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    self.view.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableView registerNib:[UINib nibWithNibName:@"PersonalArchiveCell" bundle:nil] forCellReuseIdentifier:@"PersonalArchiveCell"];
+    [self.view addSubview:tableView];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(10 );
+        make.bottom.mas_equalTo(0);
+        make.width.mas_equalTo( CGRectGetWidth(self.view.frame)-20);
+    }];
+    self.tableView = tableView;
+    [self addFamilyResultWithNetWorking];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+-(void) keyBoardChange:(NSNotification *)note
+
+{
+    
+    //获取键盘弹出或收回时frame
+    
+    CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
+    //获取键盘弹出所需时长
+    
+    float duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    //添加弹出动画
+    
+    [UIView animateWithDuration:duration animations:^{
+        
+        self.popInputTextView.transform = CGAffineTransformMakeTranslation(0, keyboardFrame.origin.y+KHeight(100) - (KScreenHeight));
+        
+    }];
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+
+    return 0.01;
+
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    
+    return self.dataArray.count;
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    NSString *cellid = @"PersonalArchiveCell";
+    PersonalArchiveCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    NSDictionary *dic = self.dataArray[indexPath.row];
+    cell.nameLal.text = [NSString stringWithFormat:@"%@",dic[@"name"]];
+    cell.textLal.text = [NSString stringWithFormat:@"%@",dic[@"text"]];
+    cell.selectStarLab.hidden = [dic[@"hiden"] boolValue];
+    return cell;
+        
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+        return 50;
+
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    NSDictionary *dic = self.dataArray[indexPath.row];
+    if ([dic[@"tag"] integerValue]== 1) {
+       if(indexPath.row == 0 ){
+           [UIView animateWithDuration:.2 animations:^{
+               self.popInputTextView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+                                                                         CGAffineTransformMakeScale(1.0f, 1.0f));
+           }];
+           [[UIApplication sharedApplication].keyWindow addSubview:self.popInputTextView];
+        
+       
+        }else
+       {
+            self.popBottomView.popBottomType = indexPath.row;
+           //5s:300 6:330
+           [UIView animateWithDuration:.2 animations:^{
+               self.popBottomView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+                                                                      CGAffineTransformMakeScale(1.0f, 1.0f));
+           }];
+           [[UIApplication sharedApplication].keyWindow addSubview:self.popBottomView];
+           //    [self.view addSubview:self.popBottomView];
+    }
+  }else   if ([dic[@"tag"] integerValue]== 2)
+  {
+      NSMutableArray *tempArr = [NSMutableArray array];
+      NSString *tempStr = @"";
+      if (indexPath.row == 1) {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.PastHistory) {
+              [tempArr addObject:model.DictionaryName];
+          }
+         tempStr = @"A";
+          
+      }
+      else if (indexPath.row == 0)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.PastHistory) {
+              [tempArr addObject:model.DictionaryName];
+          }
+      }else if (indexPath.row == 2)
+      {
+//           tempArr = self.personalDictionaryMsg.OperationTrauma;
+          for (DictionaryMsg *model in self.personalDictionaryMsg.OperationTrauma) {
+              [tempArr addObject:model.DictionaryName];
+          }
+      }
+      else if (indexPath.row == 3)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.AllergyDrug) {
+              [tempArr addObject:model.DictionaryName];
+          }
+//           tempArr = self.personalDictionaryMsg.AllergyDrug;
+      }
+      else if (indexPath.row == 4)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.FoodAllergy) {
+              [tempArr addObject:model.DictionaryName];
+          }
+//           tempArr = self.personalDictionaryMsg.FoodAllergy;
+      }
+      else if (indexPath.row == 5)
+      {
+          for (DictionaryMsg *model in self.personalDictionaryMsg.LongTermMedicine) {
+              [tempArr addObject:model.DictionaryName];
+          }
+//          tempArr = self.personalDictionaryMsg.LongTermMedicine;
+      }
+       [SureMultipleSelectedWindow showWindowWithTitle:@"请选择过敏药物" selectedConditions:tempArr defaultSelectedConditions:@[@"磺胺",@"链霉素"] title:tempStr  selectedBlock:^(NSArray *selectedArr) {
+                  NSLog(@"%@",selectedArr);
+                  for (SureConditionModel *model in selectedArr) {
+                      NSLog(@"选中[%@]",model.title);
+                  }
+              }];
+      
+  }else
+  {
+      
+      self.popBottomView.popBottomType = 5+indexPath.row;
+      //5s:300 6:330
+      [UIView animateWithDuration:.2 animations:^{
+          self.popBottomView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+                                                                 CGAffineTransformMakeScale(1.0f, 1.0f));
+      }];
+      [[UIApplication sharedApplication].keyWindow addSubview:self.popBottomView];
+      
+  }
+      
+}
+- (void)addFamilyResultWithNetWorking
+{
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                      
+                          };
+    
+    [HealthRecordViewModel editRecordResultDataWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed) {
+            
+        
+            self.personalDictionaryMsg=[PersonalDictionaryMsg mj_objectWithKeyValues:response.Result];
+            
+            NSLog(@"309获取个人档案相关字典%@",response.Result);
+            [self.tableView reloadData];
+            
+        }else
+        {
+            ShowErrorStatus(response.msg);
+        }
+    }];
+}
+-(void)modifyRecordsWithNetWorking  {// @"Age":@(), @"IdCard":@"", @"HeadImg":@"",   @"AllergyDrug":@"", @"FoodAllergy":@"", @"SmokingStatusName":@"", @"LongMedication":@"", @"FamilyHistoryIDList":@"",@"PastHistoryIDList":@"",   @"ProjectOperation":@"",  @"DrinkingStatusName":@"",
+//    NSDictionary *dict = @{@"Token":[UserInfoTool getLoginInfo].Token,
+//                           @"MemberID":@([UserInfoTool getLoginInfo].MemberID),
+//                           @"FullName":@"",
+//                           @"SexID":@(),
+//                           @"Birthday":@"",
+//                           @"Height":@(),
+//                           @"Weight":@(),
+//                           @"FamilyHistory":@"",
+//                           @"PastHistory":@"",
+//                           @"ProjectOperationNo":@"",
+//                           @"SmokingStatusID":@(SmokingStatusID),
+//                           @"AllergyDrugNo":@"",
+//                           @"FoodAllergyNo":@""
+//                           @"LongTermMedicineNo":@"",
+//                           @"DrinkingStatusID":@()};
+//
+//    //    [[XKLoadingView shareLoadingView]showLoadingText:@"保存中"];
+//
+//    [NetWorkTool postAction:checkHomeEditPersonalFileUrl params:dict finishedBlock:^(ResponseObject *response) {
+//
+//        if (response.code == CodeTypeSucceed) {
+//
+//
+//
+//        }else{
+//
+//            ShowErrorStatus(response.msg);
+//        }
+//
+//    }];
+}
+#pragma mark   输入框添加姓名
+- (void)PersonArchiveTextPutViewCompleteClick:(NSString *)dataStr;
+{
+    if (dataStr.length>0) {
+      
+//       NSDictionary *dic = self.dataArray[indexPath.row];
+        
+    }
+}
+- (void)PersonArchiveSinglePopViewSelectItemClick:(NSString *)completeStr;
+{
+    
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

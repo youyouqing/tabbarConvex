@@ -1,0 +1,164 @@
+//
+//  PersonArchiveSinglePopView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "PersonArchiveSinglePopView.h"
+@interface PersonArchiveSinglePopView ()<UIPickerViewDelegate,UIPickerViewDataSource>
+{
+  
+    NSNumber *_selectedArea;
+   
+}
+@property (weak, nonatomic) IBOutlet UILabel *titleLab;
+@property (weak, nonatomic) IBOutlet UIView *bottomView;
+@property (weak, nonatomic) IBOutlet UIButton *sureBtn;
+@property (weak, nonatomic) IBOutlet UIButton *borderBtn;
+@property (weak, nonatomic) IBOutlet UIView *centerView;
+@property (weak, nonatomic) IBOutlet UIDatePicker *datepicker;
+@property (weak, nonatomic) IBOutlet UIPickerView *pickview;
+@property (nonatomic, strong) NSMutableArray *get_high_array;
+@end
+@implementation PersonArchiveSinglePopView
+-(NSMutableArray *)get_high_array
+{
+    if (!_get_high_array) {
+        _get_high_array = [[NSMutableArray alloc]init];
+    }
+    return _get_high_array;
+    
+}
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+- (IBAction)completeBtnAction:(id)sender {
+    
+    [self removeFromSuperview];
+//    [UIView animateWithDuration:0.3 animations:^{
+//        self.datePicker.alpha = 0;
+//        [self.relationView changeBirthColorWithisEding:NO];
+//        CGRect frame = self.datePicker.frame;
+//        frame.origin.y = self.view.frame.size.height;
+//        self.datePicker.frame = frame;
+//    }];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(PersonArchiveSinglePopViewSelectItemClick:)]) {
+        [self.delegate PersonArchiveSinglePopViewSelectItemClick:@""];
+    }
+}
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.centerView.layer.cornerRadius=5;
+    self.centerView.layer.masksToBounds=YES;
+    self.layer.masksToBounds=YES;
+    self.layer.cornerRadius=5;
+    
+    self.sureBtn.layer.masksToBounds=YES;
+    self.borderBtn.layer.borderWidth = 0.5;
+    self.borderBtn.layer.borderColor = kMainColor.CGColor;
+    self.sureBtn.layer.cornerRadius=self.sureBtn.frame.size.height/2.0;
+    
+    self.bottomView.hidden = NO;
+    self.centerView.hidden = YES;
+   
+    _pickview.dataSource  = self;
+    _pickview.delegate = self;
+}
+-(void)setPopBottomType:(ArchiveSingleType)popBottomType
+{
+    _popBottomType = popBottomType;
+    [self.get_high_array removeAllObjects];
+    if (_popBottomType == 2) {
+        self.datepicker.hidden = NO;
+        [self.datepicker addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
+        self.titleLab.text = @"出生年月";
+    }else    if (_popBottomType == 1) {
+        self.datepicker.hidden = YES;
+        
+        self.titleLab.text = @"性别";
+        [self.get_high_array addObject:@"男"];
+         [self.get_high_array addObject:@"女"];
+    }else    if (_popBottomType == 3) {
+        self.datepicker.hidden = YES;
+         self.titleLab.text = @"身高";
+        NSMutableArray *data = [[NSMutableArray alloc]init];
+        for (int i=100;i<200;i++){
+            [data addObject:[NSNumber numberWithInt:i]];
+        }
+        [self.get_high_array addObjectsFromArray:data];
+    }else    if (_popBottomType == 4) {
+        self.datepicker.hidden = YES;
+          self.titleLab.text = @"体重";
+        NSMutableArray *data = [[NSMutableArray alloc]init];
+        
+        for (int i=3;i<150;i++){
+            [data addObject:[NSNumber numberWithInt:i]];
+        }
+        [self.get_high_array addObjectsFromArray:data];
+        
+    }
+    else    if (_popBottomType == 5) {
+        self.datepicker.hidden = YES;
+        self.titleLab.text = @"您饮酒吗";
+        NSMutableArray *data = [[NSMutableArray alloc]init];
+        
+        
+        [data addObject:@"是"];
+        [data addObject:@"否"];
+        [self.get_high_array addObjectsFromArray:data];
+        
+    }
+    else    if (_popBottomType == 6) {
+        self.datepicker.hidden = YES;
+        self.titleLab.text = @"您平均每天吸烟的数量";
+        NSMutableArray *data = [[NSMutableArray alloc]init];
+        
+        [data addObject:@"不吸烟"];
+        [data addObject:@"吸烟"];
+        [self.get_high_array addObjectsFromArray:data];
+        
+    }
+    [self.pickview reloadAllComponents];
+}
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+    
+}
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    
+    return self.get_high_array.count;
+
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+
+        
+//        NSNumber *num = self.get_high_array[row];
+        return [NSString stringWithFormat:@"%@", self.get_high_array[row]];
+  
+}
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+
+        _selectedArea = self.get_high_array[row];
+        
+
+}
+- (void)dateChange:(UIDatePicker *)datePicker
+{
+    NSDate *date = [datePicker date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"yyy年MM月dd日"];
+    NSLog(@"----%@",[dateFormatter stringFromDate:date]);
+//    self.contentBirthdayLab.text = [dateFormatter stringFromDate:date];
+    
+}
+@end

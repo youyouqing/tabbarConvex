@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EPluseTemperView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfg-kX-rB8">
+                    <rect key="frame" x="6" y="0.0" width="363" height="282"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="afw-au-oLG">
+                            <rect key="frame" x="15" y="15" width="0.0" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgQ-d2-4oE">
+                            <rect key="frame" x="15" y="15" width="0.0" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="0.48627450979999998" green="0.51372549020000002" blue="0.54901960780000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="未检测" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEa-aC-3p6">
+                            <rect key="frame" x="0.0" y="235" width="363" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.70196078429999997" green="0.73333333329999995" blue="0.76862745099999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6TB-bB-CNr">
+                            <rect key="frame" x="0.0" y="30" width="363" height="205"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_jiance_temperature" highlightedImage="bg_jiance_temperature" translatesAutoresizingMaskIntoConstraints="NO" id="cku-ba-B3q">
+                                    <rect key="frame" x="57.5" y="5.5" width="248" height="194"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="cku-ba-B3q" secondAttribute="height" multiplier="124:97" id="5No-hQ-U5U"/>
+                                        <constraint firstAttribute="height" constant="194" id="o1U-f5-zda"/>
+                                    </constraints>
+                                </imageView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nt4-Bq-uJJ">
+                                    <rect key="frame" x="57.5" y="5.5" width="248" height="194"/>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c1s-QC-gaV">
+                                    <rect key="frame" x="176" y="87.5" width="11" height="30"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <color key="textColor" red="0.70196078429999997" green="0.73333333329999995" blue="0.76862745099999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="nt4-Bq-uJJ" firstAttribute="width" secondItem="cku-ba-B3q" secondAttribute="width" id="90f-He-UcP"/>
+                                <constraint firstItem="cku-ba-B3q" firstAttribute="top" secondItem="nt4-Bq-uJJ" secondAttribute="top" id="I0b-JA-L44"/>
+                                <constraint firstItem="cku-ba-B3q" firstAttribute="centerX" secondItem="6TB-bB-CNr" secondAttribute="centerX" id="Kj8-Gf-xvw"/>
+                                <constraint firstItem="c1s-QC-gaV" firstAttribute="centerY" secondItem="6TB-bB-CNr" secondAttribute="centerY" id="Mb2-Bp-vKB"/>
+                                <constraint firstItem="c1s-QC-gaV" firstAttribute="centerX" secondItem="6TB-bB-CNr" secondAttribute="centerX" id="Pfg-da-QJ1"/>
+                                <constraint firstItem="cku-ba-B3q" firstAttribute="bottom" secondItem="nt4-Bq-uJJ" secondAttribute="bottom" id="h7u-Oa-X8j"/>
+                                <constraint firstItem="cku-ba-B3q" firstAttribute="centerY" secondItem="6TB-bB-CNr" secondAttribute="centerY" id="qFC-lw-dQw"/>
+                                <constraint firstItem="nt4-Bq-uJJ" firstAttribute="centerX" secondItem="6TB-bB-CNr" secondAttribute="centerX" id="qNo-kK-jnz"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="dEa-aC-3p6" secondAttribute="trailing" id="9SA-Wb-Dfs"/>
+                        <constraint firstItem="afw-au-oLG" firstAttribute="top" secondItem="yfg-kX-rB8" secondAttribute="top" constant="15" id="Ad0-hf-4Nw"/>
+                        <constraint firstItem="tgQ-d2-4oE" firstAttribute="top" secondItem="afw-au-oLG" secondAttribute="bottom" id="BkK-mr-Svg"/>
+                        <constraint firstAttribute="height" constant="282" id="Fpq-7j-Iam"/>
+                        <constraint firstAttribute="bottom" secondItem="dEa-aC-3p6" secondAttribute="bottom" constant="30" id="a6Y-GO-1Vy"/>
+                        <constraint firstAttribute="trailing" secondItem="6TB-bB-CNr" secondAttribute="trailing" id="ebU-1c-o9H"/>
+                        <constraint firstItem="dEa-aC-3p6" firstAttribute="leading" secondItem="yfg-kX-rB8" secondAttribute="leading" id="knL-gH-6hy"/>
+                        <constraint firstItem="dEa-aC-3p6" firstAttribute="top" secondItem="6TB-bB-CNr" secondAttribute="bottom" id="nXR-fq-WJK"/>
+                        <constraint firstItem="afw-au-oLG" firstAttribute="leading" secondItem="yfg-kX-rB8" secondAttribute="leading" constant="15" id="npD-wP-HZg"/>
+                        <constraint firstItem="tgQ-d2-4oE" firstAttribute="leading" secondItem="yfg-kX-rB8" secondAttribute="leading" constant="15" id="psM-bG-R8X"/>
+                        <constraint firstItem="6TB-bB-CNr" firstAttribute="leading" secondItem="yfg-kX-rB8" secondAttribute="leading" id="qX5-yE-cAV"/>
+                        <constraint firstItem="6TB-bB-CNr" firstAttribute="top" secondItem="tgQ-d2-4oE" secondAttribute="bottom" constant="15" id="xEk-pP-RzH"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="yfg-kX-rB8" secondAttribute="trailing" constant="6" id="DEj-50-hSn"/>
+                <constraint firstItem="yfg-kX-rB8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="6" id="fQU-7L-5qf"/>
+                <constraint firstItem="yfg-kX-rB8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ji0-Iy-XBK"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="TemperatureImage" destination="cku-ba-B3q" id="K89-Z1-xM1"/>
+                <outlet property="TempertureBackView" destination="nt4-Bq-uJJ" id="ri9-z1-Bff"/>
+                <outlet property="backView" destination="yfg-kX-rB8" id="U1v-D0-Ia1"/>
+                <outlet property="conditionLab" destination="dEa-aC-3p6" id="X50-Uq-hbY"/>
+                <outlet property="dataLab" destination="c1s-QC-gaV" id="2rT-Ej-uIU"/>
+                <outlet property="testTimeLab" destination="tgQ-d2-4oE" id="OiF-P0-dH0"/>
+            </connections>
+            <point key="canvasLocation" x="-154" y="-70"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bg_jiance_temperature" width="206.5" height="161.5"/>
+    </resources>
+</document>

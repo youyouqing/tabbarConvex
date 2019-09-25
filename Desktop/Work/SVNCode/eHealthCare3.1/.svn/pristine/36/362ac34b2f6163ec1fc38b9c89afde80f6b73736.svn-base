@@ -1,0 +1,66 @@
+//
+//  MessagePublicCell.m
+//  eHealthCare
+//
+//  Created by xiekang on 16/9/7.
+//  Copyright © 2016年 mac. All rights reserved.
+//
+
+#import "MessagePublicCell.h"
+@interface MessagePublicCell()
+@property (weak, nonatomic) IBOutlet UIImageView *imageV;
+@property (weak, nonatomic) IBOutlet UILabel *titleLal;
+@property (weak, nonatomic) IBOutlet UILabel *timeLal;
+@property (weak, nonatomic) IBOutlet UILabel *textLal;
+@property (weak, nonatomic) IBOutlet UIButton *messageNumLal;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *numWidthCons;
+
+@end
+@implementation MessagePublicCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+    self.imageV.layer.cornerRadius = self.imageV.frame.size.height/2;
+    self.imageV.clipsToBounds = YES;
+    
+    self.messageNumLal.layer.cornerRadius = self.messageNumLal.frame.size.height/2;
+    self.messageNumLal.clipsToBounds = YES;
+    self.messageNumLal.backgroundColor = ORANGECOLOR;
+    self.messageNumLal.hidden = NO;
+}
+
+-(void)setModel:(MessagePublicModel *)model
+{
+    _model = model;
+   // if ([model.indexs isEqualToString:@"0"]) {
+        _imageV.image = [UIImage imageNamed:model.imageName];//[UIImage imageNamed:@"icon_meaasge_gonggao"];
+        _titleLal.text = model.content;
+   // }else{
+    //    _imageV.image = [UIImage imageNamed:@"icon_meaasge_jiankang"];
+     //   _titleLal.text = @"健康消息";
+   // }
+    _textLal.text = model.NoticeTitle;
+    _timeLal.text = model.NoticeCreateTime;
+    
+    if (model.NoticeReadNum <= 0) {
+        _numWidthCons.constant = 0;
+    }else if(model.NoticeReadNum > 9){
+        _numWidthCons.constant = 30;
+    }else{
+        _numWidthCons.constant = 20;
+    }
+    
+    if (model.NoticeReadNum > 0) {//大于零的时候才显示
+         [_messageNumLal setTitle:[NSString stringWithFormat:@"%li",model.NoticeReadNum] forState:UIControlStateNormal];
+    }
+
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

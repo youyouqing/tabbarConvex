@@ -1,0 +1,19 @@
+//
+//  MessagePublicModel.h
+//  eHealthCare
+//
+//  Created by xiekang on 16/9/7.
+//  Copyright © 2016年 mac. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface MessagePublicModel : NSObject
+@property (nonatomic,strong) NSString *NoticeTitle;
+@property (nonatomic,strong) NSString *NoticeCreateTime;
+@property (nonatomic,assign) NSInteger NoticeReadNum;
+@property (nonatomic,strong) NSString *indexs;
+@property (nonatomic,strong) NSString *imageName;
+
+@property (nonatomic,strong) NSString *content;
+@end

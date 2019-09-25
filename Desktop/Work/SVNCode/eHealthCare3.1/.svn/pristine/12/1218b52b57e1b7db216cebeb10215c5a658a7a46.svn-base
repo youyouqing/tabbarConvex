@@ -1,0 +1,102 @@
+//
+//  EPluseTemperView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/23.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "EPluseTemperView.h"
+#define kXXAngleToRadian(angle)  (M_PI / 180.0 * (angle))
+@implementation EPluseTemperView
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.backgroundColor = [UIColor getColor:@"EFF8FE"];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    UIBezierPath *corPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth-20, self.backView.frame.size.height) byRoundingCorners:UIRectCornerBottomRight | UIRectCornerBottomLeft cornerRadii:CGSizeMake(5, 5)];
+    maskLayer.frame = corPath.bounds;
+    maskLayer.path=corPath.CGPath;
+    self.backView.layer.mask=maskLayer;
+    
+    
+    CGPoint p =  [self calToAcquireTheCenterWithCircleRadius:(161/2.0) moveAngle:-30 ArcCenter:(161/2.0)];
+    UIImageView *circle      = [[UIImageView alloc] initWithFrame:CGRectMake(p.x - 3, p.y + 6, 24, 24)];//圆的半径是30  -150----+150
+    circle.image = [UIImage imageNamed:@"cicreView"];
+//    circle.backgroundColor = [UIColor blackColor];
+    [self.TemperatureImage bringSubviewToFront:circle];
+//    NSLog(@"---JJJJ-----%@--------%@",NSStringFromCGPoint(p),NSStringFromCGPoint(point));
+    [self.TempertureBackView addSubview:circle];
+//
+}
+- (CGPoint)calculateTextPositonWithArcCenter:(CGPoint)center
+                                       Angle:(CGFloat)angel
+{
+    CGFloat x = 80 * cosf(angel);
+    CGFloat y = 80 * sinf(angel);
+    
+    return CGPointMake(center.x + x, center.y - y);
+}
+- (CGPoint)calToAcquireTheCenterWithCircleRadius:(CGFloat)circleRadius moveAngle:(CGFloat)moveAngle ArcCenter:(CGFloat)c
+{
+    CGPoint center = CGPointZero;
+    // 设圆心角A的对边为a 邻边为b 斜边为c
+    CGFloat x = sin(kXXAngleToRadian(moveAngle)) * circleRadius;
+    CGFloat y = cos(kXXAngleToRadian(moveAngle)) * circleRadius;
+    center.x = c+ x;
+    center.y = c - y;
+    return center;
+}
+-(void)setPhysicalMod:(NSArray *)PhysicalMod
+{
+    _PhysicalMod = PhysicalMod;
+    
+    for ( PhysicalList *model in PhysicalMod) {
+        
+        if ([model.PhysicalItemIdentifier isEqualToString:@"TC"]){
+            
+            self.conditionLab.text = (model.ExceptionFlag == 1)?(@"正常"):((model.ParameterName)?(model.ParameterName):(@"未检测"));
+            self.dataLab.text = model.TypeParameter?(model.TypeParameter):@"-";
+            
+        }
+        
+    }
+    
+}
+-(NSString *)getColorStr:(NSString *)typeValue minValue:(CGFloat)minValue maxValue:(CGFloat)maxValue ExceptionFlag:(NSInteger)ExceptionFlag;
+{
+    if (ExceptionFlag == 0) {
+        if ([typeValue floatValue] < minValue) {
+            
+            
+            return @"FFD36D";
+        }else  if ([typeValue floatValue]> maxValue)
+        {
+            
+            return @"FF4564";
+        }
+        else
+            return @"B3BBC4";
+    }else
+    {
+        return @"07DD8F";
+        
+    }
+    
+}
+-(NSString *)nameTitleLabWithPhysicalItemIdentifier:(NSString *)PhysicalItemIdentifier
+{
+    NSString *nameStr;//TC对应体温
+    if ([PhysicalItemIdentifier isEqualToString:@"TC"]) {
+        nameStr = [NSString stringWithFormat:@"体温"];
+    }
+    return nameStr;
+}
+@end

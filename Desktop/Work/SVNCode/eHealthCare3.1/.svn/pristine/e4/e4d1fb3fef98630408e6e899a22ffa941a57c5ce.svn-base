@@ -1,0 +1,117 @@
+//
+//  StepTableViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/15.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "StepTableViewCell.h"
+@interface StepTableViewCell ()
+@property (weak, nonatomic) IBOutlet UILabel *detailLab;
+@property (weak, nonatomic) IBOutlet UIButton *stepBtn;
+@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UIView *backBottomView;
+@property (weak, nonatomic) IBOutlet UILabel *stepLab;
+@property (assign, nonatomic)CGFloat progress;
+@end
+@implementation StepTableViewCell
+- (void)drawCircle {
+    //创建一个layer并添加到self.layer上面去
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame = self.backView.bounds;
+    [self.backView.layer addSublayer:layer];
+    //创建一个圆
+    CGFloat width = CGRectGetWidth(self.backView.bounds);
+    CGFloat height = CGRectGetHeight(self.backView.bounds);
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(width/2, height/2) radius:CGRectGetWidth(self.backView.bounds)/2 startAngle:0 endAngle:2* M_PI clockwise:YES];
+    layer.path = path.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.strokeColor = [UIColor getColor:@"EDF8FF"].CGColor;
+    layer.lineWidth = 10;
+    layer.lineCap = kCALineCapRound;
+    
+  
+}
+- (void)updateProgressCircle{
+    //update progress value
+    self.progress = (float) (0.3);
+    //redraw back & progress circles
+    //    [self setNeedsDisplay];
+    [self drawColorLayer];
+    //增加动画
+    
+}
+//设置整个view渐变色
+- (void)drawColorLayer {
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame = self.backView.bounds;
+    [self.backView.layer addSublayer:layer];
+    
+    layer.frame = self.backView.bounds;
+    layer.lineWidth = 10;
+    UIBezierPath *progressCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.backView.bounds.size.width / 2,self.backView.bounds.size.height / 2)
+                                                                  radius:CGRectGetWidth(self.backView.bounds)/2.0
+                                                              startAngle:(CGFloat) - M_PI_2
+                                                                endAngle:(CGFloat)(- M_PI_2 + self.progress * 2 * M_PI)
+                                                               clockwise:YES];
+    
+    
+    layer.path = progressCircle.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.strokeColor = [UIColor getColor:@"07DD8F"].CGColor;
+    layer.lineCap = kCALineCapButt;
+    
+    
+    CABasicAnimation *pathAnimation=[CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    pathAnimation.duration = 2;
+    pathAnimation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    pathAnimation.fromValue=[NSNumber numberWithFloat:0.0f];
+    pathAnimation.toValue=[NSNumber numberWithFloat:self.progress];
+    pathAnimation.autoreverses=NO;
+    
+    pathAnimation.fillMode = kCAFillModeForwards;
+    pathAnimation.removedOnCompletion = NO;
+    pathAnimation.repeatCount = 1;
+    [layer addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.detailLab.font =Kfont(15);
+    self.detailLab.textColor = [UIColor getColor:@"B3BBC4"];
+    self.stepBtn.backgroundColor = [UIColor getColor:@"03C7FF"];
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOpacity = 0.4;
+    self.layer.shadowRadius = 4.f;
+    self.layer.shadowOffset = CGSizeMake(4, 4);
+    self.backgroundColor = [UIColor getColor:@"edf8ff"];
+     [self drawCircle];
+    
+    CAShapeLayer *maskTwoLayer = [[CAShapeLayer alloc] init];
+    UIBezierPath *corTwoPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth-20, (134)) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(5, 5)];
+    maskTwoLayer.frame = corTwoPath.bounds;
+    maskTwoLayer.path=corTwoPath.CGPath;
+    self.backBottomView.layer.mask=maskTwoLayer;
+}
+-(void)setData:(HealthData *)data
+{
+    
+    _data = data;
+    self.stepLab.text = [NSString stringWithFormat:@"%zi",data.StepCount];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self updateProgressCircle];
+    });
+    
+}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+- (IBAction)goAction:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sportbuttonClick)]) {
+        [self.delegate sportbuttonClick];
+    }
+}
+
+@end

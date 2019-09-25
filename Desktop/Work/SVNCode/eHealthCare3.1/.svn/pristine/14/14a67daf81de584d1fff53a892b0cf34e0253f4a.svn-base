@@ -1,0 +1,22 @@
+//
+//  NewHealthNoticeMod.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/11/9.
+//  Copyright © 2018 Jon Shi. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NewHealthNoticeMod : NSObject
+
+/**
+ 消息类型 1、随访提醒 2、体检通知    
+ */
+@property (nonatomic,strong) NSString *NoticeReferer;
+@property (nonatomic,strong) NSString *NoticeContent;
+@property (nonatomic,strong) NSString *NoticeTime;
+@property (nonatomic,assign) NSInteger NoticeNoReadNum;
+@property (nonatomic,strong) NSString *NoticeTitle;
+
+@end

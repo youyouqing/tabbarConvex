@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="XKMusicListView">
+            <rect key="frame" x="0.0" y="0.0" width="457" height="745"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ycC-9y-eNY">
+                    <rect key="frame" x="0.0" y="0.0" width="457" height="745"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cql-D0-Z8m">
+                    <rect key="frame" x="0.0" y="425" width="457" height="320"/>
+                    <subviews>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="JW1-hP-ggH">
+                            <rect key="frame" x="0.0" y="0.0" width="457" height="320"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="JW1-hP-ggH" firstAttribute="top" secondItem="cql-D0-Z8m" secondAttribute="top" id="2Ot-9o-S56"/>
+                        <constraint firstAttribute="height" constant="320" id="Y7g-AZ-qez"/>
+                        <constraint firstItem="JW1-hP-ggH" firstAttribute="leading" secondItem="cql-D0-Z8m" secondAttribute="leading" id="auc-Tt-C1E"/>
+                        <constraint firstAttribute="trailing" secondItem="JW1-hP-ggH" secondAttribute="trailing" id="c2C-DM-dzc"/>
+                        <constraint firstAttribute="bottom" secondItem="JW1-hP-ggH" secondAttribute="bottom" id="zBg-9s-Heg"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="ycC-9y-eNY" secondAttribute="bottom" id="1Gv-6F-GHZ"/>
+                <constraint firstItem="cql-D0-Z8m" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="K4A-U9-wqs"/>
+                <constraint firstAttribute="bottom" secondItem="cql-D0-Z8m" secondAttribute="bottom" id="djd-0c-P0G"/>
+                <constraint firstAttribute="trailing" secondItem="ycC-9y-eNY" secondAttribute="trailing" id="dst-we-G3N"/>
+                <constraint firstItem="ycC-9y-eNY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="dvt-x7-HQu"/>
+                <constraint firstItem="ycC-9y-eNY" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="fof-fn-w84"/>
+                <constraint firstAttribute="trailing" secondItem="cql-D0-Z8m" secondAttribute="trailing" id="lpg-a8-VWW"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="bottom_bg_View" destination="ycC-9y-eNY" id="2Fz-us-UUw"/>
+                <outlet property="listView" destination="cql-D0-Z8m" id="shp-4S-fz0"/>
+                <outlet property="listViewHeight" destination="Y7g-AZ-qez" id="dN7-HG-7aP"/>
+                <outlet property="tabV" destination="JW1-hP-ggH" id="W4Q-0s-e9H"/>
+            </connections>
+            <point key="canvasLocation" x="89.5" y="97.5"/>
+        </view>
+    </objects>
+</document>

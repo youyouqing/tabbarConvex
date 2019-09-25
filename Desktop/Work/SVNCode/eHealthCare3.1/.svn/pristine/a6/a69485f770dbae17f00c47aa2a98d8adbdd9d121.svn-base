@@ -1,0 +1,248 @@
+//
+//  XKAddHotTopicController.m
+//  eHealthCare
+//
+//  Created by jamkin on 2017/6/13.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKAddHotTopicController.h"
+#import "XKTopicTagHotView.h"
+
+@interface XKAddHotTopicController ()<XKTopicTagHotViewDelegate,UITextViewDelegate>
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topCons;
+
+/**
+ 添加标签视图按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *addTagBtn;
+
+/**
+ 发表视图按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *topicPublishBtn;
+
+/**
+ 标签视图
+ */
+@property (nonatomic,strong) XKTopicTagHotView *tagView;
+
+/**
+ 文本视图
+ */
+@property (weak, nonatomic) IBOutlet UITextView *txtView;
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
+
+/**
+ 字数限制标签
+ */
+@property (weak, nonatomic) IBOutlet UILabel *fontLimtLab;
+
+@end
+
+@implementation XKAddHotTopicController
+
+-(XKTopicTagHotView *)tagView{
+    
+    if (!_tagView) {
+        
+        _tagView = [[[NSBundle mainBundle] loadNibNamed:@"XKTopicTagHotView" owner:self options:nil] firstObject];
+        _tagView.x = 0;
+        _tagView.y = 0;
+        _tagView.width = KScreenWidth;
+        _tagView.delegate = self;
+        _tagView.height = KScreenHeight;
+        
+    }
+    
+    return _tagView;
+}
+
+/**
+ 添加标签
+ */
+- (IBAction)addTagAction:(UIButton *)sender {
+    
+    NSLog(@"添加话题标签");
+    [self.txtView resignFirstResponder];
+    [[UIApplication sharedApplication].delegate.window addSubview:self.tagView];
+    
+    if ([sender.titleLabel.text isEqualToString:@"添加标签"]) {
+        for (XKHealthPlanModel *model in self.typeArray) {
+            model.isSelect = NO;
+        }
+        self.tagView.typeArray = self.typeArray;
+    }else{
+        self.tagView.typeArray = self.typeArray;
+    }
+    
+}
+
+/**
+ 发表按钮
+ */
+- (IBAction)publicAction:(id)sender {
+    NSLog(@"发表");
+    NSInteger type = -1;
+    for (XKHealthPlanModel *model in self.typeArray) {
+        if (model.isSelect) {
+            type = model.TypeID;
+            break;
+        }
+    }
+    
+    if (type == -1) {
+        [self showAlert:@"请选择话题分类"];
+        return;
+    }
+    if (self.txtView.text.length==0) {
+        [self showAlert:@"请输入话题内容"];
+        return;
+    }
+    //   判定输入框不为空格以及空
+    NSString *textField=[self.txtView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    if ([textField length] == 0) {
+        
+       [self showAlert:@"请输入话题内容"];
+        
+        return ;
+        
+    }
+    [[XKLoadingView shareLoadingView]showLoadingText:nil];
+    [ProtosomaticHttpTool protosomaticPostWithURLString:@"907" parameters:@{@"Token":[UserInfoTool getLoginInfo].Token,@"TopicType":@(type),@"MemberID":@([UserInfoTool getLoginInfo].MemberID),@"TopicContent":self.txtView.text} success:^(id json) {
+        
+        NSLog(@"%@",json);
+        if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+            
+            [[XKLoadingView shareLoadingView] hideLoding];
+            //发表健康话题
+            XKValidationAndAddScoreTools *tools = [[XKValidationAndAddScoreTools alloc] init];
+            [tools validationAndAddScore:@{@"Token":[UserInfoTool getLoginInfo].Token,@"TaskType":@(1),@"MemberID":@([UserInfoTool getLoginInfo].MemberID),@"TypeID":@(6)} withAdd:@{@"Token":[UserInfoTool getLoginInfo].Token,@"TaskType":@(1),@"MemberID":@([UserInfoTool getLoginInfo].MemberID),@"TypeID":@(6)}];
+          
+            ShowSuccessStatus(@"发表成功");
+            [self.txtView resignFirstResponder];
+            self.txtView.text = @"";
+            
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }else{
+            [[XKLoadingView shareLoadingView]errorloadingText:@"发表失败"];
+
+        }
+        
+    } failure:^(id error) {
+        
+        NSLog(@"%@",error);
+        [[XKLoadingView shareLoadingView]errorloadingText:@"发表失败"];
+        
+    }];
+    
+}
+
+-(void)showAlert:(NSString *)str{
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:str preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [alert addAction:action];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
+/**
+ 文本框的协议方法
+ */
+- (void)textViewDidChange:(UITextView *)textView{
+    
+    if (textView.text.length >= 400) {
+        textView.text = [textView.text substringToIndex:400];
+    }
+    self.fontLimtLab.text = [NSString stringWithFormat:@"%li/400",textView.text.length];
+    
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.topCons.constant = (PublicY);
+    [self.addTagBtn setTitleColor:NAVICOLOR forState:UIControlStateNormal];
+    
+    self.addTagBtn.layer.borderColor = NAVICOLOR.CGColor;
+    self.addTagBtn.layer.borderWidth = 1;
+    
+    self.topicPublishBtn.backgroundColor = NAVICOLOR;
+    [self.topicPublishBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    self.topicPublishBtn.layer.cornerRadius = 22.5;
+    self.topicPublishBtn.layer.masksToBounds = YES;
+    
+    self.deleteBtn.hidden = YES;
+    
+    self.tagView.typeArray = self.typeArray;
+    
+    self.txtView.delegate = self;
+    
+    self.txtView.inputAccessoryView = [[UIView alloc]initWithFrame:CGRectZero];
+    
+}
+/**
+ 删除标签按钮的操作
+ */
+- (IBAction)deleteAction:(id)sender {
+    
+    for (XKHealthPlanModel *model in self.typeArray) {
+        model.isSelect = NO;
+    }
+    
+    self.tagView.typeArray = self.typeArray;
+    
+    [self.addTagBtn setTitle:@"添加标签" forState:UIControlStateNormal];
+    
+    self.deleteBtn.hidden = YES;
+    
+}
+
+-(void)changeDataSoure:(NSArray *)array{
+    
+    self.typeArray = array;
+    
+    for (XKHealthPlanModel *model in self.typeArray) {
+        if (model.isSelect == YES) {
+            [self.addTagBtn setTitle:model.TypeName forState:UIControlStateNormal];
+             self.deleteBtn.hidden = NO;
+            break;
+        }
+    }
+    
+}
+
+/**
+ 点击按钮开始编辑
+ */
+- (IBAction)editAction:(id)sender {
+    
+    [self.txtView becomeFirstResponder];
+    
+}
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
+replacementText:(NSString *)text
+{
+    //如果为回车则将键盘收起
+    if ([text isEqualToString:@"\n"]) {
+        
+        [textView resignFirstResponder];
+        return NO;
+    }
+    return YES;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+@end

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HealthRecordFooterView">
+            <rect key="frame" x="0.0" y="0.0" width="353" height="213"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNI-GI-URt">
+                    <rect key="frame" x="10" y="0.0" width="333" height="213"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Xt4-Kr-2rm">
+                    <rect key="frame" x="10" y="0.0" width="333" height="203"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Xt4-Kr-2rm" secondAttribute="trailing" constant="10" id="Ccs-j8-f3h"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Xt4-Kr-2rm" secondAttribute="bottom" constant="10" id="RII-ha-NgZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="gNI-GI-URt" secondAttribute="bottom" id="Umi-Yc-uSM"/>
+                <constraint firstItem="gNI-GI-URt" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="YAH-Of-nvX"/>
+                <constraint firstItem="gNI-GI-URt" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="aRj-3B-z3o"/>
+                <constraint firstItem="Xt4-Kr-2rm" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="bQW-2Z-aAO"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gNI-GI-URt" secondAttribute="trailing" constant="10" id="q6n-cn-2Vr"/>
+                <constraint firstItem="Xt4-Kr-2rm" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="tce-Ow-7HA"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="tableView" destination="Xt4-Kr-2rm" id="Tlg-ZJ-Ddx"/>
+            </connections>
+            <point key="canvasLocation" x="22.5" y="-173.5"/>
+        </view>
+    </objects>
+</document>

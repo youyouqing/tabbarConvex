@@ -1,0 +1,104 @@
+//
+//  HealthTestTableViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/15.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTestTableViewCell.h"
+#import "HealthTestCollectionViewCell.h"
+@interface HealthTestTableViewCell()
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) UICollectionViewLayout *customLayout;
+@property (strong, nonatomic) NSArray *imageArray;
+@property (strong, nonatomic) NSArray *titleArray;
+@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (strong, nonatomic) NSArray *secondTitleArray;
+@end
+
+@implementation HealthTestTableViewCell
+
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+    _customLayout = [[UICollectionViewLayout alloc] init]; // 自定义的布局对象
+    _collectionView.dataSource = self;
+    _collectionView.delegate = self;
+    
+    self.backgroundColor = [UIColor getColor:@"edf8ff"];
+    _collectionView.backgroundColor = [UIColor whiteColor];
+    // 注册cell、sectionHeader、sectionFooter
+    [_collectionView registerNib:[UINib nibWithNibName:@"HealthTestCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"HealthTestCollectionViewCell"];
+    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
+    flow.itemSize = CGSizeMake((KScreenWidth-20)/2, 246+10);
+    flow.minimumLineSpacing = 0;
+    flow.minimumInteritemSpacing = 0;
+    flow.scrollDirection = UICollectionViewScrollDirectionVertical;
+    _collectionView.showsHorizontalScrollIndicator=NO;
+    _collectionView.showsVerticalScrollIndicator=NO;
+    [_collectionView setCollectionViewLayout:flow];
+    
+    
+    _imageArray = @[@"iv_test_zhongyitizhi",@"iv_test_yajiankang",@"iv_test_richangxingwei",@"iv_test_jianshang"];
+  
+    
+    _titleArray = @[@"中医体质检测",@"亚健康测试",@"日常行为测试",@"健商"];
+    _secondTitleArray = @[@"权威中医体质检测，检测 你属于哪种体质",@"现在的身体是否处于亚健 康状态",@"你的日常行为会对健康造 成影响",@"你的健商有多高，一起来 测测吧"];
+    
+    CAShapeLayer *maskTwoLayer = [[CAShapeLayer alloc] init];
+    UIBezierPath *corTwoPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth-20, (533)) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(5, 5)];
+    maskTwoLayer.frame = corTwoPath.bounds;
+    maskTwoLayer.path=corTwoPath.CGPath;
+    self.backView.layer.mask=maskTwoLayer;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 4;
+}
+
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    HealthTestCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:@"HealthTestCollectionViewCell" forIndexPath:indexPath];
+    cell.bgImage.image = [UIImage imageNamed:_imageArray[indexPath.row]];
+    cell.nameLab.text = _titleArray[indexPath.row];
+    cell.detailLab.text = _secondTitleArray[indexPath.row];
+    cell.delegate = self;
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+{
+    
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(HealthTestTableViewCellJoinAction:)]) {
+//
+//        [self.delegate HealthTestTableViewCellJoinAction:indexPath.row];
+//    }
+//
+    
+}
+-(void)HealthTestCollectionViewCellJoinAction:(HealthTestCollectionViewCell *)cell;
+{
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(HealthTestTableViewCellJoinAction:)]) {
+        
+        [self.delegate HealthTestTableViewCellJoinAction:cell.nameLab.text ];
+    }
+    
+}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

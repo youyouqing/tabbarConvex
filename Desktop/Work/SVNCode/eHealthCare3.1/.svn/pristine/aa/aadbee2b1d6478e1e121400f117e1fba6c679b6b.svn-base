@@ -1,0 +1,125 @@
+//
+//  RippleView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/25.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "RippleView.h"
+
+
+
+@implementation RippleView
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        _multiple = 1.423;
+    }
+    
+    return self;
+}
+// 设置静态常量 pulsingCount ，表示 Layer 的数量
+static NSInteger const pulsingCount = 4;
+// 设置静态常量 animationDuration ，表示动画时间
+static double const animationDuration = 2;
+- (void)drawRect:(CGRect)rect {
+     self.backgroundColor = [UIColor whiteColor];
+    CALayer *animationLayer = [CALayer layer];
+    
+    // 利用 for 循环创建三个动画 Layer
+    for (int i = 0; i < pulsingCount; i++) {
+        NSArray *animationArray = [self animationArray];
+        
+        // 通过传入参数 i 计算，错开动画时间
+        // 将三个动画合并为一个动画组
+//        CAAnimationGroup *animationGroup = [self animationGroupAnimations:animationArray];
+        CAAnimationGroup *animationGroup = [self animationGroupAnimations:animationArray index:i];
+        //修改方法，将原先添加的动画由“简单动画”改为“动画组”
+        CALayer *pulsingLayer = [self pulsingLayer:rect animation:animationGroup];
+        
+        //将动画 Layer 添加到 animationLayer
+        [animationLayer addSublayer:pulsingLayer];
+    }
+    [self.layer addSublayer:animationLayer];
+}
+
+#define ColorWithAlpha(r,g,b,a) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
+- (NSArray *)animationArray {
+    NSArray *animationArray = nil;
+    
+    CABasicAnimation *scaleAnimation = [self scaleAnimation];
+    CAKeyframeAnimation *borderColorAnimation = [self borderColorAnimation];
+//    CAKeyframeAnimation *backgroundColorAnimation = [self backgroundColorAnimation];
+    animationArray = @[scaleAnimation, borderColorAnimation];
+    
+    return animationArray;
+}
+- (CAAnimationGroup *)animationGroupAnimations:(NSArray *)array {
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    
+    animationGroup.beginTime = CACurrentMediaTime();
+    animationGroup.duration = 1;
+    animationGroup.repeatCount = HUGE;
+    animationGroup.animations = array;
+    animationGroup.removedOnCompletion = NO;
+    return animationGroup;
+}
+- (CABasicAnimation *)scaleAnimation {
+    CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    
+    scaleAnimation.fromValue = @1;
+    scaleAnimation.toValue = @(_multiple);
+    return scaleAnimation;
+}
+//// 使用关键帧动画，使得颜色动画不要那么的线性变化
+//- (CAKeyframeAnimation *)backgroundColorAnimation {
+//    CAKeyframeAnimation *backgroundColorAnimation = [CAKeyframeAnimation animation];
+//
+//    backgroundColorAnimation.keyPath = @"backgroundColor";
+//    backgroundColorAnimation.values = @[(__bridge id)ColorWithAlpha(255, 216, 87, 0.5).CGColor,
+//                                        (__bridge id)ColorWithAlpha(255, 231, 152, 0.5).CGColor,
+//                                        (__bridge id)ColorWithAlpha(255, 241, 197, 0.5).CGColor,
+//                                        (__bridge id)ColorWithAlpha(255, 241, 197, 0).CGColor];
+//    backgroundColorAnimation.keyTimes = @[@0.3,@0.6,@0.9,@1];
+//    return backgroundColorAnimation;
+//}
+- (CAKeyframeAnimation *)borderColorAnimation {
+    CAKeyframeAnimation *borderColorAnimation = [CAKeyframeAnimation animation];
+    
+    borderColorAnimation.keyPath = @"borderColor";
+    borderColorAnimation.values = @[(__bridge id)ColorWithAlpha(255, 216, 87, 0.5).CGColor,
+                                    (__bridge id)ColorWithAlpha(255, 231, 152, 0.5).CGColor,
+                                    (__bridge id)ColorWithAlpha(255, 241, 197, 0.5).CGColor,
+                                    (__bridge id)ColorWithAlpha(255, 241, 197, 0).CGColor,(__bridge id)ColorWithAlpha(255, 241, 197, 0).CGColor,(__bridge id)ColorWithAlpha(255, 241, 197, 0).CGColor];
+    borderColorAnimation.keyTimes = @[@0.2,@0.4,@0.6,@0.7,@0.9,@1];
+    return borderColorAnimation;
+}
+- (CALayer *)pulsingLayer:(CGRect)rect animation:(CAAnimationGroup *)animationGroup {
+    CALayer *pulsingLayer = [CALayer layer];
+    
+    pulsingLayer.borderWidth = 0.5;
+    pulsingLayer.borderColor = ColorWithAlpha(255, 216, 87, 0.5).CGColor;
+    pulsingLayer.frame = CGRectMake(0, 0, rect.size.width, rect.size.height);
+    pulsingLayer.cornerRadius = rect.size.height / 2;
+    [pulsingLayer addAnimation:animationGroup forKey:@"plulsing"];
+    return pulsingLayer;
+}
+
+- (CAAnimationGroup *)animationGroupAnimations:(NSArray *)array index:(int)index {
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    
+    animationGroup.beginTime = CACurrentMediaTime() + (double)(index * animationDuration) / (double)pulsingCount;
+    animationGroup.duration = animationDuration;
+    animationGroup.repeatCount = HUGE;
+    animationGroup.animations = array;
+    animationGroup.removedOnCompletion = NO;
+    
+    // 添加动画曲线。关于其他的动画曲线，也可以自行尝试
+    animationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
+    return animationGroup;
+}
+
+@end

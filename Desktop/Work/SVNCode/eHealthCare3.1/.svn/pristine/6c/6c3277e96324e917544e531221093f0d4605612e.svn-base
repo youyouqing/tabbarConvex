@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment version="2048" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="lVO-Jm-rly" customClass="XKMultiFunctionCheckResultHeadView">
+            <rect key="frame" x="0.0" y="0.0" width="1109" height="279"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mutilproject" translatesAutoresizingMaskIntoConstraints="NO" id="7li-fc-i6a">
+                    <rect key="frame" x="427" y="10" width="255" height="259"/>
+                </imageView>
+                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z3a-a3-wj2" customClass="XKEquipButton">
+                    <rect key="frame" x="506" y="11" width="98" height="79"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="98" id="pam-zu-nvu"/>
+                        <constraint firstAttribute="height" constant="79" id="pf2-Ma-W48"/>
+                    </constraints>
+                    <connections>
+                        <action selector="pressureAction:" destination="lVO-Jm-rly" eventType="touchUpInside" id="7Mx-m7-Xo4"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSz-S4-Q0B" customClass="XKEquipButton">
+                    <rect key="frame" x="602" y="67" width="86" height="106"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="106" id="2ch-Zu-wRI"/>
+                        <constraint firstAttribute="width" constant="86" id="Mfm-9R-jKL"/>
+                    </constraints>
+                    <connections>
+                        <action selector="sugarAction:" destination="lVO-Jm-rly" eventType="touchUpInside" id="aOB-09-fFy"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bf7-of-y7w" customClass="XKEquipButton">
+                    <rect key="frame" x="558" y="158" width="104" height="84"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="104" id="Wu7-RQ-Ee7"/>
+                        <constraint firstAttribute="height" constant="84" id="wJH-w1-ow5"/>
+                    </constraints>
+                    <connections>
+                        <action selector="tempureAction:" destination="lVO-Jm-rly" eventType="touchUpInside" id="nEM-Fo-EID"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t7g-1Z-63h" customClass="XKEquipButton">
+                    <rect key="frame" x="443" y="158" width="104" height="94"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="94" id="B79-Mo-q9h"/>
+                        <constraint firstAttribute="width" constant="104" id="w8I-hG-yke"/>
+                    </constraints>
+                    <connections>
+                        <action selector="oxgenAction:" destination="lVO-Jm-rly" eventType="touchUpInside" id="PfL-1Z-EH0"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UBk-dR-uKL" customClass="XKEquipButton">
+                    <rect key="frame" x="420" y="59" width="90" height="101"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="101" id="e5t-RL-vvW"/>
+                        <constraint firstAttribute="width" constant="90" id="qJX-uY-fyV"/>
+                    </constraints>
+                    <connections>
+                        <action selector="rateAction:" destination="lVO-Jm-rly" eventType="touchUpInside" id="MF9-DI-dUP"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.23529411764705882" green="0.78823529411764703" blue="0.85882352941176465" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="7li-fc-i6a" firstAttribute="centerY" secondItem="lVO-Jm-rly" secondAttribute="centerY" id="1e6-ET-qYy"/>
+                <constraint firstItem="t7g-1Z-63h" firstAttribute="centerX" secondItem="lVO-Jm-rly" secondAttribute="centerX" constant="-60" id="1vF-8g-Yhn"/>
+                <constraint firstItem="UBk-dR-uKL" firstAttribute="centerX" secondItem="lVO-Jm-rly" secondAttribute="centerX" constant="-90" id="3NN-Wp-oY0"/>
+                <constraint firstItem="Bf7-of-y7w" firstAttribute="centerX" secondItem="lVO-Jm-rly" secondAttribute="centerX" constant="55" id="5cm-IC-BKx"/>
+                <constraint firstItem="t7g-1Z-63h" firstAttribute="centerY" secondItem="lVO-Jm-rly" secondAttribute="centerY" constant="65" id="5y4-k5-UzQ"/>
+                <constraint firstItem="7li-fc-i6a" firstAttribute="centerX" secondItem="lVO-Jm-rly" secondAttribute="centerX" id="6zt-Xr-VjE"/>
+                <constraint firstItem="z3a-a3-wj2" firstAttribute="centerY" secondItem="lVO-Jm-rly" secondAttribute="centerY" constant="-89" id="9TS-GF-RdT"/>
+                <constraint firstItem="Bf7-of-y7w" firstAttribute="centerY" secondItem="lVO-Jm-rly" secondAttribute="centerY" constant="60" id="Afe-Zr-aFa"/>
+                <constraint firstItem="bSz-S4-Q0B" firstAttribute="centerX" secondItem="lVO-Jm-rly" secondAttribute="centerX" constant="90" id="Rr2-Nl-eMC"/>
+                <constraint firstItem="bSz-S4-Q0B" firstAttribute="centerY" secondItem="lVO-Jm-rly" secondAttribute="centerY" constant="-20" id="SE6-dL-Ecz"/>
+                <constraint firstItem="z3a-a3-wj2" firstAttribute="centerX" secondItem="lVO-Jm-rly" secondAttribute="centerX" id="TVE-uB-wp0"/>
+                <constraint firstItem="7li-fc-i6a" firstAttribute="top" secondItem="lVO-Jm-rly" secondAttribute="top" constant="10" id="wbX-Ij-4Mp"/>
+                <constraint firstItem="UBk-dR-uKL" firstAttribute="centerY" secondItem="lVO-Jm-rly" secondAttribute="centerY" constant="-30" id="zdY-he-KcX"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="oxygenBtn" destination="t7g-1Z-63h" id="oDH-H0-8PX"/>
+                <outlet property="presureBtn" destination="z3a-a3-wj2" id="DaD-vO-bJc"/>
+                <outlet property="rateBtn" destination="UBk-dR-uKL" id="d1z-QS-CjF"/>
+                <outlet property="sugarBtn" destination="bSz-S4-Q0B" id="EVD-jc-XXR"/>
+                <outlet property="tempBtn" destination="Bf7-of-y7w" id="baB-gl-UCa"/>
+            </connections>
+            <point key="canvasLocation" x="637.5" y="-610.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="mutilproject" width="255" height="255"/>
+    </resources>
+</document>

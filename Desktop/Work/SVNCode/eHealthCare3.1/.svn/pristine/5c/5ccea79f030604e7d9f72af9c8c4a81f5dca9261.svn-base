@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="U6b-Vx-4bR" customClass="AddFamilyCollectionReusableView">
+            <rect key="frame" x="0.0" y="0.0" width="358" height="92"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iVs-U0-rhA">
+                    <rect key="frame" x="10" y="11" width="338" height="81"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="自定义">
+                        <color key="titleColor" red="0.17254901960784313" green="0.27450980392156865" blue="0.40392156862745099" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="customAction:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="8CF-NN-qBj"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="9Gg-ye-v9C" firstAttribute="trailing" secondItem="iVs-U0-rhA" secondAttribute="trailing" constant="10" id="7C1-WP-fmA"/>
+                <constraint firstItem="9Gg-ye-v9C" firstAttribute="bottom" secondItem="iVs-U0-rhA" secondAttribute="bottom" id="XBt-4p-K1f"/>
+                <constraint firstItem="iVs-U0-rhA" firstAttribute="top" secondItem="9Gg-ye-v9C" secondAttribute="top" constant="11" id="fPt-V3-mDV"/>
+                <constraint firstItem="iVs-U0-rhA" firstAttribute="leading" secondItem="9Gg-ye-v9C" secondAttribute="leading" constant="10" id="wUG-V7-Oal"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="9Gg-ye-v9C"/>
+            <connections>
+                <outlet property="CustomBtn" destination="iVs-U0-rhA" id="fhP-vd-8cX"/>
+            </connections>
+            <point key="canvasLocation" x="53" y="75"/>
+        </collectionReusableView>
+    </objects>
+</document>

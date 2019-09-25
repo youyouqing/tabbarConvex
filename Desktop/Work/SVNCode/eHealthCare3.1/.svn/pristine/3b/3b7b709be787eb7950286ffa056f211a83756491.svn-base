@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddFamilyBindPhoneViewController">
+            <connections>
+                <outlet property="addBtn" destination="K09-F8-aFa" id="QuR-z4-HQE"/>
+                <outlet property="backView" destination="ZeY-mh-DbI" id="hhB-2z-H6W"/>
+                <outlet property="iconImage" destination="TjB-8Q-mHV" id="K21-FW-wAf"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K09-F8-aFa">
+                    <rect key="frame" x="23" y="607" width="329" height="45"/>
+                    <color key="backgroundColor" red="0.35171464089999999" green="0.76916491990000002" blue="0.98028892280000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="45" id="aCh-tA-SVV"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="开始关爱呵护"/>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dBJ-Vk-6GN" customClass="RippleView">
+                    <rect key="frame" x="87" y="115" width="200" height="200"/>
+                    <color key="backgroundColor" red="0.96470588239999999" green="0.4549019608" blue="0.45882352939999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeY-mh-DbI">
+                    <rect key="frame" x="87" y="115" width="200" height="200"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TjB-8Q-mHV">
+                            <rect key="frame" x="70.5" y="70" width="60" height="60"/>
+                            <color key="backgroundColor" red="0.63896363970000003" green="0.88874357940000004" blue="0.98818844559999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="C2P-Bo-6ZF"/>
+                                <constraint firstAttribute="width" constant="60" id="nRM-vP-Fpj"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="TjB-8Q-mHV" firstAttribute="centerX" secondItem="ZeY-mh-DbI" secondAttribute="centerX" id="1n7-HL-9sO"/>
+                        <constraint firstItem="TjB-8Q-mHV" firstAttribute="centerY" secondItem="ZeY-mh-DbI" secondAttribute="centerY" id="guw-Oi-ZgV"/>
+                        <constraint firstAttribute="height" constant="200" id="lIg-xo-o3o"/>
+                        <constraint firstAttribute="width" constant="200" id="o6e-1u-SWq"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="关爱提醒，助您关爱家庭健康" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rnv-6h-u0m">
+                    <rect key="frame" x="0.0" y="387" width="375" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.70196078429999997" green="0.73333333329999995" blue="0.76862745099999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="家人账号绑定，数据远程实时查看" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nba-ec-xoD">
+                    <rect key="frame" x="0.0" y="340" width="375" height="24"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                    <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="Rnv-6h-u0m" secondAttribute="trailing" id="6jD-Ie-p7X"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="K09-F8-aFa" secondAttribute="trailing" constant="23" id="6kQ-gr-4Ta"/>
+                <constraint firstItem="Nba-ec-xoD" firstAttribute="top" secondItem="ZeY-mh-DbI" secondAttribute="bottom" constant="25" id="9Rk-mc-b51"/>
+                <constraint firstItem="Nba-ec-xoD" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="Hnt-XU-f9I"/>
+                <constraint firstItem="dBJ-Vk-6GN" firstAttribute="leading" secondItem="ZeY-mh-DbI" secondAttribute="leading" id="N8M-40-DsQ"/>
+                <constraint firstItem="dBJ-Vk-6GN" firstAttribute="trailing" secondItem="ZeY-mh-DbI" secondAttribute="trailing" id="Pbn-Rc-neu"/>
+                <constraint firstItem="K09-F8-aFa" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="23" id="Sz6-A7-u60"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="K09-F8-aFa" secondAttribute="bottom" constant="15" id="WF9-He-cBw"/>
+                <constraint firstItem="Rnv-6h-u0m" firstAttribute="top" secondItem="Nba-ec-xoD" secondAttribute="bottom" constant="23" id="baV-9i-89U"/>
+                <constraint firstItem="dBJ-Vk-6GN" firstAttribute="top" secondItem="ZeY-mh-DbI" secondAttribute="top" id="bdZ-vT-vBm"/>
+                <constraint firstItem="ZeY-mh-DbI" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="cTd-Cm-07J"/>
+                <constraint firstItem="ZeY-mh-DbI" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="95" id="eae-zy-hK4"/>
+                <constraint firstItem="Rnv-6h-u0m" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="lsR-aV-Xlw"/>
+                <constraint firstItem="dBJ-Vk-6GN" firstAttribute="bottom" secondItem="ZeY-mh-DbI" secondAttribute="bottom" id="pJn-VQ-5fe"/>
+                <constraint firstItem="Nba-ec-xoD" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="wks-5T-3fj"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+</document>

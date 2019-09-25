@@ -1,0 +1,86 @@
+//
+//  EPluseSugarView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/23.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "EPluseSugarView.h"
+
+
+
+
+@implementation EPluseSugarView
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.backgroundColor = [UIColor getColor:@"EFF8FE"];
+   
+    self.trajecView.layer.borderColor = [UIColor getColor:@"DAE4EB"].CGColor;
+    self.trajecView.layer.borderWidth = .5f;
+    self.trajecView.layer.cornerRadius = 6;
+    self.trajecView.layer.masksToBounds = YES;
+    
+    
+    self.trajecViewTwo.layer.borderColor = [UIColor getColor:@"DAE4EB"].CGColor;
+    self.trajecViewTwo.layer.borderWidth = .5f;
+    self.trajecViewTwo.layer.cornerRadius = 6;
+    self.trajecViewTwo.layer.masksToBounds = YES;
+    
+    self.trajecViewThree.layer.borderColor = [UIColor getColor:@"DAE4EB"].CGColor;
+    self.trajecViewThree.layer.borderWidth = .5f;
+    self.trajecViewThree.layer.cornerRadius = 6;
+    self.trajecViewTwo.layer.masksToBounds = YES;
+    
+    self.smTrajectView.layer.cornerRadius = 4;
+    self.smTrajectView.layer.masksToBounds = YES;
+    self.smTrajectViewTwo.layer.cornerRadius = 4;
+    self.smTrajectViewTwo.layer.masksToBounds = YES;
+    self.smTrajectViewThree.layer.cornerRadius = 4;
+    self.smTrajectViewThree.layer.masksToBounds = YES;
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    UIBezierPath *corPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth-20, self.backView.frame.size.height) byRoundingCorners:UIRectCornerBottomRight | UIRectCornerBottomLeft cornerRadii:CGSizeMake(5, 5)];
+    maskLayer.frame = corPath.bounds;
+    maskLayer.path=corPath.CGPath;
+    self.backView.layer.mask=maskLayer;
+    if (IS_IPHONE5||IS_IPHONE4S) {
+        self.trajectViewWidth.constant = self.trajectViewTwoWidth.constant = self.trajectViewThreeWidth.constant =  KWidth(142);
+        
+        
+        self.smTranLabCenterX.constant = self.smTranThreeLabCenterX.constant = self.smTranFiveLabCenterX.constant =KWidth(142)/3.0-10;
+        
+        self.smTranSixLabCenterX.constant =  self.smTranFourLabCenterX.constant = self.smTranTwoLabCenterX.constant =-( KWidth(142)/3.0)+10;
+    }else
+    {
+          self.trajectViewWidth.constant = self.trajectViewTwoWidth.constant = self.trajectViewThreeWidth.constant =  KWidth(152);
+        
+        
+        self.smTranLabCenterX.constant = self.smTranThreeLabCenterX.constant = self.smTranFiveLabCenterX.constant =KWidth(152)/3.0-10;
+        
+        self.smTranSixLabCenterX.constant =  self.smTranFourLabCenterX.constant = self.smTranTwoLabCenterX.constant =-( KWidth(152)/3.0)+10;
+    }
+    
+  
+//
+//    UIBezierPath *path2=[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, (KScreenWidth/2-30)/12000*(NSInteger)_model.StepCount, 8)      byRoundingCorners:UIRectCornerBottomRight | UIRectCornerTopRight    cornerRadii:CGSizeMake((KScreenWidth/2-30)/12000*(NSInteger)_model.StepCount, 8*0.5)];
+//
+//    CAShapeLayer *layer2=[CAShapeLayer layer];
+//
+//    layer2.frame=CGRectMake(0, 0, (KScreenWidth/2-30)/12000*(NSInteger)_model.StepCount,8);
+//
+//    layer2.fillColor = [[UIColor getColor:@"03BCFF"] CGColor];
+//
+//    layer2.path=path2.CGPath;
+//
+//    [self.smTrajectView.layer addSublayer:layer2];
+}
+
+@end

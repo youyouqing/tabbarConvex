@@ -1,0 +1,223 @@
+//
+//  Health+ViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/2.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "Health+ViewController.h"
+#import "CheerYourselfUpViewController.h"
+#import "TrainWithMusicViewController.h"
+#import "BreathingTrainingViewController.h"
+
+#import "MusicTrainViewModel.h"
+
+#import "ShareView.h"
+
+@interface Health_ViewController ()
+
+///早安 晚安 正念等数据
+@property (nonatomic, strong) NSArray *musicTrainDataArray;
+
+@end
+
+@implementation Health_ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    self.myTitle = @"健康+";
+    
+    NSArray *buttonArray = @[@"为自己加油",
+                             @"开始深呼吸",
+                             @"早安",
+                             @"晚安",
+                             @"安静默想",
+                             @"缓解压力",
+                             @"正念训练"];
+    for (int i = 0; i < buttonArray.count; i++) {
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        button.tag = 100 + i;
+        [button setTitle:buttonArray[i] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:button];
+        [button mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.top.mas_equalTo(PublicY + KHeight(60) + i * KHeight(60));
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.size.mas_equalTo(CGSizeMake(KScreenWidth, KHeight(30)));
+        }];
+        
+    }
+}
+
+- (void)buttonAction:(UIButton *)sender
+{
+    switch (sender.tag - 100) {
+        case 0:
+        {
+            CheerYourselfUpViewController *cheer = [[CheerYourselfUpViewController alloc]initWithType:pageTypeNoNavigation];
+            [self.navigationController pushViewController:cheer animated:YES];
+        }
+            break;
+        case 1:
+        {
+            BreathingTrainingViewController *breath = [[BreathingTrainingViewController alloc]initWithType:pageTypeNoNavigation];
+            [self.navigationController pushViewController:breath animated:YES];
+        }
+            break;
+        case 2:
+        {
+            [self getMorningEverningAndMindfulnessListWithNetworking:3];
+        }
+            break;
+        case 3:
+        {
+            [self getMorningEverningAndMindfulnessListWithNetworking:4];
+        }
+            break;
+        case 4:
+        {
+            [self getMorningEverningAndMindfulnessListWithNetworking:0];
+        }
+            break;
+        case 5:
+        {
+            [self getMorningEverningAndMindfulnessListWithNetworking:1];
+        }
+            break;
+        case 6:
+        {
+            [self getMorningEverningAndMindfulnessListWithNetworking:2];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark NetWorking
+- (void)getMorningEverningAndMindfulnessListWithNetworking:(NSInteger)trainType;
+{
+    ShowNormailMessage(@"正在配置环境，请稍等...");
+
+    TrainWithMusicViewController *train = [[TrainWithMusicViewController alloc]initWithType:pageTypeNoNavigation];
+    
+    if (self.musicTrainDataArray.count > 0) {
+        
+        DismissHud();
+        [self getSuitDataToSuitTypeTrain:train trainType:trainType];
+        [self.navigationController pushViewController:train animated:YES];
+        
+    }else{
+        
+        NSDictionary *dic = @{@"Token":[SingleTon shareInstance].token,
+                              @"MemberId":[UserInfoTool getLoginInfo].MemberID};
+        
+        [MusicTrainViewModel getMorningEverningAndMindfulnessListWithParams:dic FinishedBlock:^(ResponseObject *response) {
+            DismissHud();
+            if (response.code == CodeTypeSucceed) {
+                
+                self.musicTrainDataArray = response.Result;
+                [self getSuitDataToSuitTypeTrain:train trainType:trainType];
+                [self.navigationController pushViewController:train animated:YES];
+                
+            }else{
+                
+                ShowErrorStatus(response.msg);
+            }
+        }];
+    }
+    
+}
+
+- (void)getSuitDataToSuitTypeTrain:(TrainWithMusicViewController *)train trainType:(TrainType)trainType
+{
+    NSMutableArray *topicMArray = [NSMutableArray array];
+    
+    for (NSDictionary *dic in self.musicTrainDataArray)
+    {
+        //先筛选出dataDic
+        if ([dic[@"EaseID"] integerValue] == 4 && trainType == 3)
+        {
+            train.dataDic = dic;
+            train.trainType = TrainTypeMorning;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 5 && trainType == 4){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeEvening;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 1 && trainType == 0){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeSilence;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 2 && trainType == 1){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeStress;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 3 && trainType == 2){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeMindfulness;
+        }
+        
+        //筛选出TopicDataArray
+        if ([dic[@"EaseType"] integerValue] == 3 && [dic[@"MindfulnessType"] integerValue] == 1 && trainType == 0)
+        {
+            [topicMArray addObject:dic];///筛选出了正念训练 安静调节等topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 3 && [dic[@"MindfulnessType"] integerValue] == 2 && trainType == 1)
+        {
+            [topicMArray addObject:dic];///筛选出了正念训练 压力调节等topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 3 && [dic[@"MindfulnessType"] integerValue] == 3 && trainType == 2)
+        {
+            [topicMArray addObject:dic];///筛选出了正念训练 压力调节等topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 1 && trainType == 3)
+        {
+            [topicMArray addObject:dic];///筛选出了早安 topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 2 && trainType == 4)
+        {
+            [topicMArray addObject:dic];///筛选出了晚安 topic资源
+        }
+    }
+    
+    train.TopicDataArray = [NSArray arrayWithArray:topicMArray];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+//    [self.navigationController pushViewController:[[BaiduMap_SportViewController alloc] initWithType:pageTypeNoNavigation] animated:YES];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

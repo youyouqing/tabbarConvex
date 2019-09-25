@@ -1,0 +1,118 @@
+//
+//  GuideView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/5.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "GuideView.h"
+
+@interface GuideView ()
+
+@property (nonatomic, strong) UIScrollView *guideScrollView;//引导页scrollview
+
+@property (nonatomic, strong) NSArray *guideImageArray;//引导页
+
+@end
+
+@implementation GuideView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if(self = [super initWithFrame:frame])
+    {
+        self.backgroundColor = [UIColor clearColor];
+        [self setupSubviews];
+    }
+    return self;
+}
+
+// 添加子控件
+- (void)setupSubviews
+{
+     [self setGuideImageArray:nil];
+    
+    _guideScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight)];
+    _guideScrollView.backgroundColor =[UIColor clearColor];
+    _guideScrollView.bounces = NO;
+    _guideScrollView.showsHorizontalScrollIndicator = NO;
+    _guideScrollView.showsVerticalScrollIndicator = NO;
+    _guideScrollView.delegate = self;
+    _guideScrollView.pagingEnabled = YES;
+    [self addSubview:_guideScrollView];
+    _guideScrollView.contentSize = CGSizeMake(KScreenWidth * self.guideImageArray.count, KScreenHeight);
+    
+    for (int i = 1; i < self.guideImageArray.count + 1; i++) {
+        UIImageView *guidePageView = [[UIImageView alloc]initWithFrame:CGRectMake(_guideScrollView.frame.size.width * (i - 1), 0, _guideScrollView.frame.size.width, _guideScrollView.frame.size.height)];
+        guidePageView.image = [UIImage imageNamed:self.guideImageArray[i - 1]];
+        
+        if (i == self.guideImageArray.count - 1)
+        {
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            [button setBackgroundColor:[UIColor colorWithHexString:@"0xF4CC19"]];
+            button.titleLabel.font = [UIFont systemFontOfSize:13.0];
+            [button setTitle:@"立即体验" forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(hiddenGuidePage:) forControlEvents:UIControlEventTouchUpInside];
+            guidePageView.userInteractionEnabled=YES;
+            button.layer.cornerRadius = 34/2.0;
+            
+            button.frame = CGRectMake(KScreenWidth / 2 - KWidth(53), KScreenHeight - KHeight(148), KWidth(106), KHeight(40));
+            [guidePageView addSubview:button];
+        }
+        
+        
+        [_guideScrollView addSubview:guidePageView];
+    }
+    
+}
+
+
+
+
+-(void)hiddenGuidePage:(UIButton *)sender
+{
+    NSString *nowVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    [[NSUserDefaults standardUserDefaults] setObject:nowVersion forKey:@"lastVersion"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    WEAKSELF
+    [UIView animateWithDuration:1.5 animations:^{
+        if(weakSelf.hideGuideViewBlock)
+        {
+            weakSelf.hideGuideViewBlock();
+        }
+        weakSelf.guideScrollView.alpha = 0;
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }completion:^( BOOL finish){
+        
+        [self removeFromSuperview];
+    }];
+}
+
+
+#pragma mark scrollView delegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if(scrollView.contentOffset.x <= 0){
+        [scrollView setContentOffset:CGPointMake(0, 0) animated:NO];
+    }
+    
+    CGFloat pageWidth = scrollView.frame.size.width;
+    int currentPage = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+
+    if (currentPage == self.guideImageArray.count - 1)
+    {
+        [self hiddenGuidePage:nil];
+    }
+    NSLog(@"%d",currentPage);
+}
+
+#pragma lazy load
+- (void)setGuideImageArray:(NSArray *)guideImageArray
+{
+    if (!_guideImageArray) {
+        _guideImageArray = @[@"guidepage1",@"guidepage2",@"guidepage3",@"guidepage4",@""];
+    }
+}
+@end

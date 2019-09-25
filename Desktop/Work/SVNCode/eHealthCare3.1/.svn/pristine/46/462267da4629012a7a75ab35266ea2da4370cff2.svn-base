@@ -1,0 +1,120 @@
+//
+//  RecordDetalInfoViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "RecordDetalInfoViewController.h"
+#import "PersonalCellHeadView.h"
+#import "PersonalArchiveCell.h"
+#import "PersonArchiveSinglePopView.h"
+@interface RecordDetalInfoViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property(strong,nonatomic) PersonArchiveSinglePopView *popBottomView;
+@end
+
+@implementation RecordDetalInfoViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    self.view.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableView registerNib:[UINib nibWithNibName:@"PersonalArchiveCell" bundle:nil] forCellReuseIdentifier:@"PersonalArchiveCell"];
+    [self.view addSubview:tableView];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(10 );
+        make.bottom.mas_equalTo(0);
+        make.width.mas_equalTo( CGRectGetWidth(self.view.frame)-20);
+    }];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+
+    return 0.01;
+
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    
+    return 3;
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+        NSString *cellid = @"PersonalArchiveCell";
+        PersonalArchiveCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+        
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+        return 50;
+
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    if(indexPath.row == 0 ){
+        [self creatUI];
+        
+    }else
+    {
+        
+        [SureMultipleSelectedWindow showWindowWithTitle:@"请选择过敏药物" selectedConditions:@[@"青霉素",@"磺胺",@"链霉素",@"其他"] defaultSelectedConditions:@[@"磺胺",@"链霉素"] title:@"A"  selectedBlock:^(NSArray *selectedArr) {
+            NSLog(@"%@",selectedArr);
+            for (SureConditionModel *model in selectedArr) {
+                NSLog(@"选中[%@]",model.title);
+            }
+        }];
+    }
+
+    
+}
+-(void)creatUI
+{
+    //5s:300 6:330
+    self.popBottomView = [[[NSBundle mainBundle]loadNibNamed:@"PersonArchiveSinglePopView" owner:self options:nil]  firstObject];
+    self.popBottomView.left = 0;
+    self.popBottomView.top=0;
+    self.popBottomView.width=KScreenWidth;
+    self.popBottomView.height=KScreenHeight;
+//    self.popBottomView.delegate = self;
+    [UIView animateWithDuration:.2 animations:^{
+        self.popBottomView.transform = CGAffineTransformConcat(CGAffineTransformIdentity,
+                                                                  CGAffineTransformMakeScale(1.0f, 1.0f));
+    }];
+   [[UIApplication sharedApplication].keyWindow addSubview:self.popBottomView];
+//    [self.view addSubview:self.popBottomView];
+
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

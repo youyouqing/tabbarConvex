@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HealthRecordNoDataFooterView">
+            <rect key="frame" x="0.0" y="0.0" width="410" height="192"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kq-Jl-bhu">
+                    <rect key="frame" x="10" y="0.0" width="390" height="192"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9WC-Np-wHU">
+                            <rect key="frame" x="127" y="96" width="135" height="50"/>
+                            <color key="backgroundColor" red="0.35171464089999999" green="0.76916491990000002" blue="0.98028892280000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="135" id="pUl-kQ-9GE"/>
+                                <constraint firstAttribute="height" constant="50" id="wt0-Vp-RYi"/>
+                            </constraints>
+                            <state key="normal" title="去运动">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="Action:" destination="iN0-l3-epB" eventType="touchUpInside" id="SYH-VB-TFZ"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="加入健康队伍" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="01l-8j-j41">
+                            <rect key="frame" x="143" y="60.5" width="104" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="01l-8j-j41" firstAttribute="centerY" secondItem="1Kq-Jl-bhu" secondAttribute="centerY" constant="-25" id="59t-hQ-t1u"/>
+                        <constraint firstItem="9WC-Np-wHU" firstAttribute="centerX" secondItem="1Kq-Jl-bhu" secondAttribute="centerX" id="IrL-b7-rWX"/>
+                        <constraint firstItem="9WC-Np-wHU" firstAttribute="centerY" secondItem="1Kq-Jl-bhu" secondAttribute="centerY" constant="25" id="MZs-cz-6oh"/>
+                        <constraint firstItem="01l-8j-j41" firstAttribute="centerX" secondItem="1Kq-Jl-bhu" secondAttribute="centerX" id="oGS-xZ-h4h"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="1Kq-Jl-bhu" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="1Ae-nN-kBq"/>
+                <constraint firstItem="1Kq-Jl-bhu" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="I31-wU-IdT"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="1Kq-Jl-bhu" secondAttribute="trailing" constant="10" id="KML-k4-RZQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="1Kq-Jl-bhu" secondAttribute="bottom" id="ngj-Ne-3sE"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="backView" destination="1Kq-Jl-bhu" id="5Uc-aF-VRP"/>
+                <outlet property="goBtn" destination="9WC-Np-wHU" id="2Vs-Qe-MVI"/>
+                <outlet property="titleLab" destination="01l-8j-j41" id="qxI-bR-CS7"/>
+            </connections>
+            <point key="canvasLocation" x="51" y="291"/>
+        </view>
+    </objects>
+</document>

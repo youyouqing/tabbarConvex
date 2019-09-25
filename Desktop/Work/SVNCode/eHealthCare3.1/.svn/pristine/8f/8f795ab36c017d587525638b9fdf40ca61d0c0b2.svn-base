@@ -1,0 +1,24 @@
+//
+//  InformationCell.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/12.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "WikiTypeList.h"
+@class XKNewModel;
+@protocol InformationCellDelegate <NSObject>
+
+- (void)InformationCellClick:(XKNewModel *)model;
+- (void)refreshCell:(NSArray *)wikiArr;
+@end
+
+
+@interface InformationCell : UITableViewCell
+@property (nonatomic,strong)NSArray *WikiTypeList1;
+@property (nonatomic, weak) id <InformationCellDelegate> delegate;
+
+@property (nonatomic,strong)NSArray *WikiList;
+@end

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina3_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="149" id="KGk-i7-Jjw" customClass="XKBindToolTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="149"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="148.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CGZ-rc-GJg">
+                        <rect key="frame" x="10" y="10" width="300" height="138"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="glu1" translatesAutoresizingMaskIntoConstraints="NO" id="Xet-xu-s9m">
+                                <rect key="frame" x="10" y="14" width="110" height="110"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="110" id="8UX-kc-r0M"/>
+                                    <constraint firstAttribute="width" constant="110" id="Hp3-W1-Uxv"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="爱奥乐" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bEG-s1-Nqj">
+                                <rect key="frame" x="120" y="38" width="170" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.63522332910000001" green="0.63533496860000005" blue="0.63521629570000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGg-0B-7cz">
+                                <rect key="frame" x="120" y="71" width="95" height="35"/>
+                                <color key="backgroundColor" red="0.21960784310000001" green="0.80000000000000004" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="95" id="2s6-wW-4Nt"/>
+                                    <constraint firstAttribute="height" constant="35" id="p3o-Bm-abK"/>
+                                </constraints>
+                                <state key="normal" title="去绑定"/>
+                                <connections>
+                                    <action selector="bindAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="dRT-Uo-CuL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="701-Fp-4ry">
+                                <rect key="frame" x="218" y="71" width="74" height="35"/>
+                                <state key="normal" title="购买设备">
+                                    <color key="titleColor" red="0.21960784310000001" green="0.80000000000000004" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="buyAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="xDq-nb-GeP"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bEG-s1-Nqj" firstAttribute="centerY" secondItem="Xet-xu-s9m" secondAttribute="centerY" constant="-20" id="4FR-13-jWe"/>
+                            <constraint firstItem="Xet-xu-s9m" firstAttribute="centerY" secondItem="CGZ-rc-GJg" secondAttribute="centerY" id="94K-97-R0u"/>
+                            <constraint firstItem="vGg-0B-7cz" firstAttribute="centerY" secondItem="Xet-xu-s9m" secondAttribute="centerY" constant="20" id="CMx-i0-ZJH"/>
+                            <constraint firstItem="bEG-s1-Nqj" firstAttribute="leading" secondItem="Xet-xu-s9m" secondAttribute="trailing" id="IAv-2v-k0u"/>
+                            <constraint firstItem="Xet-xu-s9m" firstAttribute="leading" secondItem="CGZ-rc-GJg" secondAttribute="leading" constant="10" id="UqA-Ii-ix9"/>
+                            <constraint firstAttribute="trailing" secondItem="bEG-s1-Nqj" secondAttribute="trailing" constant="10" id="izZ-It-Ixm"/>
+                            <constraint firstItem="701-Fp-4ry" firstAttribute="bottom" secondItem="vGg-0B-7cz" secondAttribute="bottom" id="klF-UB-EDb"/>
+                            <constraint firstAttribute="trailing" secondItem="701-Fp-4ry" secondAttribute="trailing" constant="8" id="tsO-am-6OD"/>
+                            <constraint firstItem="bEG-s1-Nqj" firstAttribute="leading" secondItem="vGg-0B-7cz" secondAttribute="leading" id="uu1-1u-3zO"/>
+                            <constraint firstItem="701-Fp-4ry" firstAttribute="top" secondItem="vGg-0B-7cz" secondAttribute="top" id="zjF-jW-4Y9"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" red="0.94891661405563354" green="0.94907897710800171" blue="0.94890636205673218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstItem="CGZ-rc-GJg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="WYO-P3-jyL"/>
+                    <constraint firstAttribute="bottom" secondItem="CGZ-rc-GJg" secondAttribute="bottom" id="Wjf-1g-Q2v"/>
+                    <constraint firstItem="CGZ-rc-GJg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="m1E-vY-TPm"/>
+                    <constraint firstAttribute="trailing" secondItem="CGZ-rc-GJg" secondAttribute="trailing" constant="10" id="pkE-TA-egR"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="bindBtn" destination="vGg-0B-7cz" id="r4D-dE-Ioy"/>
+                <outlet property="imgView" destination="Xet-xu-s9m" id="lKX-TQ-qdg"/>
+                <outlet property="nameLab" destination="bEG-s1-Nqj" id="heS-25-u4O"/>
+            </connections>
+            <point key="canvasLocation" x="50" y="106.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="glu1" width="110" height="110"/>
+    </resources>
+</document>

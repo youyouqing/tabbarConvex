@@ -1,0 +1,31 @@
+//
+//  MessagePublicModel.h
+//  eHealthCare
+//
+//  Created by xiekang on 16/9/7.
+//  Copyright © 2016年 mac. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "NewWikiModel.h"
+#import "NewFamilyAddMessagMod.h"
+#import "NewHealthNoticeMod.h"
+@interface MessagePublicModel : NSObject
+
+//@property (nonatomic,strong) NSString *NoticeCreateTime;
+//@property (nonatomic,assign) NSInteger NoticeReadNum;
+
+
+
+@property (nonatomic,strong)NewWikiModel *NewNotice;
+@property (nonatomic,strong)NewWikiModel *NewSysMessage;
+@property (nonatomic,strong)NewHealthNoticeMod *NewHealthNotice;
+@property (nonatomic,strong)NewWikiModel *NewWikiMessage;
+@property (nonatomic,strong)NewWikiModel *NewTopicMessage;
+@property (nonatomic,strong)NewFamilyAddMessagMod * NewFamilyAddMessage;
+
+@property (nonatomic,strong) NSString *Rows;
+@property (nonatomic,strong) NSString *index;
+//@property (nonatomic,strong) NSString *imageName;
+//@property (nonatomic,strong) NSString *content;
+@end

@@ -1,0 +1,311 @@
+//
+//  LoginViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/6/29.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "LoginViewController.h"
+
+#import "LoginViewModel.h"
+
+#import "AdvertisingScrolllView.h"
+
+#import "EncryptionTool.h"
+
+#import <MZTimerLabel.h>
+
+///短信验证码DES解密的秘钥
+static NSString *const DESKey = @"xk@12580";
+
+@interface LoginViewController () <MZTimerLabelDelegate,UITextFieldDelegate>
+
+@property (nonatomic, strong) UITextField *phoneText;
+@property (nonatomic, strong) UITextField *codeText;//手机验证码输入框
+@property (nonatomic, strong) UIButton *getMSMCodeButton;//获取验证码按钮
+@property (nonatomic, strong) MZTimerLabel *timer;//用来倒计时
+
+@end
+
+@implementation LoginViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    [self setLoginUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
+#pragma UI
+- (void)setLoginUI
+{
+    self.myTitle = @"登录";
+    
+    UITextField *phoneText = [[UITextField alloc]init];
+    
+    phoneText.placeholder = @"请输入手机号";
+    phoneText.font = Kfont(14);
+    phoneText.text = [UserInfoTool getUserPhone];
+    phoneText.borderStyle = UITextBorderStyleRoundedRect;
+    phoneText.textAlignment = NSTextAlignmentCenter;
+    phoneText.keyboardType = UIKeyboardTypePhonePad;
+    [phoneText addTarget:self action:@selector(textFieldDidChange) forControlEvents:UIControlEventEditingChanged];
+    
+    [self.view addSubview:phoneText];
+    self.phoneText = phoneText;
+    
+    [phoneText mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(PublicY + 20);
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(300), KHeight(40)));
+        
+    }];
+    
+    UITextField *codeText = [[UITextField alloc]init];
+    
+    codeText.placeholder = @"请输入验证码";
+    codeText.font = Kfont(14);
+    codeText.borderStyle = UITextBorderStyleRoundedRect;
+    codeText.textAlignment = NSTextAlignmentCenter;
+    codeText.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [self.view addSubview:codeText];
+    self.codeText = codeText;
+    
+    [codeText mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(phoneText.mas_bottom).mas_offset(KHeight(20));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(300), KHeight(40)));
+        
+    }];
+    
+    UIButton *getMSMCodeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [getMSMCodeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [getMSMCodeButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    getMSMCodeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [getMSMCodeButton addTarget:self action:@selector(getMSMCodeWithNetWorking) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:getMSMCodeButton];
+    self.getMSMCodeButton = getMSMCodeButton;
+    [getMSMCodeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(codeText.mas_bottom).mas_offset(KHeight(80));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(200), KHeight(40)));
+    }];
+    
+    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [loginButton setTitle:@"登录" forState:UIControlStateNormal];
+    [loginButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+    [loginButton addTarget:self action:@selector(loginActionWithNetWorking) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:loginButton];
+    [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(getMSMCodeButton.mas_bottom).mas_offset(KHeight(60));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(200), KHeight(40)));
+    }];
+    
+    //微信登录
+    UIButton *thirdLogin = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [thirdLogin setTitle:@"微信登录" forState:UIControlStateNormal];
+    [thirdLogin setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+    [thirdLogin addTarget:self action:@selector(loginWithWechat) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:thirdLogin];
+    [thirdLogin mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(loginButton.mas_bottom).mas_offset(KHeight(60));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(200), KHeight(40)));
+    }];
+}
+
+#pragma mark NetWorking
+///登录
+- (void)loginActionWithNetWorking
+{
+    [self.view endEditing:YES];
+    
+    if (self.phoneText.text.length != 11) {
+        ShowErrorStatus(@"请输入正确的手机号");
+        return;
+    }
+    
+    if (self.codeText.text.length == 0) {
+        ShowErrorStatus(@"请输入验证码");
+        return;
+    }
+    
+    NSDictionary *dic = @{@"LoginName":self.phoneText.text,
+                          @"PassWord":self.codeText.text,
+                          @"Token":@""};
+    
+    ShowNormailMessage(@"正在登陆...");
+    [LoginViewModel loginActionWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        DismissHud();
+        if (response.code == CodeTypeSucceed) {
+            
+            //保存用户手机号
+            [UserInfoTool saveUserPhone:self.phoneText.text];
+            
+            if (self.presentingViewController) {
+                
+                [self dismissViewControllerAnimated:YES completion:nil];
+                
+            }else{
+                
+                if (self.loginSuccess)
+                {
+                    self.loginSuccess(self);
+                }
+            }
+            
+            
+        }else {
+            
+            ShowErrorStatus(response.msg);
+            
+        }
+    }];
+}
+
+///获取验证码
+- (void)getMSMCodeWithNetWorking
+{
+    [self.view endEditing:YES];
+    
+    if (self.phoneText.text.length != 11) {
+        
+        ShowErrorStatus(@"请输入正确的手机号码");
+        return;
+    }
+    
+    NSDictionary *dic = @{@"LoginName":self.phoneText.text,
+                          @"Token":@""
+                          };
+    
+    ShowNormailMessage(@"获取验证码...");
+    [LoginViewModel getLoginMSMCodeParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        DismissHud();
+        if (response.code == CodeTypeSucceed) {
+            
+            ShowSuccessStatus(@"获取验证码成功");
+            NSString *codeString = [EncryptionTool decryptUseDES:response.Result[@"CaptchaCode"] key:DESKey];
+
+            //启动倒计时
+            [self startCountDownTimer];
+            
+            if (DEBUG)
+            {
+                [AlertView showMessage:codeString withTitle:@"验证码" sureButtonTitle:@"确认"];
+            }
+            
+            //提供给苹果审核平台的测试账号，给出一个弹窗提示验证码
+            if ([self.phoneText.text isEqualToString:@"13760440737"])
+            {
+               [AlertView showMessage:codeString withTitle:@"验证码" sureButtonTitle:@"确认"];
+            }
+            
+        }else{
+            
+            ShowSuccessStatus(response.msg);
+            
+        }
+        
+    }];
+}
+
+///第三方微信登录
+- (void)loginWithWechat
+{
+    [self.view endEditing:YES];
+    [LoginViewModel getWechatLoginWithFinishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed) {
+                        
+            //保存用户手机号
+            [UserInfoTool saveUserPhone:self.phoneText.text];
+            
+            if (self.presentingViewController) {
+                
+                [self dismissViewControllerAnimated:YES completion:nil];
+                
+            }else{
+                
+                if (self.loginSuccess)
+                {
+                    self.loginSuccess(self);
+                }
+            }
+            
+        }else{
+            ShowErrorStatus(response.msg);
+        }
+        
+    }];
+}
+
+#pragma mark Action
+- (void)startCountDownTimer
+{
+    if (!self.timer) {
+        MZTimerLabel *timer = [[MZTimerLabel alloc] initWithLabel:self.getMSMCodeButton.titleLabel andTimerType:MZTimerLabelTypeTimer];
+        timer.timeFormat = @"ss";
+        self.timer = timer;
+        timer.delegate = self;
+    }
+   
+    [self.timer setCountDownTime:5];
+    
+    [self.timer start];
+}
+
+- (void)textFieldDidChange
+{
+    if (self.phoneText.text.length > 11)
+    {
+        self.phoneText.text = [self.phoneText.text substringToIndex:11];
+    }
+}
+
+#pragma mark MZTimerLabel Delegate
+- (void)timerLabel:(MZTimerLabel *)timerLabel finshedCountDownTimerWithTime:(NSTimeInterval)countTime
+{
+    self.getMSMCodeButton.titleLabel.text = @"获取验证码";
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

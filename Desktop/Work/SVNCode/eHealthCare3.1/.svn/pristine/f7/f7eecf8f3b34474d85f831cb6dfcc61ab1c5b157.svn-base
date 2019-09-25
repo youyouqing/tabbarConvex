@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment version="2048" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="5pP-Yg-iXP" customClass="XKMultiFunctionCheckResultBottomView">
+            <rect key="frame" x="0.0" y="0.0" width="381" height="164"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FoJ-ua-wkm">
+                    <rect key="frame" x="0.0" y="0.0" width="381" height="164"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <state key="normal" title="上传报告">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="clickUploadAction:" destination="5pP-Yg-iXP" eventType="touchUpInside" id="nyS-qb-SZK"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="FoJ-ua-wkm" secondAttribute="trailing" id="0zI-L7-L4O"/>
+                <constraint firstItem="FoJ-ua-wkm" firstAttribute="leading" secondItem="5pP-Yg-iXP" secondAttribute="leading" id="23p-Ec-kJf"/>
+                <constraint firstAttribute="bottom" secondItem="FoJ-ua-wkm" secondAttribute="bottom" id="ZFD-qe-2dE"/>
+                <constraint firstItem="FoJ-ua-wkm" firstAttribute="top" secondItem="5pP-Yg-iXP" secondAttribute="top" id="wbm-A8-q12"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="99.5" y="-820"/>
+        </view>
+    </objects>
+</document>

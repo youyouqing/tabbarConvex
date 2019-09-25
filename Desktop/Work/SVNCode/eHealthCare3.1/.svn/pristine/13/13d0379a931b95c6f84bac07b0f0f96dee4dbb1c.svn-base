@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="XKGoSportRemindView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cBz-3m-UAS">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I6h-cd-8ol">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_envelope" highlightedImage="bg_envelope" translatesAutoresizingMaskIntoConstraints="NO" id="AkN-EN-xVA">
+                            <rect key="frame" x="17.5" y="184" width="340" height="300"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="AkN-EN-xVA" secondAttribute="height" multiplier="649:571" id="1tq-pU-Vb1"/>
+                                <constraint firstAttribute="height" constant="300" id="3Z8-pJ-j8a"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n7H-FO-aZJ">
+                            <rect key="frame" x="308.5" y="190" width="17" height="17"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="17" id="0rR-lE-hPZ"/>
+                                <constraint firstAttribute="width" constant="17" id="yBy-za-qmR"/>
+                            </constraints>
+                            <state key="normal" backgroundImage="icon_colse_white"/>
+                            <connections>
+                                <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Iyo-Lp-s80"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vpA-J2-7pu">
+                            <rect key="frame" x="120" y="413" width="134" height="45"/>
+                            <color key="backgroundColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="45" id="IG3-U0-cvj"/>
+                                <constraint firstAttribute="width" constant="134" id="zOB-ae-Uey"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="立刻去运动">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="gpSportAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="lyT-bp-L8r"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="您的好友XXX提醒您:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S8E-ru-nwD">
+                            <rect key="frame" x="65.5" y="194" width="360" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="您今天的运动不达标，每天步行3000步有益健康~快去运动吧~" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gJa-0t-YVp">
+                            <rect key="frame" x="65.5" y="232" width="244" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="vpA-J2-7pu" firstAttribute="centerX" secondItem="AkN-EN-xVA" secondAttribute="centerX" id="02X-A1-gfh"/>
+                        <constraint firstItem="gJa-0t-YVp" firstAttribute="top" secondItem="S8E-ru-nwD" secondAttribute="bottom" constant="20" id="FUe-iK-NXc"/>
+                        <constraint firstItem="n7H-FO-aZJ" firstAttribute="trailing" secondItem="AkN-EN-xVA" secondAttribute="trailing" constant="-32" id="HP5-ec-bzV"/>
+                        <constraint firstItem="AkN-EN-xVA" firstAttribute="centerX" secondItem="I6h-cd-8ol" secondAttribute="centerX" id="OJA-3S-AzC"/>
+                        <constraint firstItem="S8E-ru-nwD" firstAttribute="trailing" secondItem="AkN-EN-xVA" secondAttribute="trailing" constant="68" id="ONR-nU-GNW"/>
+                        <constraint firstItem="n7H-FO-aZJ" firstAttribute="top" secondItem="AkN-EN-xVA" secondAttribute="top" constant="6" id="XIo-Sc-idN"/>
+                        <constraint firstItem="vpA-J2-7pu" firstAttribute="bottom" secondItem="AkN-EN-xVA" secondAttribute="bottom" constant="-26" id="ZwB-Yb-6HD"/>
+                        <constraint firstItem="gJa-0t-YVp" firstAttribute="trailing" secondItem="AkN-EN-xVA" secondAttribute="trailing" constant="-48" id="cKs-cC-jRU"/>
+                        <constraint firstItem="gJa-0t-YVp" firstAttribute="centerX" secondItem="I6h-cd-8ol" secondAttribute="centerX" id="ecg-6J-oZq"/>
+                        <constraint firstItem="gJa-0t-YVp" firstAttribute="leading" secondItem="S8E-ru-nwD" secondAttribute="leading" id="jW0-bb-RRQ"/>
+                        <constraint firstItem="S8E-ru-nwD" firstAttribute="leading" secondItem="AkN-EN-xVA" secondAttribute="leading" constant="48" id="oy1-cW-zaX"/>
+                        <constraint firstItem="AkN-EN-xVA" firstAttribute="centerY" secondItem="I6h-cd-8ol" secondAttribute="centerY" id="q32-yY-z29"/>
+                        <constraint firstItem="S8E-ru-nwD" firstAttribute="top" secondItem="AkN-EN-xVA" secondAttribute="top" constant="10" id="v7I-C4-p3x"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="I6h-cd-8ol" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="2Ih-J3-M0A"/>
+                <constraint firstAttribute="trailing" secondItem="I6h-cd-8ol" secondAttribute="trailing" id="2sD-uv-Lkx"/>
+                <constraint firstItem="cBz-3m-UAS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="IaT-Pv-Kjb"/>
+                <constraint firstItem="cBz-3m-UAS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="MoA-G9-O3I"/>
+                <constraint firstItem="cBz-3m-UAS" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="gbU-kc-veW"/>
+                <constraint firstItem="cBz-3m-UAS" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="sVO-vm-NfT"/>
+                <constraint firstItem="I6h-cd-8ol" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="sgh-Sy-6J8"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="I6h-cd-8ol" secondAttribute="bottom" id="tI9-JJ-koh"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="friendRemindLab" destination="S8E-ru-nwD" id="85J-Tb-72A"/>
+                <outlet property="sureBtn" destination="vpA-J2-7pu" id="2RH-fK-3vE"/>
+            </connections>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bg_envelope" width="324" height="285"/>
+        <image name="icon_colse_white" width="17" height="17"/>
+    </resources>
+</document>

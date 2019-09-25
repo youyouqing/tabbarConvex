@@ -1,0 +1,74 @@
+//
+//  InformationCollectionViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/12.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "InformationCollectionViewCell.h"
+@interface InformationCollectionViewCell ()
+@property (weak, nonatomic) IBOutlet UILabel *contentLab;
+@property (weak, nonatomic) IBOutlet UILabel *timeLab;
+@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UIImageView *iconImage;
+@property (weak, nonatomic) IBOutlet UIButton *readBtn;
+@property (weak, nonatomic) IBOutlet UIButton *numBtn;
+@property (weak, nonatomic) IBOutlet UIButton *collectBtn;
+@property (weak, nonatomic) IBOutlet UILabel *collectLab;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *backWidthCons;
+
+@end
+@implementation InformationCollectionViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+     self.backgroundColor = [UIColor whiteColor];
+    
+//    self.backView.layer.cornerRadius = 5.f;
+//    self.backView.layer.borderWidth = .5;
+//    self.backView.layer.borderColor = [UIColor getColor:@"5D94A4"].CGColor;
+//    self.backView.clipsToBounds = YES;
+    
+
+    
+//    if (IS_IPHONE5) {
+//        self.backWidthCons.constant = 145.f;
+//    }else  if (IS_IPHONE6) {
+//        self.backWidthCons.constant = 155.f;
+//    }else if (IS_IPHONE6_PLUS) {
+//        self.backWidthCons.constant = 158.f;
+//    }else
+//         self.backWidthCons.constant = 158.f;
+    self.backWidthCons.constant = KWidth(158);
+    self.backView.layer.shadowColor = [UIColor colorWithRed:93/255.0 green:148/255.0 blue:164/255.0 alpha:0.13].CGColor;
+    self.backView.layer.shadowOpacity = 1;
+    self.backView.layer.shadowRadius = 5.f;
+    self.backView.layer.shadowOffset = CGSizeMake(0, 2);
+    self.contentLab.textColor = [UIColor getColor:@"6E6E6E"];
+}
+-(void)setWikiListModel:(XKNewModel *)WikiListModel
+{
+    
+    _WikiListModel = WikiListModel;
+    self.contentLab.text = WikiListModel.WikiName;//WikiListModel.Content;
+    [self.iconImage sd_setImageWithURL:[NSURL URLWithString:WikiListModel.ImgUrl] placeholderImage:[UIImage imageNamed:@"iv_index_information_default"]];
+    
+//    [DateformatTool DateFormatWithDate:[NSString stringWithFormat:@"%@",WikiListModel.PublishTime] withFormat:@"YYYY-MM-dd"];
+    
+    self.timeLab.text = WikiListModel.PublishTime;//[DateformatTool ymdStringFromString:[DateformatTool dateFromString:WikiListModel.PublishTime]];
+   
+    [self.readBtn setTitle:[NSString stringWithFormat:@" %li",WikiListModel.VisitCount] forState:UIControlStateNormal];
+
+    [self.numBtn setTitle:[NSString stringWithFormat:@" %li",WikiListModel.DiscussCount] forState:UIControlStateNormal];
+    
+    self.collectLab.text = [NSString stringWithFormat:@"%li",WikiListModel.FavorCount];
+    if (WikiListModel.CollectFlag == 1) {
+        self.collectBtn.selected = YES;
+    }
+    else
+        self.collectBtn.selected = NO;
+    
+}
+@end

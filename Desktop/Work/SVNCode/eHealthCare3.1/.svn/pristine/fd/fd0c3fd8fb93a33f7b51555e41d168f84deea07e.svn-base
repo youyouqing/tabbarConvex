@@ -1,0 +1,226 @@
+//
+//  SportSubViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/12.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "SportSubViewController.h"
+#import "XKHomeAcountView.h"
+#import "BaiduMap_SportViewController.h"
+#import "SportMapViewController.h"
+@interface SportSubViewController ()
+@property(nonatomic,strong)UIButton *beginButton;
+@property (nonatomic,strong) UILabel *totalLabel;
+/**
+ 计步表格试图
+ */
+@property (nonatomic,strong) UITableView *acountTable;
+/**
+ 计步子视图
+ */
+@property (nonatomic,strong) XKHomeAcountView *acountHeadView;
+
+/**
+ 首页数据模型属性
+ */
+@property (nonatomic,strong) XKSportsHomeModel *homeModel;
+
+/**保留记步信息实体*/
+@property (nonatomic,strong)StepModel *step;
+@end
+
+@implementation SportSubViewController
+
+/**
+ 计步功能视图的懒加载
+ */
+-(UITableView *)acountTable{
+    
+    if (!_acountTable) {
+        _acountTable = [[UITableView alloc] init];
+        _acountTable.left = 0;
+        _acountTable.top = self.view.frame.origin.y;
+        _acountTable.width = KScreenWidth;
+        _acountTable.height =  self.view.frame.size.height;
+        _acountTable.showsVerticalScrollIndicator = NO;
+        _acountTable.showsHorizontalScrollIndicator = NO;
+        _acountTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        _acountTable.scrollEnabled = NO;
+    }
+    
+    return _acountTable;
+}
+/**
+ 计步子视图懒加载
+ */
+-(XKHomeAcountView *)acountHeadView{
+    
+    if (!_acountHeadView) {
+        _acountHeadView = [[[NSBundle mainBundle] loadNibNamed:@"XKHomeAcountView" owner:self options:nil] firstObject];
+        _acountHeadView.left = 0;
+        _acountHeadView.top = 0;
+        _acountHeadView.delegate = self;
+        _acountHeadView.width = KScreenWidth;
+        _acountHeadView.height =  KScreenHeight-(PublicY)-KHeight(45);
+    }
+    return _acountHeadView;
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+   
+    
+    [self loadData];//视图出现刷新数据
+  
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor getColor:@"EFF8FE"];
+    if (self.type == 0) {
+        [self.view addSubview:self.acountTable];
+        self.acountTable.tableHeaderView = self.acountHeadView;
+        self.acountTable.backgroundColor = [UIColor getColor:@"EFF8FE"];
+    }
+    else
+    {
+        UILabel *showLabel = [[UILabel alloc] init];
+        [showLabel setNumberOfLines:0];
+        showLabel.text = @"登山距离 (公里)";
+        showLabel.textColor = [UIColor getColor:@"2C4667"];
+        showLabel.font = [UIFont systemFontOfSize:13];
+        showLabel.textAlignment= NSTextAlignmentCenter;
+        [showLabel sizeToFit];
+        showLabel.adjustsFontSizeToFitWidth = YES;
+        [self.view addSubview:showLabel];
+        [showLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(96);
+            make.left.mas_equalTo(30);
+            make.right.mas_equalTo(-30);
+            //make.bottom.mas_equalTo(btn.mas_top).offset(-30);
+        }];
+        
+        //
+        self.totalLabel = [[UILabel alloc] init];
+        //NSArray *totalDistanceAndTimeInterval = [RCFMDBManager getTotalDistanceAndTimeSpend];
+        //self.totalLabel.text = totalDistanceAndTimeInterval[0];
+        self.totalLabel.text = @"0.00";
+        self.totalLabel.textColor = [UIColor getColor:@"2C4667"];
+        self.totalLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:80];
+        self.totalLabel.textAlignment= NSTextAlignmentCenter;
+        [self.totalLabel sizeToFit];
+        [self.view addSubview:self.totalLabel];
+        [self.totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            //        make.top.mas_equalTo(showLabel.mas_bottom).offset(-80);
+            make.top.mas_equalTo(showLabel.mas_bottom).mas_offset(KHeight(80));
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
+            // make.bottom.mas_equalTo(btn.mas_top).offset(-30);
+        }];
+        
+        //beginbutton
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [btn setBackgroundImage:[UIImage imageNamed:@"btn_go"] forState:UIControlStateNormal];
+        [self.view addSubview:btn];
+        //self.beginButton = btn;
+        [btn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(120);
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.bottom.mas_equalTo(-KHeight(42));
+        }];
+        
+        
+
+        
+    }
+    
+    //label warning
+    UIImageView *bgImage = [[UIImageView alloc] init];
+    if (self.type == 2) {
+        bgImage.image = [UIImage imageNamed:@"bg_climb"];
+    }else
+    bgImage.image = [UIImage imageNamed:@"bg_run"];//bg_run bg_climb
+    [self.view addSubview:bgImage];
+    [bgImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(0);
+        make.left.mas_equalTo(0);
+        make.right.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+    }];
+    
+    
+}
+-(void)buttonClick:(UIButton *)btn
+{
+    SportMapViewController *sport = [[SportMapViewController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:sport animated:YES];
+    
+    
+}
+-(void)ValidationAndAddScore{
+    
+    //展示当天任务是否完成
+    XKValidationAndAddScoreTools *tools = [[XKValidationAndAddScoreTools alloc] init];
+    
+    NSDictionary *validationDic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                                    @"TaskType":@(1),
+                                    @"MemberID":@([UserInfoTool getLoginInfo].MemberID),
+                                    @"TypeID":@(7)};
+    
+    NSDictionary *scoreDic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                               @"TaskType":@(1),
+                               @"MemberID":@([UserInfoTool getLoginInfo].MemberID),
+                               @"TypeID":@(7)};
+    
+    [tools validationAndAddScore:validationDic withAdd:scoreDic];
+    
+}
+//加载数据
+-(void)loadData{
+    
+    [[XKLoadingView shareLoadingView]showLoadingText:nil];
+    [ProtosomaticHttpTool protosomaticPostWithURLString:@"340" parameters:@{@"Token":[UserInfoTool getLoginInfo].Token,@"MemberID":@([UserInfoTool getLoginInfo].MemberID)} success:^(id json) {
+        
+        NSLog(@"%@",json);
+        if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+            
+            [[XKLoadingView shareLoadingView] hideLoding];
+            
+            self.homeModel = [XKSportsHomeModel objectWithKeyValues:json[@"Result"]];
+            
+            if (!self.acountHeadView.model) {//判断是否要给记步数据赋值
+                self.acountHeadView.model = self.homeModel;
+            }
+//            self.runHeadView.model = self.homeModel;
+//            self.rideHeadView.model = self.homeModel;
+            
+        }else{
+            [[XKLoadingView shareLoadingView]errorloadingText:[[json objectForKey:@"Basis"] objectForKey:@"Msg"]];
+        }
+        
+    } failure:^(id error) {
+    
+        [[XKLoadingView shareLoadingView]errorloadingText:nil];
+    }];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

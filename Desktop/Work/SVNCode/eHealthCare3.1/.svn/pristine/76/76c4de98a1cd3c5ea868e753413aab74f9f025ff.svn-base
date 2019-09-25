@@ -1,0 +1,78 @@
+//
+//  EPluseCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/23.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "EPluseCell.h"
+@interface EPluseCell ()
+
+
+@end
+
+@implementation EPluseCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.backgroundColor = [UIColor getColor:@"EFF8FE"];
+    self.lienView.backgroundColor=[UIColor getColor:@"EBF0F4"];
+    self.sportBtn.layer.cornerRadius = self.sportBtn.frame.size.height/2.0;
+    self.sportBtn.layer.masksToBounds = YES;
+    self.sportBtn.layer.shadowOffset = CGSizeMake(0,6);
+    self.sportBtn.layer.shadowOpacity = 1;
+    self.sportBtn.layer.shadowRadius = 9;
+    self.sportBtn.layer.shadowColor = [UIColor colorWithRed:3/255.0 green:199/255.0 blue:255/255.0 alpha:0.3].CGColor;
+   
+    //    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    //    UIBezierPath *corPath = [UIBezierPath bezierPathWithRoundedRect:self.backView.frame byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(5, 5)];
+    //    maskLayer.frame = corPath.bounds;
+    //    maskLayer.path=corPath.CGPath;
+    //    self.backView.layer.mask=maskLayer;
+    
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    UIBezierPath *corPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth-20, self.topBackView.frame.size.height) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(5, 5)];
+    maskLayer.frame = corPath.bounds;
+    maskLayer.path=corPath.CGPath;
+    self.topBackView.layer.mask=maskLayer;
+    
+    
+    CAShapeLayer *maskTwoLayer = [[CAShapeLayer alloc] init];
+    UIBezierPath *corTwoPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth-20, 117-42) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(5, 5)];
+    maskTwoLayer.frame = corTwoPath.bounds;
+    maskTwoLayer.path=corTwoPath.CGPath;
+    self.bottomBackView.layer.mask=maskTwoLayer;
+    
+    
+    
+}
+-(void)setDataDic:(NSDictionary *)DataDic{
+    _DataDic = DataDic;
+    
+    self.titleLab.text = DataDic[@"remark"];
+    self.icomImage.image = [UIImage imageNamed:DataDic[@"img"]];
+    
+    
+    if ([DataDic[@"imgw"] isEnptyOrNil:[NSNull null]]== NO) {
+//        self.titleLabTwo.text = DataDic[@"remarkw"];
+        self.iconImageTwo.image = [UIImage imageNamed:DataDic[@"imgw"]];
+    }
+    
+    
+    
+}
+- (IBAction)goEnterMainConAction:(id)sender {
+    
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sportEPluseCellbuttonClick:)]) {
+        [self.delegate sportEPluseCellbuttonClick:self.titleLab.text];
+    }
+}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

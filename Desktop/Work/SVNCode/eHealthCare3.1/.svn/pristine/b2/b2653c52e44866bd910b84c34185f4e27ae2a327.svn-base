@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="229" id="KGk-i7-Jjw" customClass="XKRecordPhotoCell">
+            <rect key="frame" x="0.0" y="0.0" width="432" height="207"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="432" height="206.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gaX-RR-MDU">
+                        <rect key="frame" x="6" y="10" width="420" height="192"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hk7-Nv-7Q7">
+                                <rect key="frame" x="10" y="50" width="400" height="0.5"/>
+                                <color key="backgroundColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="rOt-QO-mHZ"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="病历原件" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LeN-Kp-WFx">
+                                <rect key="frame" x="15" y="14" width="73.5" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="highlightedColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="heT-L5-mK0">
+                                <rect key="frame" x="15" y="65.5" width="390" height="126.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PFM-dp-r77">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(最多9张图)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eKj-aM-8fg">
+                                <rect key="frame" x="103.5" y="16" width="82" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.73725490196078436" green="0.73725490196078436" blue="0.73725490196078436" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="LeN-Kp-WFx" firstAttribute="top" secondItem="gaX-RR-MDU" secondAttribute="top" constant="14" id="BP4-du-RjK"/>
+                            <constraint firstItem="heT-L5-mK0" firstAttribute="top" secondItem="hk7-Nv-7Q7" secondAttribute="bottom" constant="15" id="EDk-D0-gLs"/>
+                            <constraint firstItem="hk7-Nv-7Q7" firstAttribute="top" secondItem="gaX-RR-MDU" secondAttribute="top" constant="50" id="ID0-8W-LTY"/>
+                            <constraint firstItem="LeN-Kp-WFx" firstAttribute="leading" secondItem="gaX-RR-MDU" secondAttribute="leading" constant="15" id="PEd-6L-NbB"/>
+                            <constraint firstAttribute="trailing" secondItem="hk7-Nv-7Q7" secondAttribute="trailing" constant="10" id="bAf-ks-o6e"/>
+                            <constraint firstAttribute="trailing" secondItem="heT-L5-mK0" secondAttribute="trailing" constant="15" id="ktq-Ro-Adp"/>
+                            <constraint firstItem="heT-L5-mK0" firstAttribute="leading" secondItem="gaX-RR-MDU" secondAttribute="leading" constant="15" id="mmq-Dt-5nh"/>
+                            <constraint firstItem="hk7-Nv-7Q7" firstAttribute="leading" secondItem="gaX-RR-MDU" secondAttribute="leading" constant="10" id="nzF-Im-DX7"/>
+                            <constraint firstItem="eKj-aM-8fg" firstAttribute="leading" secondItem="LeN-Kp-WFx" secondAttribute="trailing" constant="15" id="qWB-SS-o0F"/>
+                            <constraint firstItem="eKj-aM-8fg" firstAttribute="centerY" secondItem="LeN-Kp-WFx" secondAttribute="centerY" id="qup-yU-nXm"/>
+                            <constraint firstAttribute="bottom" secondItem="heT-L5-mK0" secondAttribute="bottom" id="vuQ-N0-9gI"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YBi-LT-f4q">
+                        <rect key="frame" x="0.0" y="0.0" width="432" height="10"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="gTl-2c-WYg"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="gaX-RR-MDU" secondAttribute="trailing" constant="6" id="5hq-TX-X7i"/>
+                    <constraint firstItem="gaX-RR-MDU" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="6" id="Fej-xj-QKq"/>
+                    <constraint firstAttribute="trailing" secondItem="YBi-LT-f4q" secondAttribute="trailing" id="Ng7-oA-vfG"/>
+                    <constraint firstItem="gaX-RR-MDU" firstAttribute="top" secondItem="YBi-LT-f4q" secondAttribute="bottom" id="Ngi-Nq-rUE"/>
+                    <constraint firstAttribute="bottom" secondItem="gaX-RR-MDU" secondAttribute="bottom" constant="4.5" id="Ohe-mc-Tzw"/>
+                    <constraint firstItem="YBi-LT-f4q" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="TJQ-U8-33H"/>
+                    <constraint firstItem="YBi-LT-f4q" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="ky3-z2-iae"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.93679130077362061" green="0.97222012281417847" blue="0.99606567621231079" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <connections>
+                <outlet property="heightCons" destination="gTl-2c-WYg" id="4uP-6U-YWj"/>
+                <outlet property="photoCollectionView" destination="heT-L5-mK0" id="J7n-Su-u6d"/>
+                <outlet property="photoNumbercontrolLab" destination="eKj-aM-8fg" id="d8S-D6-xFH"/>
+            </connections>
+            <point key="canvasLocation" x="-4" y="127.5"/>
+        </tableViewCell>
+    </objects>
+</document>

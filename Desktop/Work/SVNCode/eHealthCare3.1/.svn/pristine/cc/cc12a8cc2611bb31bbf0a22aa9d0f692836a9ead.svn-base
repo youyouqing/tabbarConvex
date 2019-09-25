@@ -1,0 +1,19 @@
+//
+//  AddFamilyCollectionViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/17.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "AddFamilyCollectionViewCell.h"
+
+@implementation AddFamilyCollectionViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.clipsToBounds = YES;
+    self.layer.cornerRadius = 5.f;
+}
+
+@end

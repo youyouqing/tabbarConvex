@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="GoHealthTopView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tgO-oL-2Va">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="104"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iv_todaytask" highlightedImage="iv_todaytask" translatesAutoresizingMaskIntoConstraints="NO" id="pLO-th-gHE" customClass="btn_gohealth">
+                            <rect key="frame" x="0.0" y="0.0" width="92" height="34"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="pLO-th-gHE" secondAttribute="height" multiplier="185:68" id="MTu-8M-08H"/>
+                                <constraint firstAttribute="height" constant="34" id="wYX-ri-1Wz"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0K" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPK-Jd-TZq">
+                            <rect key="frame" x="12" y="7" width="23" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="每天完成一下健康任务，累积100K健康值， 可浇灌健康树，获得更多康币哦~~" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="29h-dK-GhV">
+                            <rect key="frame" x="51" y="46" width="272" height="36"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstItem="HPK-Jd-TZq" firstAttribute="leading" secondItem="tgO-oL-2Va" secondAttribute="leading" constant="12" id="GD6-C8-SlP"/>
+                        <constraint firstItem="pLO-th-gHE" firstAttribute="leading" secondItem="tgO-oL-2Va" secondAttribute="leading" id="T3V-oM-OnK"/>
+                        <constraint firstItem="29h-dK-GhV" firstAttribute="leading" secondItem="tgO-oL-2Va" secondAttribute="leading" constant="51" id="TWN-vz-Vr0"/>
+                        <constraint firstItem="HPK-Jd-TZq" firstAttribute="top" secondItem="tgO-oL-2Va" secondAttribute="top" constant="7" id="eOj-Af-Fyv"/>
+                        <constraint firstItem="29h-dK-GhV" firstAttribute="centerY" secondItem="tgO-oL-2Va" secondAttribute="centerY" constant="12" id="eri-Fo-rGN"/>
+                        <constraint firstAttribute="height" constant="104" id="lgz-iB-E9b"/>
+                        <constraint firstAttribute="trailing" secondItem="29h-dK-GhV" secondAttribute="trailing" constant="52" id="smn-65-cyc"/>
+                        <constraint firstItem="pLO-th-gHE" firstAttribute="top" secondItem="tgO-oL-2Va" secondAttribute="top" id="uDa-At-NL1"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="tgO-oL-2Va" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="F9E-uq-7BU"/>
+                <constraint firstItem="tgO-oL-2Va" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="JwP-dK-P8c"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="tgO-oL-2Va" secondAttribute="trailing" id="tkN-MT-GG2"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="kValueLab" destination="HPK-Jd-TZq" id="Pmd-PK-zfY"/>
+            </connections>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="iv_todaytask" width="92" height="34"/>
+    </resources>
+</document>

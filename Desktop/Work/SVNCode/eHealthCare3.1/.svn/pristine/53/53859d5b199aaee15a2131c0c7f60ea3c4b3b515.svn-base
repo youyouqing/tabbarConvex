@@ -1,0 +1,13 @@
+//
+//  MessagePublicModel.m
+//  eHealthCare
+//
+//  Created by xiekang on 16/9/7.
+//  Copyright © 2016年 mac. All rights reserved.
+//
+
+#import "MessagePublicModel.h"
+
+@implementation MessagePublicModel
+
+@end

@@ -1,0 +1,38 @@
+//
+//  HealthTestCollectionViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/15.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTestCollectionViewCell.h"
+@interface HealthTestCollectionViewCell ()
+@property (weak, nonatomic) IBOutlet UIView *backView;
+
+
+@end
+@implementation HealthTestCollectionViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.backgroundColor = [UIColor whiteColor];
+    self.nameLab.font = [UIFont systemFontOfSize:17];
+    self.nameLab.font = [UIFont systemFontOfSize:13];
+    self.BeginTestBtn.backgroundColor = [UIColor getColor:@"03C7FF"];
+    self.backView.layer.shadowColor =[UIColor colorWithRed:93/255.0 green:148/255.0 blue:164/255.0 alpha:0.13].CGColor;
+    self.backView.layer.shadowOpacity = 1;
+    self.backView.layer.shadowRadius = 5.f;
+    self.backView.layer.shadowOffset = CGSizeMake(0, 5);
+}
+- (IBAction)beginTest:(id)sender {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(HealthTestCollectionViewCellJoinAction:)]) {
+        
+        [self.delegate HealthTestCollectionViewCellJoinAction:self];
+    }
+    
+    
+}
+
+@end

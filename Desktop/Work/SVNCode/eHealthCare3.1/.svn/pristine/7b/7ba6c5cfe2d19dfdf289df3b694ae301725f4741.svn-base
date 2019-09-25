@@ -1,0 +1,120 @@
+//
+//  HealthTopScrollHeaderView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTopScrollHeaderView.h"
+#import "FamilyObject.h"
+@interface HealthTopScrollHeaderView()
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, strong)NSMutableArray *addBtnArr;
+@end
+
+@implementation HealthTopScrollHeaderView
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    _scrollView.bounces = NO;
+    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.delegate = self;
+    _scrollView.pagingEnabled = YES;
+  
+}
+
+-(void)setFamilyArr:(NSArray *)familyArr
+{
+    _familyArr = familyArr;
+    
+    _scrollView.contentSize = CGSizeMake(((60)+KWidth(22.5) )* familyArr.count+KWidth(22.5), KWidth(105));
+    _addBtnArr  = [NSMutableArray arrayWithCapacity:0];
+    [_scrollView removeAllSubviews];//刷新时先清除数据再创建
+    for (int i = 0; i < familyArr.count; i++)
+    {
+        
+        FamilyObject *family = familyArr[i];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button setBackgroundColor:[UIColor getColor:@"8FE5FF"]];
+        button.titleLabel.font = [UIFont systemFontOfSize:13.0];
+        NSString *famTemp = family.FamilyName;
+        [button sd_setBackgroundImageWithURL:[NSURL URLWithString:family.HeadImg] forState:UIControlStateNormal];
+//        [button sd_setImageWithURL:[NSURL URLWithString:family.HeadImg] forState:UIControlStateNormal];
+        [button setTitle:[famTemp firstChar] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor]   forState:UIControlStateNormal];
+         [button setTitleColor:[UIColor whiteColor]  forState:UIControlStateSelected];//[UIColor getColor:@"8FE5FF"]
+        
+        button.clipsToBounds = YES;
+        [button addTarget:self action:@selector(replaceOtherRelation:) forControlEvents:UIControlEventTouchUpInside];
+        button.layer.cornerRadius = (60)/2.0;
+        button.frame = CGRectMake(((60)+KWidth(22.5)) * i+KWidth(22.5), (22), (60), (60));
+        [_scrollView addSubview:button];
+        button.tag = family.FamilyMemberID;
+        
+        if (family.FamilyMemberID == self.userMemberID) {
+            button.layer.borderColor = [UIColor whiteColor].CGColor;
+            button.layer.borderWidth = 5.f;
+        }
+        
+        UILabel *contentLab = [[UILabel alloc]init];
+        contentLab.text = family.FamilyName;
+        contentLab.textColor = [UIColor whiteColor];
+        contentLab.font = Kfont(15);
+        contentLab.textAlignment = NSTextAlignmentCenter;
+        contentLab.frame = CGRectMake(((60)+KWidth(22.5)) * i+KWidth(22.5), (22)+CGRectGetHeight(button.frame)+KHeight(9),CGRectGetWidth(button.frame), KHeight(20));
+        [_scrollView addSubview:contentLab];
+        if (family.FamilyMemberID == [UserInfoTool getLoginInfo].MemberID) {
+            contentLab.text = @"我";
+             [button setTitle:[[UserInfoTool getLoginInfo].Name firstChar] forState:UIControlStateNormal];
+            [button sd_setBackgroundImageWithURL:[NSURL URLWithString:[UserInfoTool getLoginInfo].HeadImg] forState:UIControlStateNormal];
+        }
+        [_addBtnArr addObject:button];
+    }
+    
+}
+
+- (IBAction)addFamilyAction:(id)sender {
+    
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(addFamilyTools)]) {
+        [self.delegate addFamilyTools];
+        
+    }
+    
+    
+}
+-(void)replaceOtherRelation:(UIButton *)sender{
+   
+   
+    
+    for (int i = 0; i<_addBtnArr.count; i++) {
+        
+        UIButton *btn = _addBtnArr[i];
+        btn.layer.borderWidth = 0.f;
+        btn.selected = NO;
+        [btn setBackgroundColor:[UIColor getColor:@"8FE5FF"]];
+       
+    }
+
+    UIButton *btn = (UIButton *)sender;
+    btn.selected = !btn.selected;
+    btn.layer.borderWidth = 5.f;
+    btn.layer.borderColor = [UIColor whiteColor].CGColor;
+    
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(replaceRelationData:)]) {
+        [self.delegate replaceRelationData:btn.tag];
+        
+    }
+//    [_scrollView setContentOffset:CGPointMake(btn.frame.origin.x, 0) animated:YES];
+    
+    
+}
+@end

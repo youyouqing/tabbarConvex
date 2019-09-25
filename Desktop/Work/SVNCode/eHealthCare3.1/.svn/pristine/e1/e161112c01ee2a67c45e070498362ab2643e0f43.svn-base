@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EPluseNoneDataView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="llr-Ss-WbY">
+                    <rect key="frame" x="142.5" y="41" width="90" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="90" id="Wk8-1g-hVg"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                    <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="血脂" image="icon_xuezhi">
+                        <color key="titleColor" red="0.19534143809999999" green="0.27238416669999999" blue="0.39601552490000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </state>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iv_xueya_empty" translatesAutoresizingMaskIntoConstraints="NO" id="wqL-wf-Dg9">
+                    <rect key="frame" x="87.5" y="265.5" width="200" height="100"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="暂无数据，请测量" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4h5-9r-Qjr">
+                    <rect key="frame" x="130.5" y="383.5" width="114.5" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.72549019607843135" green="0.76862745098039209" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TRt-3N-8TL">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="6"/>
+                    <color key="backgroundColor" red="0.96078437569999997" green="0.96078437569999997" blue="0.96078437569999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="6" id="ifB-jG-zkB"/>
+                        <constraint firstAttribute="height" constant="6" id="scO-o8-K0m"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Whc-bw-xQm">
+                    <rect key="frame" x="152.5" y="609" width="70" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <state key="normal" title="去测量" backgroundImage="btn_140_60">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="goTestBtnAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="DqP-kM-87K"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="TRt-3N-8TL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5Px-Ts-tsR"/>
+                <constraint firstItem="llr-Ss-WbY" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="21" id="9sa-CZ-XZg"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Whc-bw-xQm" secondAttribute="bottom" constant="28" id="FA2-K1-imx"/>
+                <constraint firstItem="wqL-wf-Dg9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-18" id="QFN-VY-Nby"/>
+                <constraint firstItem="Whc-bw-xQm" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="VQb-U1-lSs"/>
+                <constraint firstItem="llr-Ss-WbY" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="a21-77-UXV"/>
+                <constraint firstAttribute="trailing" secondItem="TRt-3N-8TL" secondAttribute="trailing" id="g5z-Ab-gSk"/>
+                <constraint firstItem="TRt-3N-8TL" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="isQ-iZ-K41"/>
+                <constraint firstItem="4h5-9r-Qjr" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="lhT-cL-8rS"/>
+                <constraint firstItem="wqL-wf-Dg9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="nCm-66-wPO"/>
+                <constraint firstItem="4h5-9r-Qjr" firstAttribute="top" secondItem="wqL-wf-Dg9" secondAttribute="bottom" constant="18" id="qrH-sl-gb5"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="backImageView" destination="wqL-wf-Dg9" id="I8L-1s-uM5"/>
+                <outlet property="titleBtn" destination="llr-Ss-WbY" id="0s5-7e-tsb"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="btn_140_60" width="70" height="30"/>
+        <image name="icon_xuezhi" width="25" height="25"/>
+        <image name="iv_xueya_empty" width="200" height="100"/>
+    </resources>
+</document>

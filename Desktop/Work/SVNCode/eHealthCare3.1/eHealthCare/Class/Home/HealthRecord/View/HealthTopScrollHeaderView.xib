@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HealthTopScrollHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="376" height="105"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xc6-rv-ELT">
+                    <rect key="frame" x="301" y="22" width="60" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="JaE-yP-fwV"/>
+                        <constraint firstAttribute="height" constant="60" id="kCF-iH-xZq"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="btn_file_addfamily"/>
+                    <connections>
+                        <action selector="addFamilyAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="LMD-ht-lhM"/>
+                    </connections>
+                </button>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dR3-ol-18Y">
+                    <rect key="frame" x="0.0" y="0.0" width="286" height="105"/>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="dR3-ol-18Y" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Bu5-El-QQB"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Xc6-rv-ELT" secondAttribute="trailing" constant="15" id="Ivu-Q5-YEr"/>
+                <constraint firstItem="Xc6-rv-ELT" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="L8p-U1-Coq"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="dR3-ol-18Y" secondAttribute="trailing" constant="90" id="Ljl-uk-iPo"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="dR3-ol-18Y" secondAttribute="bottom" id="XQS-8K-N6e"/>
+                <constraint firstItem="dR3-ol-18Y" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="bc2-Hv-0jU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="heightCons" destination="JaE-yP-fwV" id="Wdn-1e-YdN"/>
+                <outlet property="scrollView" destination="dR3-ol-18Y" id="e8T-67-TCc"/>
+                <outlet property="widthCons" destination="kCF-iH-xZq" id="MWM-lB-2Tr"/>
+            </connections>
+            <point key="canvasLocation" x="34" y="281.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="btn_file_addfamily" width="60" height="60"/>
+    </resources>
+</document>

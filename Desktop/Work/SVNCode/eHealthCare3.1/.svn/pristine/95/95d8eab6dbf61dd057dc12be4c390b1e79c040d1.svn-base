@@ -1,0 +1,285 @@
+//
+//  RunningView.m
+//  RCSports
+//
+//  Created by liveidzong on 9/21/16.
+//  Copyright © 2016 SBM. All rights reserved.
+//
+
+#import "RunningView.h"
+#import "Masonry.h"
+@interface RunningView()
+{
+  /**
+     长按结束按钮计时
+     */
+    NSTimer *longTimer;
+
+}
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *gradientViewWidthCons;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *gradientViewHeightCons;
+//@property(nonatomic,strong) CAGradientLayer *gradientLayer;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomBackViewWidthCons;
+@property(nonatomic,weak)IBOutlet UIView *gradientView;
+@property (nonatomic, strong) NSTimer *enlangerTimer;
+@property (nonatomic, strong) NSTimer *shrinkTimer;
+@property(nonatomic,assign)float progress;
+@property (nonatomic, strong) UIButton *handleDemoBtn;
+@end
+@implementation RunningView
+- (void)drawCircle {
+    //创建一个layer并添加到self.layer上面去
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame =  self.gradientView.bounds;
+    [self.gradientView.layer addSublayer:layer];
+    //创建一个圆
+    CGFloat width = CGRectGetWidth( self.gradientView.bounds);
+    CGFloat height = CGRectGetHeight( self.gradientView.bounds);
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(width/2.0, height/2.0) radius:width/2.0 startAngle:0 endAngle:2* M_PI clockwise:YES];
+    layer.path = path.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.strokeColor = [UIColor getColor:@"DCE6EF"].CGColor;
+    layer.lineWidth = 10;
+    layer.lineCap = kCALineCapRound;
+}
+- (void)updateProgressCircle{
+ 
+    self.progress = (float) (0.3);
+    [self drawColorLayer];
+    
+}
+//设置整个view渐变色
+- (void)drawColorLayer {
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame = self.gradientView.bounds;
+    [ self.gradientView.layer addSublayer:layer];
+    
+    layer.frame =  self.gradientView.bounds;
+    layer.lineWidth = 10;
+    UIBezierPath *progressCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake( self.gradientView.bounds.size.width / 2, self.gradientView.bounds.size.width / 2)
+                                                                  radius:self.gradientView.bounds.size.width/2.0
+                                                              startAngle:(CGFloat) - M_PI_2
+                                                                endAngle:(CGFloat)(- M_PI_2 + self.progress * 2 * M_PI)
+                                                               clockwise:YES];
+    
+    
+    layer.path = progressCircle.CGPath;
+    layer.fillColor = [UIColor clearColor].CGColor;
+    layer.strokeColor = kMainColor.CGColor;
+    layer.lineCap = kCALineCapButt;
+    CABasicAnimation *pathAnimation=[CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    pathAnimation.duration = 3;
+    pathAnimation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    pathAnimation.fromValue=[NSNumber numberWithFloat:0.0f];
+    pathAnimation.toValue=[NSNumber numberWithFloat:self.progress];
+    pathAnimation.autoreverses=NO;
+    pathAnimation.fillMode = kCAFillModeForwards;
+    pathAnimation.removedOnCompletion = NO;
+    pathAnimation.repeatCount = 1;
+    [layer addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
+}
+
+-(void)awakeFromNib
+{
+    
+    [super awakeFromNib];
+    self.backgroundColor = [UIColor getColor:@"EFF8FE"];
+  
+    [self drawCircle];
+
+    _distanceLB = [[UILabel alloc]init];
+    _distanceLB.text = @"00.00";//Futura-CondensedExtraBold
+    _distanceLB.textColor = [UIColor getColor:@"2C4667"];
+    _distanceLB.font = Kfont(70);//PingFangSC-Ultralight
+    _distanceLB.textAlignment = NSTextAlignmentCenter;
+    [self.gradientView addSubview:_distanceLB];
+    [_distanceLB mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(10);
+        make.centerX.mas_equalTo(0);
+    }];
+    
+    UILabel *unitLabel = [[UILabel alloc]init];
+    unitLabel.text = @"目标公里数(公里)";
+    unitLabel.textColor = [UIColor getColor:@"2C4667"];
+    unitLabel.textAlignment = NSTextAlignmentCenter;
+    [self.gradientView addSubview:unitLabel];
+    [unitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(-40);;
+        make.centerX.mas_equalTo(0);
+    }];
+    
+    _timeLB = [[UILabel alloc]init];
+    _timeLB.text = @"00:00";
+    _timeLB.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:30];
+    _timeLB.textColor = [UIColor getColor:@"2C4667"];
+    [self.timeBackView addSubview:_timeLB];
+    CGFloat leftwidth = 36;
+    if (IS_IPHONE5) {
+        leftwidth = 36;
+        self.gradientViewWidthCons.constant  = self.gradientViewHeightCons.constant = 230;
+    }else if (IS_IPHONE6)
+    {
+        leftwidth = 44;
+        self.gradientViewWidthCons.constant  = self.gradientViewHeightCons.constant = 230;
+        
+    }else
+    {
+        leftwidth = 52;
+        self.gradientViewWidthCons.constant  = self.gradientViewHeightCons.constant = 230;
+    }
+    
+    
+    [_timeLB mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(leftwidth);
+        make.centerY.mas_equalTo(-15);
+    }];
+    
+    UILabel *unit4Time =[UILabel new];
+    unit4Time.text = @"分:秒";
+    unit4Time.textColor = [UIColor getColor:@"2C4667"];
+    unit4Time.font= [UIFont fontWithName:@"HelveticaNeue-light" size:16];
+    [self.timeBackView addSubview:unit4Time];
+    [unit4Time mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(_timeLB.mas_bottom).mas_equalTo(5);
+        make.centerX.mas_equalTo(_timeLB.mas_centerX).mas_equalTo(0);
+    }];
+    
+    
+    
+    _speedLB = [[UILabel alloc]init];
+    _speedLB.text = @"00.00";
+    _speedLB.textColor = [UIColor getColor:@"2C4667"];
+    _speedLB.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:30];
+    [self.timeBackView addSubview:_speedLB];
+    [_speedLB mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.gradientView.mas_bottom).mas_equalTo(50);
+//        //make.centerX.mas_equalTo(unitLabel.mas_centerX).mas_equalTo(10);
+        make.right.mas_equalTo(-leftwidth);
+        
+        
+        make.centerY.mas_equalTo(-15);
+//        make.centerX.mas_equalTo(30);
+    }];
+    
+    UILabel *unit4Speed =[UILabel new];
+    unit4Speed.text = @"距离(公里)";
+    unit4Speed.textColor = [UIColor getColor:@"2C4667"];
+    unit4Speed.font = [UIFont fontWithName:@"HelveticaNeue-light" size:16];
+    [self.timeBackView addSubview:unit4Speed];
+    [unit4Speed mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(_speedLB.mas_bottom).mas_equalTo(5);
+        make.centerX.mas_equalTo(_speedLB.mas_centerX).mas_equalTo(0);
+    }];
+    self.stopBtn.layer.cornerRadius = 74/2.0;
+    self.stopBtn.arcFinishColor =  [UIColor getColor:@"FFD36D"];
+    [self.stopBtn addTarget:self action:@selector(stopTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+   
+    [self.stopBtn addTarget:self action:@selector(stopTouchDown) forControlEvents:UIControlEventTouchDown];
+    self.endLab.hidden =self.keepLab.hidden= YES;
+    self.keepGoBtn.hidden = self.stopBtn.hidden = YES;
+    
+}
+//当按下按钮以后调用该方法，增加一个延迟。
+- (void)stopTouchDown
+{
+
+    self.stopBtn.percent = 0;
+    longTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(longBtnCount) userInfo:nil repeats:YES];
+ 
+}
+
+
+//当离开按钮的时候取消所调用的方法
+- (void)stopTouchUpInside
+{
+    [longTimer fire];
+    [longTimer invalidate];
+    longTimer = NULL;
+    self.stopBtn.percent = 0;
+    
+    
+}
+-(void)longBtnCount
+{
+    self.stopBtn.percent +=0.02;
+    
+    if (self.stopBtn.percent >= 1) {
+        [longTimer invalidate];
+        longTimer = NULL;
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(stopActionBtn)]) {
+            
+            [self.delegate stopActionBtn];
+        }
+
+    }
+    
+}
+
+
+
+- (IBAction)keepAction:(id)sender {
+    self.bottomBackViewWidthCons.constant = 80;
+    self.startBtn.hidden =self.pauseLab.hidden= NO;
+    self.keepGoBtn.hidden = self.keepLab.hidden = YES;
+    self.stopBtn.hidden =self.endLab.hidden = YES;
+    self.startBtn.enabled = YES;
+    self.leftBtnSpace.constant = 0;
+    self.rightBtnSpace.constant = 0;
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(suspendOrunKeep:)]) {
+        
+        [self.delegate suspendOrunKeep:YES];
+    }
+}
+
+- (IBAction)continueAction:(id)sender {
+    self.bottomBackViewWidthCons.constant = 180;
+    self.startBtn.enabled = NO;
+    self.keepGoBtn.hidden =self.keepLab.hidden= NO;
+    self.stopBtn.hidden = self.endLab.hidden=NO;
+     self.startBtn.hidden = self.pauseLab.hidden= YES;
+     CGFloat X = 12.5+37;
+    self.leftBtnSpace.constant = -X;
+    self.rightBtnSpace.constant = X;
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(suspendOrunKeep:)]) {
+        
+        [self.delegate suspendOrunKeep:NO];
+    }
+}
+- (IBAction)lockAction:(id)sender {
+    
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(lockOrunLockBtn)]) {
+        [self.delegate lockOrunLockBtn];
+    }
+}
+
+
+//-(void)startTimer {
+//    [self resetRecord];
+//    if(!_timer) {
+//        _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(changeTimeValue) userInfo:nil repeats:YES];
+//    }else {
+//        [_timer setFireDate:[NSDate distantPast]]; //开始
+//    }
+//}
+//-(void)stopTimer {
+//    //唯一的方法将_timer从runloop池中移除,invalite会让timer退出runloop,取消timer
+//    [_timer invalidate];
+//    _timer = nil;
+//    _timerNumber = 0;
+//}
+//-(void)changeTimeValue {
+//    _timerNumber ++;
+//    _timeLB.text = [NSString stringWithFormat:@"%.2ld:%.2ld",_timerNumber/60,_timerNumber%60];
+//}
+//-(void)resetRecord {
+//    _timeLB.text = @"00.00";
+//    _distanceLB.text = @"00.00";
+//    _speedLB.text = @"00.00";
+//    _timerNumber = 0;
+//    [_timer setFireDate:[NSDate distantFuture]]; //暂停
+//}
+//-(void)pauseRecord {
+//  
+//    [_timer setFireDate:[NSDate distantFuture]]; //暂停
+//}
+@end

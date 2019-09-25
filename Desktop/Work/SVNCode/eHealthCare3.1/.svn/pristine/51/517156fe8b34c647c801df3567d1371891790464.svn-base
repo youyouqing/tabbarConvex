@@ -1,0 +1,165 @@
+//
+//  TabbarController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/2.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "TabbarController.h"
+#import "HomeViewController.h"
+#import "Health+ViewController.h"//这不是类别，只是健康+而已😂
+#import "MallViewController.h"
+#import "PersonalCenterViewController.h"
+#import "BaseNavigationViewController.h"
+#import "MallMiddleViewController.h"
+#import "HealthTreeViewController.h"
+#import "UITabBar+XKTabBar.h"
+#import "UITabBarItem+XKTabBarItem.h"
+#import "UIBarItem+XKBarItem.h"
+@interface TabbarController ()
+
+@end
+
+@implementation TabbarController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    [self addAllChildVcs];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+//    self.tabBar.height = kTabbarHeight;
+    
+    UIImage *i = [UIImage imageNamed:@"line_white"];
+    
+    [self.tabBar setBackgroundImage:i];
+    
+    [self.tabBar setShadowImage:i];
+}
+
+#pragma mark - private
+- (void)addAllChildVcs
+{
+    HomeViewController *home = [[HomeViewController alloc]initWithType:pageTypeNoNavigation];
+//    BaseNavigationViewController *homenav = [[BaseNavigationViewController alloc] initWithRootViewController:home];
+//    homenav.navigationBarHidden = YES;
+    [self addTabbarChlildVc:home title:@"首页" imageName:@"icon_tabbar_index_normal" selectedImageName:@"icon_tabbar_index_selected"  Middlecolor:NO];
+
+    Health_ViewController *health = [[Health_ViewController alloc]initWithType:pageTypeOnlyTitle];
+//    BaseNavigationViewController *healthnav = [[BaseNavigationViewController alloc] initWithRootViewController:health];
+//    healthnav.navigationBarHidden = YES;
+    health.isHealthPluse = YES;
+    [self addTabbarChlildVc:health title:@"e加" imageName:@"icon_tabbar_ejia_normal" selectedImageName:@"icon_tabbar_ejia_selected"  Middlecolor:NO];
+    
+    HealthTreeViewController *tree = [[HealthTreeViewController alloc]initWithType:pageTypeNoNavigation];
+//    BaseNavigationViewController *treenav = [[BaseNavigationViewController alloc] initWithRootViewController:tree];
+//    treenav.navigationBarHidden = YES;
+    [self addTabbarChlildVc:tree title:@"健康树" imageName:@"icon_tabbar_tree_normal" selectedImageName:@"icon_tabbar_tree_selected" Middlecolor:YES];
+    MallMiddleViewController *mall = [[MallMiddleViewController alloc]init];
+//    BaseNavigationViewController *mallnav = [[BaseNavigationViewController alloc] initWithRootViewController:mall];
+//    mallnav.navigationBarHidden = YES;
+    [self addTabbarChlildVc:mall title:@"商城" imageName:@"icon_tabbar_shop_normal" selectedImageName:@"icon_tabbar_shop_selected"  Middlecolor:NO];
+    
+  
+    
+    PersonalCenterViewController *personal = [[PersonalCenterViewController alloc]initWithType:pageTypeNoNavigation];
+//    BaseNavigationViewController *personalnav = [[BaseNavigationViewController alloc] initWithRootViewController:personal];
+//    personalnav.navigationBarHidden = YES;
+    [self addTabbarChlildVc:personal title:@"我的" imageName:@"icon_tabbar_my_normal" selectedImageName:@"icon_tabbar_my_selected" Middlecolor:NO];
+    
+//    XKTabBar *tabBar = [[XKTabBar alloc] initWithFrame:self.tabBar.bounds];
+//
+//    tabBar.tabBarItemAttributes = @[@{kTabBarItemAttributeTitle : @"首页", kTabBarItemAttributeNormalImageName : @"icon_tabbar_index_normal", kTabBarItemAttributeSelectedImageName : @"icon_tabbar_index_selected", kTabBarItemAttributeType : @(XKTabBarItemNormal)},
+//
+//                                     @{kTabBarItemAttributeTitle : @"e加", kTabBarItemAttributeNormalImageName : @"icon_tabbar_ejia_normal", kTabBarItemAttributeSelectedImageName : @"icon_tabbar_ejia_selected", kTabBarItemAttributeType : @(XKTabBarItemNormal)},
+//
+//                                    @{kTabBarItemAttributeTitle : @"健康树", kTabBarItemAttributeNormalImageName : @"icon_tabbar_tree_normal", kTabBarItemAttributeSelectedImageName : @"icon_tabbar_tree_selected", kTabBarItemAttributeType : @(XKTabBarItemNormal)},
+//                                    @{kTabBarItemAttributeTitle : @"商城", kTabBarItemAttributeNormalImageName : @"icon_tabbar_shop_normal", kTabBarItemAttributeSelectedImageName : @"icon_tabbar_shop_selected", kTabBarItemAttributeType : @(XKTabBarItemNormal)},
+//
+//                                    @{kTabBarItemAttributeTitle : @"我的", kTabBarItemAttributeNormalImageName : @"icon_tabbar_my_normal", kTabBarItemAttributeSelectedImageName : @"icon_tabbar_my_selected", kTabBarItemAttributeType : @(XKTabBarItemNormal)}];
+//
+//
+//    self.viewControllers = @[homenav,healthnav ,treenav, mallnav, personalnav];
+//    [self.tabBar addSubview:tabBar];
+}
+
+- (void)addTabbarChlildVc:(UIViewController *)childVc title:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName Middlecolor:(BOOL)Middle;
+{
+    childVc.title = title;
+    
+
+    childVc.tabBarItem.image = [[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+
+    NSMutableDictionary *textAttrs = [NSMutableDictionary dictionary];
+    textAttrs[NSForegroundColorAttributeName] = kTabbarTextColor;
+    textAttrs[NSFontAttributeName] = [UIFont systemFontOfSize:11];
+    [childVc.tabBarItem setTitleTextAttributes:textAttrs forState:UIControlStateNormal];
+    
+
+    NSMutableDictionary *selectedTextAttrs = [NSMutableDictionary dictionary];
+    selectedTextAttrs[NSForegroundColorAttributeName] = (Middle ==YES)?([UIColor whiteColor]):kMainColor;
+    [childVc.tabBarItem setTitleTextAttributes:selectedTextAttrs forState:UIControlStateSelected];
+
+    
+    UIImage *selectedImage = [UIImage imageNamed:selectedImageName];
+   
+    childVc.tabBarItem.selectedImage = [selectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [childVc.tabBarItem setTitlePositionAdjustment:UIOffsetMake(0, 0)];
+  
+    BaseNavigationViewController *nav = [[BaseNavigationViewController alloc] initWithRootViewController:childVc];
+     nav.navigationBarHidden = YES;
+    [self addChildViewController:nav];
+    
+}
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    UITabBarItem *item = self.tabBar.items[2];
+    item.imageInsets = UIEdgeInsetsMake(-(26), -(26/4.0), 13, -(26/4.0));// UIEdgeInsets insets = {top, left, bottom, right};
+//    item.titlePositionAdjustment = UIOffsetMake(0, 0, 0, 0);
+    UIImageView *itemImageView = [item gs_imageView];
+    //
+    //    for(UIView *view in item.subviews)
+    //    {
+    //        if([view isKindOfClass:NSClassFromString(@"UITabBarButton")])
+    //        {
+    //
+    //            UILabel *lable = (UILabel *)[view subviews][1];
+    //
+    //            [itemImageView bringSubviewToFront:lable];
+    //        }
+    //    }
+    if (itemImageView && !itemImageView.userInteractionEnabled) {
+        itemImageView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(itemMiddleTap)];
+        [itemImageView addGestureRecognizer:tap];
+    }
+    
+}
+
+-(void)itemMiddleTap{
+    self.selectedIndex = 2;
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

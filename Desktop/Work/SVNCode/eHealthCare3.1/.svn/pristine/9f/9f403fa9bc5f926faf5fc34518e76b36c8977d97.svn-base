@@ -1,0 +1,206 @@
+//
+//  QuietController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/24.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "QuietController.h"
+#import "QuietTableViewCell.h"
+#import "MusicTableViewCell.h"
+#import "TrainWithMusicViewController.h"
+#import "MusicTrainViewModel.h"
+@interface QuietController ()<UITableViewDelegate,UITableViewDataSource>
+@property(strong,nonatomic)NSArray *dataArr;
+///早安 晚安 正念等数据
+@property (nonatomic, strong) NSArray *musicTrainDataArray;
+@end
+
+@implementation QuietController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+   
+    self.myTitle = (self.isQuietOrMusic == YES)?@"安静默想":@"自然音乐";
+    self.dataArr = (self.isQuietOrMusic == YES)?@[@"iv_quiet_ajmx",@"iv_quiet_hjyl",@"iv_quiet_znxl",]:@[@"iv_nature_slqc",@"iv_nature_qtdy",@"iv_nature_dxzc",@"iv_nature_hscr",@"iv_nature_ywql",@"iv_nature_hbmb",@"iv_nature_qgqs",@"iv_nature_xhfw"];
+    self.titleLab.textColor = [UIColor getColor:@"2C4667"];
+    self.headerView.backgroundColor = [UIColor whiteColor];
+    UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    [self.leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    self.view.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    
+    tableView.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableView registerNib:[UINib nibWithNibName:@"QuietTableViewCell" bundle:nil] forCellReuseIdentifier:@"QuietTableViewCell"];
+      [tableView registerNib:[UINib nibWithNibName:@"MusicTableViewCell" bundle:nil] forCellReuseIdentifier:@"MusicTableViewCell"];
+    [self.view addSubview:tableView];
+ 
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(PublicY);
+        make.left.mas_equalTo(0 );
+        make.bottom.mas_equalTo(0);
+        make.width.mas_equalTo( CGRectGetWidth(self.view.frame));
+    }];
+    tableView.estimatedRowHeight = 110;
+    tableView.rowHeight = UITableViewAutomaticDimension;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    
+    return 0.01;
+    
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    
+    return self.dataArr.count;
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isQuietOrMusic) {
+        NSString *cellid = @"QuietTableViewCell";
+        QuietTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backImage.image = [UIImage imageNamed:self.dataArr[indexPath.row]];
+        return cell;
+    }else
+    {
+        
+        NSString *cellid = @"MusicTableViewCell";
+        MusicTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backImage.image = [UIImage imageNamed:self.dataArr[indexPath.row]];
+
+        return cell;
+    }
+  
+    
+    
+    
+  
+  
+    
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+      ShowNormailMessage(@"正在配置环境，请稍等...");
+         TrainWithMusicViewController *train = [[TrainWithMusicViewController alloc]initWithType:pageTypeNoNavigation];
+    
+        if (self.musicTrainDataArray.count > 0) {
+    
+            DismissHud();
+            [self getSuitDataToSuitTypeTrain:train trainType:1];
+            [self.navigationController pushViewController:train animated:YES];
+    
+        }else{
+    
+            NSDictionary *dic = @{@"Token":[SingleTon shareInstance].token,
+                                  @"MemberID":@([UserInfoTool getLoginInfo].MemberID)};
+    
+            [MusicTrainViewModel getMorningEverningAndMindfulnessListWithParams:dic FinishedBlock:^(ResponseObject *response) {
+                DismissHud();
+                if (response.code == CodeTypeSucceed) {
+    
+                    self.musicTrainDataArray = response.Result;
+                    [self getSuitDataToSuitTypeTrain:train trainType:2];
+                    [self.navigationController pushViewController:train animated:YES];
+    
+                }else{
+    
+                    ShowErrorStatus(response.msg);
+                }
+            }];
+        }
+    
+}
+- (void)getSuitDataToSuitTypeTrain:(TrainWithMusicViewController *)train trainType:(TrainType)trainType
+{
+    NSMutableArray *topicMArray = [NSMutableArray array];
+    
+    for (NSDictionary *dic in self.musicTrainDataArray)
+    {
+        //先筛选出dataDic
+        if ([dic[@"EaseID"] integerValue] == 4 && trainType == 3)
+        {
+            train.dataDic = dic;
+            train.trainType = TrainTypeMorning;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 5 && trainType == 4){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeEvening;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 1 && trainType == 0){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeSilence;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 2 && trainType == 1){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeStress;
+            
+        }else if ([dic[@"EaseID"] integerValue] == 3 && trainType == 2){
+            
+            train.dataDic = dic;
+            train.trainType = TrainTypeMindfulness;
+        }
+        
+        //筛选出TopicDataArray
+        if ([dic[@"EaseType"] integerValue] == 3 && [dic[@"MindfulnessType"] integerValue] == 1 && trainType == 0)
+        {
+            [topicMArray addObject:dic];///筛选出了正念训练 安静调节等topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 3 && [dic[@"MindfulnessType"] integerValue] == 2 && trainType == 1)
+        {
+            [topicMArray addObject:dic];///筛选出了正念训练 压力调节等topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 3 && [dic[@"MindfulnessType"] integerValue] == 3 && trainType == 2)
+        {
+            [topicMArray addObject:dic];///筛选出了正念训练 压力调节等topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 1 && trainType == 3)
+        {
+            [topicMArray addObject:dic];///筛选出了早安 topic资源
+        }
+        
+        if ([dic[@"EaseType"] integerValue] == 2 && trainType == 4)
+        {
+            [topicMArray addObject:dic];///筛选出了晚安 topic资源
+        }
+    }
+    
+    train.TopicDataArray = [NSArray arrayWithArray:topicMArray];
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

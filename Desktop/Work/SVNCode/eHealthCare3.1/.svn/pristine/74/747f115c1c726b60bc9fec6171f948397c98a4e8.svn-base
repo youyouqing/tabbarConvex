@@ -1,0 +1,291 @@
+//
+//  ViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/6/26.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "ViewController.h"
+#import "VDGifPlayerTool.h"
+#import "TabbarController.h"
+#import "LoginViewController.h"
+
+#import "AppDelegate.h"
+#import "WXApi.h"
+#import "GuideView.h"
+
+#import "CommonViewModel.h"
+
+@interface ViewController ()
+
+@property (nonatomic, strong) GuideView *guideView;
+@property (nonatomic, strong) UIButton *newloginButton;
+@property (nonatomic, strong)UIImageView *thirdImage;
+@property (nonatomic, strong) UIView *bgView;
+@end
+
+@implementation ViewController
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (![WXApi isWXAppInstalled]) {
+        if (self.newloginButton) {
+            [ self.thirdImage mas_makeConstraints:^(MASConstraintMaker *make) {
+                
+                make.top.mas_equalTo(self.newloginButton.mas_bottom).mas_offset(KHeight(735));
+                make.centerX.mas_equalTo(self.view.mas_centerX);
+                make.size.mas_equalTo(CGSizeMake(KWidth(141), KHeight(14)));
+            }];
+        }
+        
+        
+        
+    }else
+    {
+        if (self.newloginButton) {
+            [ self.thirdImage mas_makeConstraints:^(MASConstraintMaker *make) {
+                
+                make.top.mas_equalTo(self.newloginButton.mas_bottom).mas_offset(KHeight(69));
+                make.centerX.mas_equalTo(self.view.mas_centerX);
+                make.size.mas_equalTo(CGSizeMake(KWidth(141), KHeight(14)));
+            }];
+        }
+    }
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view, typically from a nib.
+    
+    //判断当前版本是否是第一次进入App
+    NSString *nowVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *lastVersion = [[NSUserDefaults standardUserDefaults] stringForKey:@"lastVersion"];
+
+    if(![nowVersion isEqualToString:lastVersion])
+    {
+        NSString *nowVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+        [[NSUserDefaults standardUserDefaults] setObject:nowVersion forKey:@"lastVersion"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self createUI];
+//        [self loadGuidePageView];
+
+    }else
+    {
+        [self isGoToLogin];
+    }
+   
+
+}
+- (void)loginAction
+{
+     [self isGoToLogin];
+    self.bgView.hidden = YES;
+}
+- (void)newloginAction
+{
+      [self loadGuidePageView];
+      self.bgView.hidden = YES;
+}
+-(void)loginWithWechat
+{
+    
+    
+}
+-(void)createUI{
+    
+    UIView *bgView = [[UIView alloc]init];
+    [self.view addSubview:bgView];
+    self.bgView = bgView;
+    [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+      
+        make.left.mas_equalTo(0);
+        make.right.mas_equalTo(0);
+    }];
+    
+    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    loginButton.layer.cornerRadius = KHeight(45)/2.0;
+    loginButton.clipsToBounds = YES;
+    loginButton.layer.borderWidth = 1.f;
+    loginButton.layer.borderColor = kMainColor.CGColor;
+    [loginButton setTitle:@"我是老用户" forState:UIControlStateNormal];
+    [loginButton setTitleColor:kMainColor forState:UIControlStateNormal];
+    [loginButton addTarget:self action:@selector(loginAction) forControlEvents:UIControlEventTouchUpInside];
+    loginButton.backgroundColor = [UIColor whiteColor];
+    [bgView addSubview:loginButton];
+    [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(KHeight(185));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.height.mas_equalTo(KHeight(45));
+        make.left.mas_equalTo(KWidth(24));
+        make.right.mas_equalTo(-KWidth(24));
+    }];
+   
+    
+    
+    
+    UIButton *newloginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    newloginButton.layer.cornerRadius = KHeight(45)/2.0;
+    newloginButton.clipsToBounds = YES;
+    //    loginButton.layer.borderWidth = 1.f;
+    //    loginButton.layer.borderColor = [UIColor getColor:@"03C7FF"].CGColor;
+    [newloginButton setTitle:@"我是新用户" forState:UIControlStateNormal];
+    [newloginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [newloginButton addTarget:self action:@selector(newloginAction) forControlEvents:UIControlEventTouchUpInside];
+    newloginButton.backgroundColor = [UIColor getColor:@"03C7FF"];
+    [bgView addSubview:newloginButton];
+    [newloginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(loginButton.mas_bottom).mas_offset(KHeight(40));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.height.mas_equalTo(KHeight(45));
+        make.left.mas_equalTo(KWidth(24));
+        make.right.mas_equalTo(-KWidth(24));
+    }];
+    self.newloginButton = newloginButton;
+    
+    UIImageView *thirdImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"iv_login_disanfang"]];
+    [bgView addSubview:thirdImage];
+    [thirdImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(newloginButton.mas_bottom).mas_offset(KHeight(69));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(126.9), KHeight(12.6)));
+    }];
+    self.thirdImage = thirdImage;
+    
+    //微信登录
+    UIButton *thirdLogin = [UIButton buttonWithType:UIButtonTypeCustom];
+    [thirdLogin setBackgroundImage:[UIImage imageNamed:@"icon_login_weixin"] forState:UIControlStateNormal];
+    
+    [thirdLogin setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+    [thirdLogin addTarget:self action:@selector(loginWithWechat) forControlEvents:UIControlEventTouchUpInside];
+    
+    [bgView addSubview:thirdLogin];
+    [thirdLogin mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(thirdImage.mas_bottom).mas_offset(KHeight(25));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(40), KWidth(40)));
+    }];
+    
+    
+    UILabel *weixinLab = [[UILabel alloc]init];
+    [bgView addSubview:weixinLab];
+    weixinLab.text = @"微信";
+    weixinLab.textColor = [UIColor getColor:@"7C838C"];
+    weixinLab.font = Kfont(14);
+    weixinLab.textAlignment = NSTextAlignmentCenter;
+    [weixinLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(thirdLogin.mas_bottom).mas_offset(KHeight(6));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(206), KHeight(26)));
+        
+    }];
+    if (![WXApi isWXAppInstalled]) {
+        [ self.thirdImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.top.mas_equalTo(newloginButton.mas_bottom).mas_offset(KHeight(735));
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.size.mas_equalTo(CGSizeMake(KWidth(141), KHeight(14)));
+        }];
+        
+        
+    }else
+    {
+        
+        [ self.thirdImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.top.mas_equalTo(newloginButton.mas_bottom).mas_offset(KHeight(69));
+            make.centerX.mas_equalTo(self.view.mas_centerX);
+            make.size.mas_equalTo(CGSizeMake(KWidth(141), KHeight(14)));
+        }];
+        
+    }
+    
+}
+
+#pragma mark 判断是否登录了
+- (void)isGoToLogin
+{
+    //检查token是否失效
+    if([UserInfoTool getLoginInfo].Token.length > 0)
+    {
+        [SingleTon shareInstance].token = [UserInfoTool getLoginInfo].Token;
+        [SingleTon shareInstance].isLogin = YES;
+        
+        //检查token是否失效
+        [CommonViewModel checkTokenIsFailureWithFinishedBlock:^(ResponseObject *response) {
+            
+            if (response.code != CodeTypeSucceed) {
+                
+                LoginViewController *login = [[LoginViewController alloc]init];
+                [self presentViewController:login animated:YES completion:nil];
+            }
+        }];
+    }
+    
+    if ([SingleTon shareInstance].isLogin)
+    {
+        [self setRootViewController];
+        
+    }else
+    {
+        LoginViewController *login = [[LoginViewController alloc]initWithType:pageTypeNoNavigation];
+        
+        login.loginSuccess = ^(UIViewController *viewController) {
+            
+            [self setRootViewController];
+        };
+        
+//        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:login];
+//        nav.navigationBarHidden = YES;
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        appDelegate.window.rootViewController = login;
+    }
+}
+
+#pragma mark 设置rootViewController
+- (void)setRootViewController
+{
+    TabbarController *tab = [[TabbarController alloc]init];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.window.rootViewController = tab;
+}
+
+#pragma mark 加载引导页
+- (void)loadGuidePageView
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+     WEAKSELF
+    VDGifPlayerTool *addGif =  [[VDGifPlayerTool alloc]init];
+    [addGif addGifWithName:@"welcome" toView:self.view];
+    addGif.call_back = ^(BOOL dealloc) {
+        if (dealloc == YES) {
+            GuideView * guideView = [[GuideView alloc] initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight)];
+            [self.view addSubview:guideView];
+            [self.view bringSubviewToFront:guideView];
+           
+            [guideView setHideGuideViewBlock:^{
+                weakSelf.guideView = nil;
+                [weakSelf isGoToLogin];
+            }];
+            weakSelf.guideView = guideView;
+        }
+    };
+   
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

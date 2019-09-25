@@ -1,0 +1,30 @@
+//
+//  NSString+Extension.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/3.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NSString (Extension)
+
+/**
+ 截取指定字符串
+ 
+ @param characString 需要被解决的字符串
+ @param start 截取的起始位置
+ @param end 截取的终点
+ @return 处理之后的字符串
+ */
++ (NSString *)loadCharcterView:(NSString *)characString startS:(NSString *)start endS:(NSString *)end;
+
+///对字符串进行URL编码
++ (NSString *)encodeToPercentEscapeString: (NSString *) input;
+
+
+///对字符串进行URL解码
++ (NSString *)decodeFromPercentEscapeString: (NSString *) input;
+
+@end

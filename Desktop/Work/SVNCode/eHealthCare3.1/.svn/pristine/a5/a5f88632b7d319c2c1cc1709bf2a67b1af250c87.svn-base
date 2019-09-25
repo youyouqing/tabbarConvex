@@ -1,0 +1,71 @@
+//
+//  RunningView.h
+//  RCSports
+//
+//  Created by liveidzong on 9/21/16.
+//  Copyright © 2016 SBM. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "XKSpLongGestureStopBtn.h"
+@protocol XKRunAndHideViewDelegate <NSObject>
+
+@optional;
+/**
+ 开始计时
+ */
+- (void)lockOrunLockBtn;
+
+- (void)suspendOrunKeep:(BOOL)keep;
+
+
+-(void)stopActionBtn;
+@end
+@interface RunningView : UIView
+
+/**
+ 点击进入地图按钮
+ */
+@property(nonatomic,weak)IBOutlet UIButton *mapButton;
+@property (nonatomic,strong) UILabel *distanceLB;
+@property (nonatomic,strong) UILabel *timeLB;
+@property (nonatomic,strong) UILabel *speedLB;
+//@property(nonatomic,weak) NSTimer *timer;
+@property(nonatomic,weak)IBOutlet UIView *timeBackView;
+@property (nonatomic)id<XKRunAndHideViewDelegate> delegate;
+
+@property(nonatomic,weak)IBOutlet UIImageView *imageBack ;
+
+/**
+ 继续  结束。 两边的距离
+ */
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftBtnSpace;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *rightBtnSpace;
+
+/**
+ 继续按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *keepGoBtn;
+/**
+ 长按结束按钮
+ */
+@property (weak, nonatomic) IBOutlet XKSpLongGestureStopBtn *stopBtn;
+/**
+ 开始按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *startBtn;
+@property (weak, nonatomic) IBOutlet UILabel *keepLab;
+@property (weak, nonatomic) IBOutlet UILabel *pauseLab;
+
+@property (weak, nonatomic) IBOutlet UILabel *endLab;
+//用于记时的
+//@property(nonatomic,assign) NSInteger timerNumber;
+
+////重置记录
+//-(void)resetRecord;
+////开始记时器
+//-(void)startTimer;
+////停止记时器
+//-(void)stopTimer;
+//-(void)pauseRecord;
+@end

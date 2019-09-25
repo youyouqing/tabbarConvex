@@ -1,0 +1,136 @@
+//
+//  PublicViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/18.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "PublicViewController.h"
+#import "MessagePublicCell.h"
+@interface PublicViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property (strong, nonatomic)  UITableView *tableView;
+
+@property (nonatomic, strong) MessagePublicModel *publicModel;
+//@property (nonatomic, strong) MessagePublicModel *sysModel;
+//@property (nonatomic, strong) NSMutableArray *publicDataArr;
+@end
+
+@implementation PublicViewController
+#pragma mark - 获取数据
+-(void)loadPublicFromBase
+{
+    if ([[EGOCache globalCache] hasCacheForKey:@"messagePublicDic"]) {
+        NSDictionary *dic = (NSDictionary *) [[EGOCache globalCache]objectForKey:@"messagePublicDic"];
+         self.publicModel = [MessagePublicModel mj_objectWithKeyValues:dic[@"Result"]];
+        [self.tableView reloadData];
+    }
+}
+
+-(void)loadPublicData
+{
+    NSDictionary *dict=@{@"Token":[UserInfoTool getLoginInfo].Token,@"MemberID":@([UserInfoTool getLoginInfo].MemberID),@"PageIndex":@1,@"PageSize":@10};
+    
+    [[XKLoadingView shareLoadingView]showLoadingText:@"努力加载中..."];
+    [ProtosomaticHttpTool protosomaticPostWithURLString:@"116" parameters:dict success:^(id json) {
+        NSLog(@"消息列表--公告系统消息116：%@",json);
+           [[XKLoadingView shareLoadingView] hideLoding];
+        NSDictionary *dic=(NSDictionary *)json;
+        if ([[NSString stringWithFormat:@"%@",dic[@"Basis"][@"Status"]] isEqualToString:@"200"]) {
+         
+            
+             self.publicModel = [MessagePublicModel mj_objectWithKeyValues:dic[@"Result"]];
+            
+            [self.tableView reloadData];
+            
+            //缓存
+            [[EGOCache globalCache]setObject:dic forKey:@"messagePublicDic"];
+            
+        }else{
+            [[XKLoadingView shareLoadingView] errorloadingText:@"加载失败"];
+        }
+        
+    } failure:^(id error) {
+        
+        NSLog(@"%@",error);
+        [[XKLoadingView shareLoadingView] errorloadingText:error];
+    }];
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    
+    self.tableView= [[UITableView alloc]initWithFrame:CGRectMake(0, PublicY, KScreenWidth, KScreenHeight-(PublicY)) style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.backgroundColor = [UIColor getColor:@"edf8ff"];
+    [self.view addSubview:self.tableView];
+    self.tableView.estimatedRowHeight = 110;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.separatorColor=[UIColor clearColor];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MessagePublicCell" bundle:nil] forCellReuseIdentifier:@"MessagePublicCell"];
+  
+    
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.myTitle = @"消息";
+    self.publicModel = [[MessagePublicModel alloc]init];
+    [self loadPublicFromBase];//读取公告缓存的数据
+    [self createUI];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readRefresh) name:@"ReadRefresh" object:nil];
+}
+-(void)readRefresh
+{
+    [self loadPublicData];
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+   return [self.publicModel.Rows integerValue];
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+        NSString *cellid = @"MessagePublicCell";
+        MessagePublicCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        MessagePublicModel *model = publicModel[indexPath.row];
+//        cell.model = model;
+        return cell;
+        
+ 
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return KHeight(80);
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    NewPublicViewController *publicVC = [[NewPublicViewController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:publicVC animated:YES];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

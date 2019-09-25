@@ -1,0 +1,22 @@
+//
+//  NewWikiModel.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/11/9.
+//  Copyright © 2018 Jon Shi. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NewWikiModel : NSObject
+@property (nonatomic,strong) NSString *CreateTime;
+@property (nonatomic,assign) NSInteger ReadNum;
+/**
+ 最新资讯回复内容
+ */
+@property (nonatomic,strong) NSString *TopicTitle;
+
+@property (nonatomic,strong) NSString *MessageTitle;
+
+@property (nonatomic,strong) NSString *NoticeTitle;
+@end

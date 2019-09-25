@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PersonArchiveBottomView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ulH-2H-gEz">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y3d-eY-Cbp">
+                    <rect key="frame" x="0.0" y="482" width="375" height="185"/>
+                    <subviews>
+                        <button opaque="NO" tag="113" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pmy-XC-CJj">
+                            <rect key="frame" x="0.0" y="130" width="375" height="45"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="45" id="Xch-2z-cdX"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <state key="normal" title="取消">
+                                <color key="titleColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </state>
+                            <connections>
+                                <action selector="AccountbtnAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="i0K-jh-6G1"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="111" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OSi-A2-2tY">
+                            <rect key="frame" x="10" y="10" width="355" height="50"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="FxI-xj-a62"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <state key="normal" title="家人已有账号">
+                                <color key="titleColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </state>
+                            <connections>
+                                <action selector="AccountbtnAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="1fy-1h-FpQ"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="112" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q18-Sc-HuO">
+                            <rect key="frame" x="10" y="70" width="355" height="50"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="JNb-wg-y3P"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <state key="normal" title="家人无账号">
+                                <color key="titleColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </state>
+                            <connections>
+                                <action selector="AccountbtnAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Qzq-f2-V2P"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="q18-Sc-HuO" secondAttribute="trailing" constant="10" id="5Pq-OO-ssN"/>
+                        <constraint firstAttribute="trailing" secondItem="pmy-XC-CJj" secondAttribute="trailing" id="O0I-3f-5D0"/>
+                        <constraint firstAttribute="trailing" secondItem="OSi-A2-2tY" secondAttribute="trailing" constant="10" id="O4x-yw-3SX"/>
+                        <constraint firstItem="pmy-XC-CJj" firstAttribute="top" secondItem="q18-Sc-HuO" secondAttribute="bottom" constant="10" id="U8n-Ao-Bte"/>
+                        <constraint firstAttribute="height" constant="185" id="VFT-rg-YFi"/>
+                        <constraint firstItem="q18-Sc-HuO" firstAttribute="top" secondItem="OSi-A2-2tY" secondAttribute="bottom" constant="10" id="VJb-vI-mhA"/>
+                        <constraint firstItem="pmy-XC-CJj" firstAttribute="leading" secondItem="Y3d-eY-Cbp" secondAttribute="leading" id="ZbH-Hm-xId"/>
+                        <constraint firstItem="q18-Sc-HuO" firstAttribute="leading" secondItem="Y3d-eY-Cbp" secondAttribute="leading" constant="10" id="faq-hK-8gD"/>
+                        <constraint firstItem="OSi-A2-2tY" firstAttribute="leading" secondItem="Y3d-eY-Cbp" secondAttribute="leading" constant="10" id="gFK-AB-bnV"/>
+                        <constraint firstItem="OSi-A2-2tY" firstAttribute="top" secondItem="Y3d-eY-Cbp" secondAttribute="top" constant="10" id="grn-Fx-ooV"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Y3d-eY-Cbp" secondAttribute="trailing" id="39e-ID-I1d"/>
+                <constraint firstItem="Y3d-eY-Cbp" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="EH1-Lv-tks"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Y3d-eY-Cbp" secondAttribute="bottom" id="QFo-qi-Skl"/>
+                <constraint firstItem="ulH-2H-gEz" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="RL4-62-PQH"/>
+                <constraint firstItem="ulH-2H-gEz" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ZoU-4r-nis"/>
+                <constraint firstItem="ulH-2H-gEz" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="p8G-6w-eOF"/>
+                <constraint firstItem="ulH-2H-gEz" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="qYV-rk-oOv"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="bottomView" destination="Y3d-eY-Cbp" id="YJ0-iJ-iUn"/>
+                <outlet property="haveAccountBtn" destination="OSi-A2-2tY" id="bvP-a3-HHk"/>
+                <outlet property="noneAccountBtn" destination="q18-Sc-HuO" id="Zvv-qB-R5M"/>
+            </connections>
+        </view>
+    </objects>
+</document>

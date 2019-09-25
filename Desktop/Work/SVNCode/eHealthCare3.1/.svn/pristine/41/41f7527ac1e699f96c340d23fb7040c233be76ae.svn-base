@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="XKCheckResultSugarTopView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZzA-PJ-qe8">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TBv-wz-gL9">
+                    <rect key="frame" x="47" y="218" width="281" height="230"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请选择类型" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdR-Fx-cFq">
+                            <rect key="frame" x="0.0" y="25" width="281" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qcO-bo-YXb">
+                            <rect key="frame" x="260" y="4" width="17" height="17"/>
+                            <state key="normal" backgroundImage="icon_Bulletwindow_colse">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="uZD-jU-EcT"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="70" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oor-BG-7Vf">
+                            <rect key="frame" x="25" y="70.5" width="231" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="gXv-hZ-OZw"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="空腹血糖">
+                                <color key="titleColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="selectAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="FEM-5y-cuV"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="71" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IOI-q1-Ryv">
+                            <rect key="frame" x="25" y="120.5" width="231" height="40"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="餐后两小时血糖">
+                                <color key="titleColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="selectAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Oib-Qi-tNa"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="72" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o6l-hY-cGc">
+                            <rect key="frame" x="25" y="170.5" width="231" height="40"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="随机血糖">
+                                <color key="titleColor" red="0.01176470588" green="0.78039215689999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="selectAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="5rk-vg-dyj"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="IOI-q1-Ryv" firstAttribute="height" secondItem="Oor-BG-7Vf" secondAttribute="height" id="0Jq-66-df0"/>
+                        <constraint firstItem="o6l-hY-cGc" firstAttribute="height" secondItem="Oor-BG-7Vf" secondAttribute="height" id="8up-iY-NaW"/>
+                        <constraint firstItem="IOI-q1-Ryv" firstAttribute="leading" secondItem="Oor-BG-7Vf" secondAttribute="leading" id="AyJ-7S-cYM"/>
+                        <constraint firstAttribute="trailing" secondItem="Oor-BG-7Vf" secondAttribute="trailing" constant="25" id="B2t-3A-pzE"/>
+                        <constraint firstItem="o6l-hY-cGc" firstAttribute="top" secondItem="IOI-q1-Ryv" secondAttribute="bottom" constant="10" id="B5z-Kh-reH"/>
+                        <constraint firstItem="IOI-q1-Ryv" firstAttribute="top" secondItem="Oor-BG-7Vf" secondAttribute="bottom" constant="10" id="Cpb-9V-UoS"/>
+                        <constraint firstItem="Oor-BG-7Vf" firstAttribute="top" secondItem="mdR-Fx-cFq" secondAttribute="bottom" constant="25" id="N5s-df-rCa"/>
+                        <constraint firstItem="mdR-Fx-cFq" firstAttribute="centerX" secondItem="TBv-wz-gL9" secondAttribute="centerX" id="Np1-Ac-2ZW"/>
+                        <constraint firstItem="o6l-hY-cGc" firstAttribute="leading" secondItem="Oor-BG-7Vf" secondAttribute="leading" id="Q3S-iK-6OT"/>
+                        <constraint firstAttribute="trailing" secondItem="qcO-bo-YXb" secondAttribute="trailing" constant="4" id="SEA-Vi-aEw"/>
+                        <constraint firstItem="mdR-Fx-cFq" firstAttribute="leading" secondItem="TBv-wz-gL9" secondAttribute="leading" id="XTb-Yn-9pL"/>
+                        <constraint firstItem="qcO-bo-YXb" firstAttribute="top" secondItem="TBv-wz-gL9" secondAttribute="top" constant="4" id="YCP-wa-24K"/>
+                        <constraint firstItem="mdR-Fx-cFq" firstAttribute="top" secondItem="TBv-wz-gL9" secondAttribute="top" constant="25" id="Zmj-JX-wAd"/>
+                        <constraint firstItem="o6l-hY-cGc" firstAttribute="trailing" secondItem="Oor-BG-7Vf" secondAttribute="trailing" id="Zyk-ET-1oZ"/>
+                        <constraint firstAttribute="height" constant="230" id="bFr-7m-vLM"/>
+                        <constraint firstItem="IOI-q1-Ryv" firstAttribute="trailing" secondItem="Oor-BG-7Vf" secondAttribute="trailing" id="hri-41-TzE"/>
+                        <constraint firstItem="Oor-BG-7Vf" firstAttribute="leading" secondItem="TBv-wz-gL9" secondAttribute="leading" constant="25" id="z5h-mV-c2f"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ZzA-PJ-qe8" secondAttribute="trailing" id="8hG-hb-afx"/>
+                <constraint firstAttribute="trailing" secondItem="TBv-wz-gL9" secondAttribute="trailing" constant="47" id="Dhi-o7-fOQ"/>
+                <constraint firstItem="ZzA-PJ-qe8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Mfc-Fv-5Qm"/>
+                <constraint firstItem="TBv-wz-gL9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="47" id="Ngr-cE-DJL"/>
+                <constraint firstAttribute="bottom" secondItem="ZzA-PJ-qe8" secondAttribute="bottom" id="ONe-Lc-YNd"/>
+                <constraint firstItem="TBv-wz-gL9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="WkA-7C-zpX"/>
+                <constraint firstItem="TBv-wz-gL9" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="dvV-Yw-nFC"/>
+                <constraint firstItem="ZzA-PJ-qe8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="oSy-AY-efI"/>
+            </constraints>
+            <connections>
+                <outlet property="afterMealBtn" destination="IOI-q1-Ryv" id="Ssp-Kx-vWz"/>
+                <outlet property="backView" destination="ZzA-PJ-qe8" id="go5-lp-ZiX"/>
+                <outlet property="centerView" destination="TBv-wz-gL9" id="0AL-T4-3fK"/>
+                <outlet property="fastBloodGlucoseBtn" destination="Oor-BG-7Vf" id="faj-I2-gMt"/>
+                <outlet property="randomBloodSugarBtn" destination="o6l-hY-cGc" id="s8M-D1-vDA"/>
+            </connections>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon_Bulletwindow_colse" width="17" height="17"/>
+    </resources>
+</document>

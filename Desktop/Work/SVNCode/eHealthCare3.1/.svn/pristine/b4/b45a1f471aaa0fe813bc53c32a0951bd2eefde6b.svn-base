@@ -1,0 +1,74 @@
+//
+//  PersonalCenterViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/2.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "PersonalCenterViewController.h"
+#import "PersonalCenterViewModel.h"
+
+@interface PersonalCenterViewController ()
+
+@end
+
+@implementation PersonalCenterViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    [self createUI];
+    [self showPlaceHoldImageAtCenterOfViewController:nil];
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    UIButton *signOut = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    signOut.backgroundColor = [UIColor redColor];
+    [signOut setTitle:@"退出" forState:UIControlStateNormal];
+    [signOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [signOut addTarget:self action:@selector(signOut) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:signOut];
+
+    [signOut mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.bottom.mas_equalTo(- KHeight(100));
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.size.mas_equalTo(CGSizeMake(KWidth(300), KHeight(20)));
+    }];
+}
+
+#pragma Action
+//退出
+- (void)signOut
+{
+    [PersonalCenterViewModel signOutAction];
+
+    [self presentLoginView];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self hiddenPlaceHoldImage];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

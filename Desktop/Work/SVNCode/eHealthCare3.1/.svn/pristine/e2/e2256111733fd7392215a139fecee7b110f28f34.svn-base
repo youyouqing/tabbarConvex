@@ -1,0 +1,406 @@
+//
+//  XKTrendDetailShardController.m
+//  eHealthCare
+//
+//  Created by jamkin on 2017/4/6.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKTrendDetailShardController.h"
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
+#import "DrinkHeaderView.h"
+#import "NewTrendDataModel.h"
+#import "TrendSuggestModel.h"
+#import <ShareSDKUI/ShareSDK+SSUI.h>
+@interface XKTrendDetailShardController ()<DrinkHeaderViewDelegate>{
+    
+    NSDictionary *maxNumDic;
+    NSMutableArray *oneDataArr;
+    NSMutableArray *twoDataArr;
+    NSMutableArray *timeArr;
+     NSMutableArray *afeterTimeArr;
+    NewTrendDataModel *titleModel;
+    
+}
+
+@property (weak, nonatomic) IBOutlet UILabel *timeLab;
+@property (weak, nonatomic) IBOutlet UILabel *markLab;
+
+@property (weak, nonatomic) IBOutlet UIView *TendViewContain;
+
+@property (nonatomic,weak) DrinkHeaderView *DeaderView;
+
+@end
+
+@implementation XKTrendDetailShardController
+
+#pragma mark  - 懒加载
+-(DrinkHeaderView *)DeaderView{
+    
+    if (!_DeaderView) {
+        
+        _DeaderView=[[[NSBundle mainBundle]loadNibNamed:@"DrinkHeaderView" owner:self options:nil]firstObject];
+        
+        _DeaderView.x=0;
+        
+        _DeaderView.y=0;
+        
+        _DeaderView.width=KScreenWidth;
+        
+        _DeaderView.height=DrinkHeight;
+        
+        _DeaderView.delegate=self;
+        
+        _DeaderView.descriptionStr=NO;
+        
+        _DeaderView.isShowAir=NO;
+        
+        
+        _DeaderView.lineStyle=YES;
+        
+    }
+    
+    return _DeaderView;
+    
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    timeArr = [[NSMutableArray alloc] init];
+    oneDataArr = [[NSMutableArray alloc] init];
+    twoDataArr = [[NSMutableArray alloc] init];
+    titleModel = [[NewTrendDataModel alloc]init];
+    afeterTimeArr = [[NSMutableArray alloc]init];
+    self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"分享" style:UIBarButtonItemStylePlain target:self action:@selector(clickShard)];
+    
+    NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
+    formatter.dateFormat=@"yyyy-MM-dd";
+    self.timeLab.text=[formatter stringFromDate:[NSDate date]];
+    
+    self.markLab.textColor=NAVICOLOR;
+    
+    [self.TendViewContain addSubview:self.headerView];
+    
+    //折线图最大值范围
+    maxNumDic = @{@"11":@12,@"32":@12,@"33":@12,@"163":@12,@"9":@50,@"1":@100,@"14":@50,@"51":@100,@"10":@200,@"34":@15,@"36":@10,@"37":@10,@"35":@5,@"12":@260};
+    
+    self.DeaderView.maxScore = [[NSString stringWithFormat:@"%@",[maxNumDic objectForKey:[NSString stringWithFormat:@"%li",self.PhysicalItemID]]] integerValue];
+    
+     [self dealWithData];
+    
+    //  强行掉用一个方法
+    if (self.shareType) {
+        [self clickDateToTakeData:self.shareType];
+    }
+    
+    
+}
+
+//处理数据数组
+-(void)dealWithData
+{
+    NSMutableArray *yearArr = [[NSMutableArray alloc]init];
+    
+    [timeArr removeAllObjects];
+     if (self.PhysicalItemID == 32||self.PhysicalItemID == 33||self.PhysicalItemID == 163) {
+         for (XKNewTrendDataSugarModel *model in self.dataArr) {
+             
+             //            if (model.BloodType == 1) {
+             
+             [oneDataArr addObject:[NSNumber numberWithFloat:model.BloodSugar]];
+             Dateformat *format = [[Dateformat alloc]init];
+             
+             [timeArr addObject:[format DateFormatWithDate:model.TestTime withFormat:@"MM/dd" ]];
+             if (model.TestTime) {
+                  [yearArr addObject:[self fromTimeToGetYear:model.TestTime]];
+             }
+            
+             //            }
+             
+             
+             
+             
+             //        }
+             
+             
+         }
+         
+     }else
+     {
+         for (NewTrendDataModel *model in self.dataArr) {
+             if (self.PhysicalItemID == 1 || self.PhysicalItemID == 11 ||self.PhysicalItemID == 12) {
+                 //BMI 、血糖、血压
+                 model.hasTwoLine = YES;
+             }
+             
+             if (self.PhysicalItemID == 11) {
+                 
+                 NSInteger a = model.ValueOne ;
+                 if (a != 0 ) {
+                     
+                     [oneDataArr addObject:[NSNumber numberWithFloat:model.ValueOne]];
+                     
+                     [timeArr addObject:[self loadTimeStr:model.TestTime]];
+                     if (model.TestTime) {
+                          [yearArr addObject:[self fromTimeToGetYear:model.TestTime]];
+                     }
+                     
+                     
+                     
+                 }
+                 if (model.hasTwoLine) {
+                     NSInteger b = model.ValueTwo ;
+                     if (b != 0 ) {
+                         
+                         [twoDataArr addObject:[NSNumber numberWithFloat:model.ValueTwo]];
+                         
+                         [afeterTimeArr addObject:[self loadTimeStr:model.TestTime]];
+                     }
+                     
+                     
+                 }
+                 
+             }
+             else
+             {
+                 [oneDataArr addObject:[NSNumber numberWithFloat:model.ValueOne]];
+                 if (model.hasTwoLine) {
+                     [twoDataArr addObject:[NSNumber numberWithFloat:model.ValueTwo]];
+                 }
+                 [timeArr addObject:[self loadTimeStr:model.TestTime]];
+                 if (model.TestTime) {
+                     [yearArr addObject:[self fromTimeToGetYear:model.TestTime]];
+                 }
+                 
+             }
+             
+         }
+         
+         
+     }
+
+    //第一条折线图数据
+    if (oneDataArr.count>0)
+    {
+        
+        if (self.PhysicalItemID != 11) {
+            [oneDataArr removeObjectAtIndex:0];
+        }
+    
+        if (oneDataArr.count>0) {
+         self.DeaderView.dataArray = oneDataArr;
+        }
+    }
+    if (self.PhysicalItemID == 32||self.PhysicalItemID == 33||self.PhysicalItemID == 163) {
+        if (self.PhysicalItemID == 32) {
+            [self.DeaderView.acountOneBtn setTitle:[NSString stringWithFormat:@"%@(%@)",self.sugarsuggestModel.PhysicalItemNameOne,self.sugarsuggestModel.PhysicalItemUnitOne] forState:UIControlStateNormal];
+          
+        }
+        if (self.PhysicalItemID == 33) {
+            [self.DeaderView.acountOneBtn setTitle:[NSString stringWithFormat:@"%@(%@)",self.sugarsuggestModel.PhysicalItemNameTwo,self.sugarsuggestModel.PhysicalItemUnitTwo] forState:UIControlStateNormal];
+            
+           
+        }
+        if (self.PhysicalItemID == 163) {
+            [self.DeaderView.acountOneBtn setTitle:[NSString stringWithFormat:@"%@(%@)",self.sugarsuggestModel.PhysicalItemNameThree,self.sugarsuggestModel.PhysicalItemUnitThree] forState:UIControlStateNormal];
+            
+           
+        }
+        
+    }else
+        
+    [self.DeaderView.acountOneBtn setTitle:[NSString stringWithFormat:@"%@(%@)",self.suggestModel.PhysicalItemNameOne,self.suggestModel.PhysicalItemUnitOne] forState:UIControlStateNormal];
+    
+    if (twoDataArr.count> 0 ) {
+//        [twoDataArr removeObjectAtIndex:0];
+        if (self.PhysicalItemID != 11) {
+            
+            //第一条折线图数据
+            if (twoDataArr.count>0) {
+                [twoDataArr removeObjectAtIndex:0];
+                if (twoDataArr.count>0) {
+                    self.DeaderView.otherDataArray = twoDataArr;
+                }
+            }
+            
+//            self.headerView.otherDataArray = twoDataArr;//第二条折线图数据
+        }
+
+        self.DeaderView.acountTwoBtn.hidden = NO;
+        if (self.PhysicalItemID == 32||self.PhysicalItemID == 33||self.PhysicalItemID == 163) {
+            [self.DeaderView.acountOneBtn setTitle:[NSString stringWithFormat:@"%@(%@)",self.sugarsuggestModel.PhysicalItemNameTwo,self.sugarsuggestModel.PhysicalItemUnitTwo] forState:UIControlStateNormal];
+        }else
+        [self.DeaderView.acountTwoBtn setTitle:[NSString stringWithFormat:@"%@(%@)",self.suggestModel.PhysicalItemNameTwo,self.suggestModel.PhysicalItemUnitTwo] forState:UIControlStateNormal];
+    }else{
+        self.DeaderView.acountTwoBtn.hidden = YES;
+    }
+    
+    NSLog(@"%@",timeArr);
+    if (timeArr.count>0) {//为什么要移除一个时间？
+        [timeArr removeObjectAtIndex:0];
+        if (timeArr.count>0) {
+            self.DeaderView.labArray = timeArr;
+            if (yearArr.count > 0) {
+               self.DeaderView.yearDataArr = yearArr;
+            }
+            
+        }
+
+    }
+    
+    
+   }
+
+/**通过时间戳返回时间**/
+-(NSString *)loadTimeStr:(NSString *)time{
+    
+    Dateformat *dateFor = [[Dateformat alloc] init];
+    NSString *timeNumsp =[dateFor timeSpWithDate:time withFormat:@"YYYY-MM-dd"];
+    NSString *timeStr=[dateFor DateFormatWithDate:timeNumsp withFormat:@"MM/dd"];
+    
+    return timeStr;
+}
+
+///讲获得的时间转换为年
+- (NSString *)fromTimeToGetYear:(NSString *)time
+{
+    if ([time containsString:@"-"]) {
+        NSArray *needArray = [time componentsSeparatedByString:@"-"];
+        return [needArray firstObject];
+    }
+    
+    Dateformat *dateFor = [[Dateformat alloc] init];
+    NSString *timeNumsp =[dateFor SptimeConvertDate:time];
+    NSArray *needArray = [timeNumsp componentsSeparatedByString:@"-"];
+    return [needArray firstObject];
+}
+
+//-(void)viewWillDisappear:(BOOL)animated{
+//    
+//    [self.headerView removeFromSuperview];
+//    
+//}
+
+-(void)clickShard{
+#pragma mark Action
+    //分享
+
+//        ShareModel *model = [[ShareModel alloc]init];
+//
+//        model.shareUrl = [NSString stringWithFormat:@"%@",dicTemp[@"url"]];
+//        model.shareTitle = dicTemp[@"title"];
+//        model.shareContent = dicTemp[@"content"];
+//
+//        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:dicTemp[@"imagePath"]]]];
+//        model.shareImageArray = @[image];
+//
+//        [ShareView shareActionOfShareUseFor:shareUseForShareContent shareType:shareUrl WithViewcontroller:self ShareModel:model];
+}
+#pragma mark   clickDateToTakeData（特别愚蠢的办法   最好不要这样写）
+-(void)clickDateToTakeData:(NSInteger)type;
+{
+    if (self.PhysicalItemID == 11) {
+        /*第一个按钮和第二个，第一个现实刷新数据*/
+        if (type == 2000) {
+            
+            [self.DeaderView.acountOneBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            
+            [self.DeaderView.acountTwoBtn setTitleColor:kColorWithHexString(@"237e89") forState:UIControlStateNormal];
+
+            for (id cV in self.DeaderView.chartView.subviews) {
+                if ([cV isKindOfClass:[UIButton class]])
+                {
+                    UIButton *cView = (UIButton *)cV;
+                    if (cView.frame.size.width == 10) {
+                        [cView removeFromSuperview];
+                    }
+                    
+                }
+            }
+            for (UILabel *lab in self.DeaderView.greenLabArray) {
+                lab.hidden = YES;
+            }
+            for (UILabel *lab in self.DeaderView.yellowLabArray) {
+                lab.hidden = NO;
+            }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.DeaderView.lineLayer removeFromSuperlayer];
+//            });
+
+             self.DeaderView.labArray = timeArr;
+            self.DeaderView.dataArray = oneDataArr;
+            
+        }
+        else  if (type == 3000)
+        {
+            
+            [self.DeaderView.acountOneBtn setTitleColor:kColorWithHexString(@"237e89") forState:UIControlStateNormal];
+            
+            [self.DeaderView.acountTwoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            for (id cV in self.DeaderView.chartView.subviews) {
+                //                if ([cV isKindOfClass:[UILabel class]]) {
+                //                    UILabel *cView = (UILabel *)cV;
+                //                        [cView removeFromSuperview];
+                //
+                //                }
+                //                else
+                if ([cV isKindOfClass:[UIButton class]])
+                {
+                    UIButton *cView = (UIButton *)cV;
+                    if (cView.frame.size.width == 10) {
+                        [cView removeFromSuperview];
+                    }
+                    
+                }
+            }
+            for (UILabel *lab in self.DeaderView.yellowLabArray) {
+                lab.hidden = YES;
+            }
+            for (UILabel *lab in self.DeaderView.greenLabArray) {
+                lab.hidden = NO;
+            }
+            
+           
+            NSLog(@"twoData---%@",twoDataArr);
+//            dispatch_async(dispatch_get_main_queue(), ^{
+                 [self.DeaderView.lineLayer removeFromSuperlayer];
+//            });
+            self.DeaderView.labArray = afeterTimeArr;
+            self.DeaderView.otherDataArray = twoDataArr;
+        }
+        
+        
+    }
+   
+}
+
+- (UIImage *)getImage {
+    self.navigationItem.rightBarButtonItem = nil;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(KScreenWidth, [UIApplication sharedApplication].keyWindow.height), NO, 0);  //NO，YES 控制是否透明
+    [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    // 生成后的image
+     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"分享" style:UIBarButtonItemStylePlain target:self action:@selector(clickShard)];
+    return image;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

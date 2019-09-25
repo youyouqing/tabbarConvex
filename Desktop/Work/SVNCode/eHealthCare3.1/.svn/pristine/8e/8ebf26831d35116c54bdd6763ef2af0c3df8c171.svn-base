@@ -1,0 +1,35 @@
+//
+//  InformationCollectionViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/12.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "InformationCollectionViewCell.h"
+@interface InformationCollectionViewCell ()
+@property (weak, nonatomic) IBOutlet UILabel *contentLab;
+@property (weak, nonatomic) IBOutlet UILabel *timeLab;
+@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UIImageView *iconImage;
+
+@end
+@implementation InformationCollectionViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+     self.backgroundColor = [UIColor whiteColor];
+    
+//    self.backView.layer.cornerRadius = 5.f;
+//    self.backView.layer.borderWidth = .5;
+//    self.backView.layer.borderColor = [UIColor getColor:@"5D94A4"].CGColor;
+//    self.backView.clipsToBounds = YES;
+    
+    self.backView.layer.shadowColor = [UIColor colorWithRed:93/255.0 green:148/255.0 blue:164/255.0 alpha:0.13].CGColor;
+    self.backView.layer.shadowOpacity = 1;
+    self.backView.layer.shadowRadius = 5.f;
+    self.backView.layer.shadowOffset = CGSizeMake(0, 2);
+}
+
+@end

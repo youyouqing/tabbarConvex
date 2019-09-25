@@ -1,0 +1,15 @@
+//
+//  MessagePublicCell.h
+//  eHealthCare
+//
+//  Created by xiekang on 16/9/7.
+//  Copyright © 2016年 mac. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "MessagePublicModel.h"
+
+@interface MessagePublicCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *lineLab;
+@property (nonatomic,strong) MessagePublicModel *model;
+@end

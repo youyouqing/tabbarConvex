@@ -1,0 +1,28 @@
+//
+//  CheckListModel.h
+//  eHealthCare
+//
+//  Created by jamkin on 16/8/24.
+//  Copyright © 2016年 mac. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface CheckListModel : NSObject
+
+@property (nonatomic,assign)NSInteger RecommendType;
+
+@property (nonatomic,copy)NSString *SetImgUrl;
+
+@property (nonatomic,copy)NSString *SetCategoryName;
+
+@property (nonatomic,assign)NSInteger BrowseCount;
+
+@property (nonatomic,assign)NSInteger SetCategoryId;
+
+@property (nonatomic,assign)NSInteger IsCorporeity;
+
+/**套题描述**/
+@property (nonatomic,copy)NSString *SetContent;
+
+@end

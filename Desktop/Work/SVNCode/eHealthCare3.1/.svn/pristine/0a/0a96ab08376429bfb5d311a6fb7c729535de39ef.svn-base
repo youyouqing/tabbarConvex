@@ -1,0 +1,131 @@
+//
+//  ExamineReportViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/17.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "ExamineReportViewController.h"
+#import "ExamineReportCell.h"
+#import "HealthExamineView.h"
+#import "ExamineReportDetailController.h"
+#import "ExamDetailReportViewController.h"
+@interface ExamineReportViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property (strong, nonatomic)  UITableView *tableView;
+/**
+ 区头 头部试图
+ */
+@property (nonatomic,strong)HealthExamineView *headView;
+@end
+
+@implementation ExamineReportViewController
+
+//-(HealthExamineView *)headView{
+//
+//    if (!_headView) {
+ //
+ //       _headView=[[[NSBundle mainBundle]loadNibNamed:@"HealthExamineView" owner:self options:nil]firstObject];
+ //       _headView.left=0;
+ //       _headView.top=0;
+  //      _headView.width=KScreenWidth;
+   //
+   //     _headView.height=779;//原来banner图高度是150  现在iPhone5的改为115
+   //
+        //        _headView.delegate = self;
+  //  }
+   //
+  //  return _headView;
+ //
+//}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self createUI];
+      self.myTitle = @"健康监测";
+}
+#pragma mark UI
+- (void)createUI
+{
+    
+    self.tableView= [[UITableView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, self.view.frame.size.height) style:UITableViewStyleGrouped];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.backgroundColor = [UIColor getColor:@"edf8ff"];
+    self.view.backgroundColor =  [UIColor getColor:@"edf8ff"];
+    [self.view addSubview:self.tableView];
+    self.tableView.estimatedRowHeight = 110;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.separatorColor=[UIColor clearColor];
+    [self.tableView registerNib:[UINib nibWithNibName:@"ExamineReportCell" bundle:nil] forCellReuseIdentifier:@"ExamineReportCell"];
+    
+    //    [self.tableView registerNib:[UINib nibWithNibName:@"XKMyPlanLookCell" bundle:nil] forCellReuseIdentifier:@"XKMyPlanLookCell"];
+    //    [self.tableView registerNib:[UINib nibWithNibName:@"InformationCell" bundle:nil] forCellReuseIdentifier:@"InformationCell"];
+}
+
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if (section==0) {
+        return 10;
+    }
+    else{
+        return 10;
+    }
+    
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+ 
+    return 88+20;
+
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *cellid = @"ExamineReportCell";
+    ExamineReportCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //        cell.mod = _dataBigArr[indexPath.row];
+    return cell;
+    
+    
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ExamDetailReportViewController *Examine = [[ExamDetailReportViewController alloc]initWithType:pageTypeNormal];
+//    Examine.PhysicalExaminationID = @"32";
+//     Examine.myTitle  = [dateFor DateFormatWithDate:[NSString stringWithFormat:@"%@",model.TestTime] withFormat:@"YYYY-MM-dd"];
+    [self.navigationController pushViewController:Examine animated:YES];
+    
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0.01;
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

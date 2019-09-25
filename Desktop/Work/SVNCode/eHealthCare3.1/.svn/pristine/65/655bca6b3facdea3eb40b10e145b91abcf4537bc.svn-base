@@ -1,0 +1,48 @@
+//
+//  HealthTreeHeaderView.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/15.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTreeHeaderView.h"
+@interface HealthTreeHeaderView ()
+@property (weak, nonatomic) IBOutlet UILabel *xuesuLab;
+@property (weak, nonatomic) IBOutlet UILabel *kangBiLab;
+@property (weak, nonatomic) IBOutlet UILabel *dayLab;
+@property (weak, nonatomic) IBOutlet UIImageView *weatherImage;
+@property (weak, nonatomic) IBOutlet UILabel *temperLab;
+@property (weak, nonatomic) IBOutlet UILabel *conditionLab;
+@property (weak, nonatomic) IBOutlet UILabel *HotLab;
+@property (weak, nonatomic) IBOutlet UIButton *MessageBtn;
+@property (weak, nonatomic) IBOutlet UILabel *RankingLab;
+@property (weak, nonatomic) IBOutlet UILabel *GoLab;
+
+@end
+@implementation HealthTreeHeaderView
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+- (IBAction)messageAction:(id)sender {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(messageDataSoure)]) {
+        [self.delegate messageDataSoure];
+    }
+    
+}
+-(void)setHealthData:(HealthData *)HealthData
+{
+    
+    _HealthData = HealthData;
+//    self.xuesuLab.text = [NSString stringWithFormat:@"%zi",HealthData.]
+    self.kangBiLab.text =  [NSString stringWithFormat:@"%zi",HealthData.KCurrency];
+    self.RankingLab.text = [NSString stringWithFormat:@"%zi",HealthData.Ranking];
+    
+}
+@end

@@ -1,0 +1,633 @@
+//
+//  HealthTreeViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/11.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTreeViewController.h"
+#import "XKMyPlanLookCell.h"
+#import "XKNewHomeInSectionHeadView.h"
+#import "XKHotTopicChildCell.h"
+#import "RemindCell.h"
+#import "HealthTestTableViewCell.h"
+#import "MoodTableViewCell.h"
+#import "StepTableViewCell.h"
+#import "HealthTreeHeaderView.h"
+#import "SportViewController.h"
+#import "HomeViewModel.h"
+#import "PublicViewController.h"
+#import "BreathTrainViewController.h"
+#import "XKTopicHomeController.h"
+#import "XKTopicHotDetialController.h"
+#import "QuietController.h"
+#import "XKHomePlanModel.h"
+#import "HealthData.h"
+#import "XKTopicModel.h"
+#import "StepModel.h"
+#import "StepTool.h"
+#import <HealthKit/HealthKit.h>
+#import <CoreMotion/CoreMotion.h>
+@interface HealthTreeViewController ()<MoodTableViewCellCellDelegate>
+@property (strong, nonatomic)  UITableView *tableView;
+@property (strong, nonatomic) HealthTreeHeaderView *headView;
+
+@property (nonatomic, strong) NSMutableArray *dataArray;
+
+///页码数
+@property (nonatomic,assign)NSInteger pageIndex;
+/**
+ 健康自测的数据
+ */
+@property (strong, nonatomic) NSMutableArray *headViewDataArray;
+
+@property (nonatomic, strong) HealthData *HealthData;
+@property (nonatomic, strong) NSMutableArray *HealthPlanList;
+@property (nonatomic, strong) NSMutableArray *HotTopicList;
+
+
+
+
+/**保存首页记步信息*/
+@property (nonatomic,strong) StepModel *step;
+@property (nonatomic,strong)StepTool *tool;
+/**定义计时器上传每日步数**/
+@property (nonatomic,strong)NSTimer *timer;
+@property (nonatomic, strong) CMPedometer *pedometer;//记步器
+@end
+
+@implementation HealthTreeViewController
+- (HealthTreeHeaderView *)headView
+{
+    if (!_headView) {
+       
+        _headView=[[[NSBundle mainBundle]loadNibNamed:@"HealthTreeHeaderView" owner:self options:nil]firstObject];
+        _headView.left=0;
+        _headView.top=PublicY;
+        _headView.width=KScreenWidth;
+        _headView.height=KHeight(298);
+         _headView.delegate = self;
+    }
+    return _headView;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self createUI];
+    
+    //拉去数据
+    self.pageIndex = 1;
+    [self getHealthTestData];
+    [self loadStep];// 步数上传
+    
+}
+NSString *distanceStr;
+NSString *distanc;
+float dis;
+int steps;
+/**
+ 步数上传
+ */
+-(void)loadStep{
+    
+    NSNotificationCenter *notiCenter=[NSNotificationCenter defaultCenter];
+    [notiCenter addObserver:self selector:@selector(sendStepToWealk:) name:@"sendStepToWealk" object:nil];
+    //3小时上传去检测一次
+    self.timer=[NSTimer scheduledTimerWithTimeInterval:2*60*60  target:self selector:@selector(updateDayAcount) userInfo:nil repeats:YES];
+    
+    //上传历史六天的步数
+    self.tool=[[StepTool alloc]init];
+    
+    [self.tool updateBeforeDataToService];//倒着上传最近七日步数
+    
+    [self updateDayAcount];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"todayRecordUpdate1"];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //设定时间格式,这里可以设置成自己需要的格式
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    //用[NSDate date]可以获取系统当前时间
+    NSString *currentDateStr = [dateFormatter stringFromDate:[NSDate date]];
+    if (![currentDateStr isEqualToString:[NSString stringWithFormat:@"%@",[defaults objectForKey:@"yesterdayDate1"]]]) {//保存上一个日期
+        [defaults removeObjectForKey:@"todayRecordUpdate1"];
+        [defaults setObject:currentDateStr forKey:@"yesterdayDate1"];
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[XKLoadingView shareLoadingView] hideLoding];
+//        //接收到强制切换商城的通知
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mandatoryJumpToMall) name:@"mandatoryJumpToMall" object:nil];
+        
+        // 1.判断计步器是否可用
+        if (![CMPedometer isStepCountingAvailable]) {
+            
+            return;
+        }
+        
+        //统计某天的
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSString *todayDateStr = [dateFormatter stringFromDate:[NSDate date]];
+        
+        NSString *beginDateStr = [todayDateStr stringByAppendingString:@"-00-00-00"];
+        //字符转日期
+        NSDateFormatter *beginDateFormatter = [[NSDateFormatter alloc] init];
+        [beginDateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
+        NSDate *beginDate = [beginDateFormatter dateFromString:beginDateStr];
+        //  [NSDate dateWithTimeInterval:-24*60*画60 sinceDate:[NSDate date]];当你的步数有更新的时候，会触发这个方法，这个方法不会和时时返回结果，每次刷新数据大概在一分钟左右
+        [self.pedometer startPedometerUpdatesFromDate:beginDate withHandler:^(CMPedometerData *pedometerData, NSError *error) {
+            
+            if (error) {
+
+                NSLog(@"查询有误");
+//                [self loadHealthData:NO];
+                return;
+            }
+            
+            //距离字符串
+            distanceStr = [NSString stringWithFormat:@"%@",pedometerData.numberOfSteps];
+            distanc=[NSString stringWithFormat:@"%@",pedometerData.distance];
+            dis=[distanc floatValue];
+            
+            steps = [distanceStr intValue];
+            //讲步数保存到单例里头
+            [SingleTon shareInstance].stepCount = steps;
+            
+            if (!self.step) {
+                self.step = [[StepModel alloc]init];
+            }
+            self.step.StepCount = steps;
+            self.step.KilometerCount = [[NSString stringWithFormat:@"%.1lf",dis/1000] floatValue];
+            self.step.KilocalorieCount = [[NSString stringWithFormat:@"%.1lf",dis/1000*65] floatValue];
+            NSIndexPath *rpath = [NSIndexPath indexPathForRow:0 inSection:0];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadRowsAtIndexPaths:@[rpath] withRowAnimation:UITableViewRowAnimationNone];//重新刷新数据
+                
+                if (![defaults objectForKey:@"todayRecordUpdate1"]) {
+                    [self updateDayAcount];
+                    [defaults setObject:@(1) forKey:@"todayRecordUpdate1"];
+                }
+                
+            });
+            
+        }];
+        
+    });
+}
+-(void)updateDayAcount{
+    
+    if (! [UserInfoTool getLoginInfo].Token) {
+        return;
+    }
+   
+    NSDictionary *dic = @{@"Token": [UserInfoTool getLoginInfo].Token,
+                          @"MemberID":@( [UserInfoTool getLoginInfo].MemberID),
+                          @"StepCount":[NSString stringWithFormat:@"%i",steps],
+                          @"KilometerCount":[NSString stringWithFormat:@"%.2lf",dis/1000],
+                          @"KilocalorieCount":[NSString stringWithFormat:@"%.2lf",dis/1000*65]};
+    
+    
+    [ProtosomaticHttpTool protosomaticPostWithURLString:@"331" parameters:dic success:^(id json) {
+        
+        NSLog(@"%@---%@",json,@{@"Token": [UserInfoTool getLoginInfo].Token,@"MemberID":@( [UserInfoTool getLoginInfo].MemberID),@"StepCount":[NSString stringWithFormat:@"%i",steps],@"KilometerCount":[NSString stringWithFormat:@"%.1lf",dis/1000],@"KilocailorieCount":[NSString stringWithFormat:@"%.1lf",dis/1000*65]});
+        
+        if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+            NSLog(@"xxxx上传步数成功");
+            [self.tableView reloadData];
+            
+        }else{
+            NSLog(@"xxxx上传步数失败");
+        }
+        
+    } failure:^(id error) {
+        
+    }];
+}
+-(void)sendStepToWealk:(NSNotification *)noti{
+    
+    NSLog(@"recodSteprecodSteprecodStep---%@",noti.object);
+ 
+}
+
+-(void)requestMessageLab
+{
+//
+//    [ProtosomaticHttpTool protosomaticPostWithURLString:@"926" parameters:@{@"Token":[UserInfoTool getLoginInfo].Token,@"MemberID":@([UserInfoTool getLoginInfo].MemberID)} success:^(id json) {
+//
+//        NSLog(@"926:%@",json);//json[@"Result"][@"CountIsRead"]
+//        int num = [[json objectForKey:@"Result"][@"CountIsRead"] intValue];
+//
+//        UITabBarItem * item=[self.tabBarController.tabBar.items lastObject];
+//        item.badgeValue=[NSString stringWithFormat:@"%d",num];
+//        self .navigationItem .leftBarButtonItem .badgeValue  =  item.badgeValue ;
+//        if (num == 0) {
+//            self .navigationItem .leftBarButtonItem.badge.hidden = YES;
+//            self.topView.messageNumBtn.hidden = YES;
+//        }
+//        else
+//        {
+//
+//            self .navigationItem .leftBarButtonItem.badge.hidden = NO;
+//            self.topView.messageNumBtn.hidden = NO;
+//        }
+//
+//        self.topView.messageNumBtn.text = [NSString stringWithFormat:@"%i",num]  ;
+//
+//    } failure:^(id error) {
+//
+//        NSLog(@"%@",error);
+//
+//    }];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear: animated];
+
+ 
+    [self requestMessageLab];
+    
+    [self getHealthTreeData];
+    
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    
+    self.tableView= [[UITableView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight-40) style:UITableViewStyleGrouped];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.backgroundColor = [UIColor getColor:@"edf8ff"];
+    self.tableView.tableHeaderView= self.headView;
+    [self.view addSubview:self.tableView];
+    self.tableView.estimatedRowHeight = 110;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.separatorColor=[UIColor clearColor];
+    [self.tableView registerNib:[UINib nibWithNibName:@"RemindCell" bundle:nil] forCellReuseIdentifier:@"RemindCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"HealthTestTableViewCell" bundle:nil] forCellReuseIdentifier:@"HealthTestTableViewCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MoodTableViewCell" bundle:nil] forCellReuseIdentifier:@"MoodTableViewCell"];
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"StepTableViewCell" bundle:nil] forCellReuseIdentifier:@"StepTableViewCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"XKMyPlanLookCell" bundle:nil] forCellReuseIdentifier:@"XKMyPlanLookCell"];
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"XKHotTopicChildCell" bundle:nil] forCellReuseIdentifier:@"XKHotTopicChildCell"];
+    self.extendedLayoutIncludesOpaqueBars = YES;
+    if (@available(iOS 11.0, *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+
+    }
+    
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 6;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if (section==0) {
+        return 1;
+    }
+   else if (section==5) {
+       return self.HotTopicList.count;
+    }
+     else if (section==3) {
+        return self.HealthPlanList.count;
+     }
+    else{
+        return 1;
+    }
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    if (indexPath.section==0) {
+        NSString *cellid = @"StepTableViewCell";
+        StepTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.delegate = self;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.data = self.HealthData;
+        return cell;
+        
+    }
+    else  if (indexPath.section==1)
+    {
+        NSString *cellid = @"RemindCell";
+        RemindCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.healthData = self.HealthData;
+        //        cell.delegate = self;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }
+    else  if (indexPath.section==2) {
+        NSString *cellid = @"MoodTableViewCell";
+        MoodTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
+        return cell;
+        
+    }
+    else  if (indexPath.section==3) {
+        NSString *cellid = @"XKMyPlanLookCell";
+        XKMyPlanLookCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        cell.planModel = self.HealthPlanList[indexPath.row];
+        //        cell.delegate = self;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        CAShapeLayer *maskTwoLayer = [[CAShapeLayer alloc] init];
+        UIBezierPath *corTwoPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, KScreenWidth, (136)) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(5, 5)];
+        maskTwoLayer.frame = corTwoPath.bounds;
+        maskTwoLayer.path=corTwoPath.CGPath;
+        cell.layer.mask=maskTwoLayer;
+        return cell;
+        
+    }
+    else  if (indexPath.section==4)
+    {
+        NSString *cellid = @"HealthTestTableViewCell";
+        HealthTestTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+        
+        cell.delegate = self;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }
+    else
+    {
+        XKHotTopicChildCell *cell = [tableView dequeueReusableCellWithIdentifier:@"XKHotTopicChildCell" forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
+        cell.model = self.HotTopicList[indexPath.row];
+        return cell;
+
+    }
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if (section == 0){
+        XKNewHomeInSectionHeadView *headV=[[[NSBundle mainBundle]loadNibNamed:@"XKNewHomeInSectionHeadView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"今日步数";
+        headV.delegate = self;
+        headV.moreLab.hidden = YES;
+        headV.arrowImg.hidden = YES;
+        return headV;
+    }else if (section == 1){
+        XKNewHomeInSectionHeadView *headV=[[[NSBundle mainBundle]loadNibNamed:@"XKNewHomeInSectionHeadView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"健康提醒";
+        headV.delegate = self;
+       
+        headV.moreLab.hidden = YES;
+        headV.arrowImg.hidden = YES;
+        return headV;
+    }
+    else if (section == 2){
+        XKNewHomeInSectionHeadView *headV=[[[NSBundle mainBundle]loadNibNamed:@"XKNewHomeInSectionHeadView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"心情调节";
+        headV.delegate = self;
+        headV.moreLab.hidden = YES;
+        headV.arrowImg.hidden = YES;
+        return headV;
+    }
+    else if (section == 3){
+        XKNewHomeInSectionHeadView *headV=[[[NSBundle mainBundle]loadNibNamed:@"XKNewHomeInSectionHeadView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"我的健康计划";
+        headV.delegate = self;
+        return headV;
+    } else if (section == 4){
+        XKNewHomeInSectionHeadView *headV=[[[NSBundle mainBundle]loadNibNamed:@"XKNewHomeInSectionHeadView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"健康自测";
+        headV.delegate = self;
+        headV.moreLab.hidden = YES;
+        headV.arrowImg.hidden = YES;
+        return headV;
+    }
+    else {
+        XKNewHomeInSectionHeadView *headV=[[[NSBundle mainBundle]loadNibNamed:@"XKNewHomeInSectionHeadView" owner:self options:nil]  firstObject];
+        headV.titleLab.text=@"热门话题";
+        headV.delegate = self;
+        return headV;
+    }
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    if (section<=5) {
+        return 45+10;
+    }
+   
+    else
+    {
+        
+         return 0.01;
+    }
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.01;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 5) {
+        XKTopicHotDetialController *topic = [[XKTopicHotDetialController alloc]init];
+        XKTopicModel *model = self.HotTopicList[indexPath.row];
+        topic.modelID = model.TopicID;
+        topic.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:topic animated:YES];
+    }
+  
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section==0) {
+        return 134;
+    }
+    if (indexPath.section==2) {
+        return 130;
+    }
+    if (indexPath.section==1) {
+        return 190;
+    }
+    if (indexPath.section==4) {
+        return 533;
+    }
+    if (indexPath.section==3) {
+        return 136;
+    }
+    else{
+        return 136;
+    }
+    
+}
+- (void)buttonClickMainAtIndex:(NSString *)url title:(NSString *)title index:(NSInteger)tag;
+{
+    
+    
+    if (tag = 5) {
+        XKTopicHomeController *info = [[XKTopicHomeController alloc]initWithType:pageTypeNormal];
+        info.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:info animated:YES];
+    }else
+    {
+      
+        SportViewController *sport = [[SportViewController alloc]initWithType:pageTypeNormal];
+        sport.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:sport animated:YES];
+        
+    }
+}
+#pragma mark 健康自测
+-(void)HealthTestTableViewCellJoinAction:(NSString *)cellIndexStr;
+{
+    
+    if (self.headViewDataArray.count == 0)
+    {
+        [AlertView showMessage:@"正在拉取数据,请稍后重试" withTitle:@"提示" sureButtonTitle:@"确定"];
+        return;
+    }
+
+    //            for (NSDictionary *dic in self.headViewDataArray)
+    //            {
+    //                if ([dic[@"SetCategoryName"] isEqualToString:@"健商"])
+    //                {
+    //                    test.dataDic = dic;
+    //                }
+    //            }
+    ReadyTestViewController *test = [[ReadyTestViewController alloc]initWithType:pageTypeNormal];
+    
+    test.myTitle = @"健康自测";
+
+        for (NSDictionary *dic in self.headViewDataArray)
+        {
+            NSString *cateGoryName = dic[@"SetCategoryName"];
+            if ([cellIndexStr containsString:cateGoryName])
+            {
+                test.dataDic = dic;
+            }
+        }
+    test.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:test animated:YES];
+    
+}
+#pragma mark dataSource热门话题代理
+-(void)changeDataSource:(XKTopicModel *)model{
+    
+//    for (int i= 0; i<self.hotTopicList.count; i++) {
+//        XKTopicModel *topic = self.hotTopicList[i];
+//        if (topic == model) {
+//            [self.hotTopicList replaceObjectAtIndex:i withObject:model];
+//            [self.tableView reloadData];
+//
+//            break;
+//        }
+//
+//    }
+    
+}
+
+#pragma mark NetWorking
+//拉去数据
+- (void)getHealthTestData
+{
+    ///一页返回的试题数量
+    NSInteger pageSize = 8;
+    
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                          @"PageIndex":@(self.pageIndex),
+                          @"PageSize":@(pageSize)};
+    [HomeViewModel getHealthTestWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed) {
+            
+            //下拉刷新
+            if (self.pageIndex == 1) {
+                
+                NSArray *listArray = response.Result[@"OtherList"];
+                NSArray *headViewArray = response.Result[@"FixedList"];
+                
+                self.headViewDataArray = [NSMutableArray arrayWithArray:headViewArray];
+                self.dataArray = [NSMutableArray arrayWithArray:listArray];
+                
+                [self.tableView reloadData];
+                
+            }else{
+                
+                //上拉加载
+                NSArray *listArray = response.Result[@"OtherList"];
+                NSArray *headViewArray = response.Result[@"FixedList"];
+                
+                [self.headViewDataArray addObjectsFromArray:headViewArray];
+                [self.dataArray addObjectsFromArray:listArray];
+                
+                [self.tableView reloadData];
+            }
+        }
+    }];
+}
+- (void)getHealthTreeData
+{
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                          @"MemberID":@([UserInfoTool getLoginInfo].MemberID),
+                          };
+    
+    [HomeViewModel gethometree_getHomeResultUrlWithParams:dic FinishedBlock:^(ResponseObject *response) {
+        NSLog(@"944%@",response.Result);
+        if (response.code == CodeTypeSucceed) {
+            self.HealthData = [HealthData mj_objectWithKeyValues:response.Result[@"HealthData"]];
+            
+            self.HealthPlanList = (NSMutableArray *)[XKHomePlanModel mj_objectArrayWithKeyValuesArray:response.Result[@"HealthPlanList"]];
+            
+             self.HotTopicList = (NSMutableArray *)[XKTopicModel mj_objectArrayWithKeyValuesArray:response.Result[@"HotTopicList"]];
+            
+            self.headView.HealthData = self.HealthData;
+            [self.tableView reloadData];
+        
+        }
+    }];
+}
+
+#pragma mark  HeaderDelegate
+-(void)messageDataSoure;
+{
+    
+    PublicViewController *publicVC = [[PublicViewController alloc]initWithType:pageTypeNormal];
+    publicVC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:publicVC animated:YES];
+    
+}
+- (void)moodButtonClick:(NSInteger)buttonIndex;
+{
+    
+    if (buttonIndex == 0) {
+        BreathTrainViewController *breath = [[BreathTrainViewController alloc]initWithType:pageTypeNoNavigation];
+        breath.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:breath animated:YES];
+    }
+    else
+    {
+        
+        [self getMorningEverningAndMindfulnessListWithNetworking:buttonIndex];
+    }
+    
+}
+#pragma mark NetWorking
+- (void)getMorningEverningAndMindfulnessListWithNetworking:(NSInteger)trainType;
+{
+  
+      QuietController *train = [[QuietController alloc]initWithType:pageTypeNormal];
+      train.isQuietOrMusic = (trainType == 2)?YES:NO;
+      train.hidesBottomBarWhenPushed = YES;
+      [self.navigationController pushViewController:train animated:YES];
+
+}
+#pragma mark  运动页面跳转
+- (void)sportbuttonClick;{
+    
+    SportViewController *sport = [[SportViewController alloc]initWithType:pageTypeNormal];
+    sport.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:sport animated:YES];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

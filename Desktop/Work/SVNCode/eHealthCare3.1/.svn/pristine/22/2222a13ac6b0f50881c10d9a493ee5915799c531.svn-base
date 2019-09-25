@@ -1,0 +1,111 @@
+//
+//  HealthTestTableViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/8/3.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthTestTableViewCell.h"
+
+@interface HealthTestTableViewCell ()
+
+@property (nonatomic, strong) UIButton *testStartButton;//立即检测
+
+@end
+
+@implementation HealthTestTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        
+        [self createUI];
+    }
+    return self;
+}
+
+#pragma mark UI
+- (void)createUI
+{
+    UIView *backView = [[UIView alloc]init];
+    
+    backView.layer.borderWidth = 0.3f;
+    backView.layer.cornerRadius = 10.0f;
+    backView.layer.borderColor = GRAYCOLOR.CGColor;
+    backView.layer.masksToBounds = YES;
+    
+    backView.backgroundColor = [UIColor whiteColor];
+    
+    [self.contentView addSubview:backView];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(0);
+        make.left.mas_equalTo(KWidth(10));
+        make.bottom.mas_equalTo( - KWidth(10));
+        make.right.mas_equalTo( - KWidth(10));
+    }];
+    
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+
+    [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(KHeight(2));
+        make.left.mas_equalTo(KWidth(22));
+        make.size.mas_equalTo(CGSizeMake(KWidth(69), KHeight(71)));
+    }];
+    
+    self.textLabel.font = Kfont(15);
+    
+    [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(KHeight(13));
+        make.left.mas_equalTo(self.imageView.mas_right).mas_offset(KWidth(15));
+        make.height.mas_equalTo(KHeight(16));
+    }];
+    
+    
+    self.detailTextLabel.font = Kfont(11);
+    self.detailTextLabel.textColor = GRAYCOLOR;
+    
+    [self.detailTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.bottom.mas_equalTo(- KHeight(25));
+        make.left.mas_equalTo(self.textLabel.mas_left);
+        make.height.mas_equalTo(KHeight(11));
+    }];
+    
+    UIButton *testStartButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [testStartButton setTitle:@"立即检测" forState:UIControlStateNormal];
+    testStartButton.titleLabel.font = Kfont(14);
+    [testStartButton setTitleColor:[UIColor colorWithRed:230/255. green:136/255. blue:78/255. alpha:1] forState:UIControlStateNormal];
+    
+    [self.contentView addSubview:testStartButton];
+    self.testStartButton = testStartButton;
+    
+    [testStartButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.centerY.mas_equalTo(self.contentView.mas_centerY).mas_offset(-KHeight(10));
+        make.right.mas_equalTo( - KWidth(25));
+        make.height.mas_equalTo(KHeight(14));
+    }];
+}
+
+#pragma mark 给控件赋值
+- (void)loadDataToCell:(NSDictionary *)dataDic
+{
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:dataDic[@"SetImgUrl"]] placeholderImage:[UIImage imageNamed:@"placeHoldImage"]];
+    
+    self.textLabel.text = dataDic[@"SetCategoryName"];
+    self.detailTextLabel.text = [NSString stringWithFormat:@"%@人参与",dataDic[@"BrowseCount"]];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

@@ -1,0 +1,20 @@
+//
+//  StepTableViewCell.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/15.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HealthData.h"
+
+@protocol StepTableViewCellDelegate <NSObject>
+
+- (void)sportbuttonClick;
+
+@end
+@interface StepTableViewCell : UITableViewCell
+@property (nonatomic, weak) id <StepTableViewCellDelegate> delegate;
+@property (nonatomic, strong)HealthData *data;
+@end

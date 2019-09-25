@@ -1,0 +1,13 @@
+//
+//  XKGoSportRemindView.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/11/20.
+//  Copyright © 2018 Jon Shi. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface XKGoSportRemindView : UIView
+
+@end

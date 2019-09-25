@@ -1,0 +1,45 @@
+//
+//  AddFamilyBirthViewController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/17.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "AddFamilyBirthViewController.h"
+#import "AddFamilyBindPhoneViewController.h"
+@interface AddFamilyBirthViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *relationBtn;
+
+@end
+
+@implementation AddFamilyBirthViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.headerView.backgroundColor = [UIColor whiteColor];
+    [self.leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    self.relationBtn.clipsToBounds = YES;
+    self.relationBtn.layer.cornerRadius = self.relationBtn.frame.size.height/2.0;
+}
+- (IBAction)addAction:(id)sender {
+    AddFamilyBindPhoneViewController *add = [[AddFamilyBindPhoneViewController alloc]initWithType:pageTypeNormal];
+    [self.navigationController pushViewController:add animated:YES];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

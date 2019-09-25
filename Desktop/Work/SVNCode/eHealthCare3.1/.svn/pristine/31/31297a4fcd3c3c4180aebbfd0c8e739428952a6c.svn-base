@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="151" id="KGk-i7-Jjw" customClass="XKRecordBasisCell">
+            <rect key="frame" x="0.0" y="0.0" width="500" height="151"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="500" height="150.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nUD-tc-Wgk">
+                        <rect key="frame" x="15" y="15" width="470" height="50"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="就诊人" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uWi-cI-EFd">
+                                <rect key="frame" x="16" y="15.5" width="49" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入姓名" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ai6-Ti-E8B">
+                                <rect key="frame" x="85" y="16.5" width="370" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TYl-Ec-D2B">
+                                <rect key="frame" x="0.0" y="0.0" width="470" height="50"/>
+                                <connections>
+                                    <action selector="oneAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="mJQ-T1-t1b"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="TYl-Ec-D2B" firstAttribute="top" secondItem="nUD-tc-Wgk" secondAttribute="top" id="32L-6j-FNn"/>
+                            <constraint firstAttribute="trailing" secondItem="Ai6-Ti-E8B" secondAttribute="trailing" constant="15" id="3ct-aL-xdY"/>
+                            <constraint firstItem="TYl-Ec-D2B" firstAttribute="leading" secondItem="nUD-tc-Wgk" secondAttribute="leading" id="4dh-vP-00G"/>
+                            <constraint firstItem="uWi-cI-EFd" firstAttribute="leading" secondItem="nUD-tc-Wgk" secondAttribute="leading" constant="16" id="60a-hA-eEt"/>
+                            <constraint firstItem="Ai6-Ti-E8B" firstAttribute="centerY" secondItem="nUD-tc-Wgk" secondAttribute="centerY" id="DvO-No-ptF"/>
+                            <constraint firstAttribute="height" constant="50" id="EO6-7X-Qzi"/>
+                            <constraint firstAttribute="trailing" secondItem="TYl-Ec-D2B" secondAttribute="trailing" id="Rgs-dE-jEY"/>
+                            <constraint firstAttribute="bottom" secondItem="TYl-Ec-D2B" secondAttribute="bottom" id="qw3-jL-Aa0"/>
+                            <constraint firstItem="Ai6-Ti-E8B" firstAttribute="leading" secondItem="uWi-cI-EFd" secondAttribute="trailing" constant="20" id="rSB-XB-xaM"/>
+                            <constraint firstItem="uWi-cI-EFd" firstAttribute="centerY" secondItem="nUD-tc-Wgk" secondAttribute="centerY" id="y10-gD-Wg2"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pIM-rf-lEx">
+                        <rect key="frame" x="15" y="75" width="470" height="50"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="就诊时间" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uXW-fL-2xf">
+                                <rect key="frame" x="15" y="15" width="65.5" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请选择日期 (必填)" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="l3F-sS-mg4">
+                                <rect key="frame" x="336.5" y="16.5" width="118.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="673-zU-s1J">
+                                <rect key="frame" x="0.0" y="0.0" width="470" height="50"/>
+                                <connections>
+                                    <action selector="twoAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="wT8-4L-eqy"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="l3F-sS-mg4" firstAttribute="centerY" secondItem="pIM-rf-lEx" secondAttribute="centerY" id="0vN-KB-fbl"/>
+                            <constraint firstItem="uXW-fL-2xf" firstAttribute="leading" secondItem="pIM-rf-lEx" secondAttribute="leading" constant="15" id="By6-fE-2y6"/>
+                            <constraint firstAttribute="bottom" secondItem="673-zU-s1J" secondAttribute="bottom" id="HJH-9p-J5q"/>
+                            <constraint firstAttribute="trailing" secondItem="673-zU-s1J" secondAttribute="trailing" id="L1h-LG-F1d"/>
+                            <constraint firstAttribute="trailing" secondItem="l3F-sS-mg4" secondAttribute="trailing" constant="15" id="LJw-dy-614"/>
+                            <constraint firstItem="uXW-fL-2xf" firstAttribute="centerY" secondItem="pIM-rf-lEx" secondAttribute="centerY" id="Y10-5l-PJD"/>
+                            <constraint firstItem="673-zU-s1J" firstAttribute="leading" secondItem="pIM-rf-lEx" secondAttribute="leading" id="kLa-pu-hch"/>
+                            <constraint firstAttribute="height" constant="50" id="kXQ-oy-e33"/>
+                            <constraint firstItem="673-zU-s1J" firstAttribute="top" secondItem="pIM-rf-lEx" secondAttribute="top" id="xf7-HD-Q0m"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="nUD-tc-Wgk" secondAttribute="trailing" constant="15" id="Fp0-ym-E7g"/>
+                    <constraint firstItem="nUD-tc-Wgk" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="NmC-HA-FIb"/>
+                    <constraint firstAttribute="trailing" secondItem="pIM-rf-lEx" secondAttribute="trailing" constant="15" id="T79-oK-4CB"/>
+                    <constraint firstItem="pIM-rf-lEx" firstAttribute="top" secondItem="nUD-tc-Wgk" secondAttribute="bottom" constant="10" id="Uxs-by-PQV"/>
+                    <constraint firstItem="nUD-tc-Wgk" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="bbj-4B-Pha"/>
+                    <constraint firstItem="pIM-rf-lEx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="pRW-Ep-fKQ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="backViewCon" destination="nUD-tc-Wgk" id="lsM-78-1s6"/>
+                <outlet property="backViewTwo" destination="pIM-rf-lEx" id="avL-KM-Bj3"/>
+                <outlet property="txtOne" destination="Ai6-Ti-E8B" id="a86-Ku-bIY"/>
+                <outlet property="txtTwo" destination="l3F-sS-mg4" id="by8-6j-HPo"/>
+            </connections>
+            <point key="canvasLocation" x="116" y="105.5"/>
+        </tableViewCell>
+    </objects>
+</document>

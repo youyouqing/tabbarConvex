@@ -1,0 +1,30 @@
+//
+//  XKMyPlanLookCell.h
+//  eHealthCare
+//
+//  Created by xiekang on 2017/6/9.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@class XKMyPlanLookCell;
+@protocol XKMyPlanLookCellDelegate <NSObject>
+
+-(void)XKMyPlanLookCellJoinAction:(XKMyPlanLookCell *)cell;
+
+@end
+
+
+@interface XKMyPlanLookCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *iconImage;
+@property (weak, nonatomic) IBOutlet UILabel *planProtectLab;
+@property (weak, nonatomic) IBOutlet UILabel *planNumberLab;
+@property (weak, nonatomic) IBOutlet UIButton *joinBtn;
+@property (weak, nonatomic) IBOutlet UIView *bgView;
+
+@property (weak, nonatomic)id <XKMyPlanLookCellDelegate>delegate;
+
+@end

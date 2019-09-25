@@ -1,0 +1,20 @@
+//
+//  PersonalArchiveCell.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PersonalArchiveCell : UITableViewCell
+@property (nonatomic,strong)UILabel *nameLal;
+@property (nonatomic,strong)UILabel *textLal;
+@property (nonatomic,strong)UIButton *extendBtn;
+
+/**
+ 设置ImageView的点击事件
+ */
+//-(void)setTarget:(id)target action:(SEL)action;
+@end

@@ -1,0 +1,97 @@
+//
+//  LocationTool.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/8/3.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "LocationTool.h"
+
+@interface LocationTool () <CLLocationManagerDelegate>
+
+///定位
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
+///当前地理信息
+@property (nonatomic, copy) NSString *locationString;
+
+@end
+
+@implementation LocationTool
+
+#pragma mark 定位
+- (void)getCurrentLocation
+{
+    if(![CLLocationManager locationServicesEnabled]){
+        
+        NSLog(@"获取当前位置失败");
+        return;
+    }
+    
+    self.locationManager = [[CLLocationManager alloc]init];
+    
+    self.locationManager.distanceFilter = 10;
+    
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    self.locationManager.delegate = self;
+    
+    if ([[UIDevice currentDevice].systemVersion floatValue]>=8.0)
+    {
+        [self.locationManager requestAlwaysAuthorization];
+    }
+    
+    if ([[UIDevice currentDevice].systemVersion floatValue]>=9.0)
+    {
+        [self.locationManager allowsBackgroundLocationUpdates];//允许后台定位更新
+    }
+    
+    //开始定位
+    [self.locationManager startUpdatingLocation];
+}
+
+#pragma mark CLLocationManager Delegate
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(nonnull NSError *)error{
+    
+    self.locationString = nil;
+    NSLog(@"==error===>>>%@",error.localizedDescription);
+    
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(nonnull NSArray<CLLocation *> *)locations{
+    
+    CLLocation *location = [locations lastObject];
+    CLGeocoder *geocoder = [[CLGeocoder alloc]init];
+    
+    NSString *latitude = [NSString stringWithFormat:@"%f",location.coordinate.latitude]; NSString *longitude = [NSString stringWithFormat:@"%f",location.coordinate.longitude];
+    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        
+        CLPlacemark *mark = [placemarks firstObject];
+        NSLog(@"======>>%@------%@=====>>>%@",mark.locality,mark.name,mark.addressDictionary);
+        
+        NSDictionary *locationDic = [NSDictionary dictionary];
+        if (mark)
+        {
+            locationDic = @{@"district":mark.addressDictionary[@"SubLocality"],
+                                          @"Street":mark.addressDictionary[@"Street"],
+                                          @"city":mark.addressDictionary[@"City"],
+                                          @"lng":longitude,
+                                          @"streetNumber":mark.addressDictionary[@"Street"],
+                                          @"lat":latitude,
+                                          @"province":mark.addressDictionary[@"State"]};
+        }
+        
+        self.locationString = [locationDic mj_JSONString];
+        
+        [self.locationManager stopUpdatingLocation];
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(getCurrentLocationSuccess:)]) {
+            
+            [self.delegate getCurrentLocationSuccess:self.locationString];
+        }
+    }];
+    
+}
+
+@end

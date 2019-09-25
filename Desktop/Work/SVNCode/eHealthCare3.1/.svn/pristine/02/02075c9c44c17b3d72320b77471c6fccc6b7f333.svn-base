@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="XKInformationDetail">
+            <connections>
+                <outlet property="backViewHeight" destination="ufB-wp-3Aq" id="cTF-RF-Vo1"/>
+                <outlet property="infoView" destination="IbV-ub-sWU" id="FTn-OL-syF"/>
+                <outlet property="tableView" destination="O4c-Ki-Mde" id="cHV-Vd-iq1"/>
+                <outlet property="tableViewTopCons" destination="Sdp-G7-3HN" id="ooJ-y0-hCW"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="O4c-Ki-Mde">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="607"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="GW6-ax-T8v"/>
+                        <outlet property="delegate" destination="-1" id="ibi-Kp-h3z"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IbV-ub-sWU">
+                    <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iuU-C3-k8Z">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="0.5"/>
+                            <color key="backgroundColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="JP1-Wi-8IN"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="iuU-C3-k8Z" secondAttribute="trailing" id="Mad-4u-uvn"/>
+                        <constraint firstItem="iuU-C3-k8Z" firstAttribute="top" secondItem="IbV-ub-sWU" secondAttribute="top" id="VRX-iH-Z2y"/>
+                        <constraint firstItem="iuU-C3-k8Z" firstAttribute="leading" secondItem="IbV-ub-sWU" secondAttribute="leading" id="ite-Pr-Pea"/>
+                        <constraint firstAttribute="height" constant="60" id="ufB-wp-3Aq"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="O4c-Ki-Mde" secondAttribute="bottom" constant="60" id="Ae6-Xg-Cm6"/>
+                <constraint firstItem="O4c-Ki-Mde" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Sdp-G7-3HN"/>
+                <constraint firstItem="IbV-ub-sWU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="UM6-7p-eBr"/>
+                <constraint firstAttribute="trailing" secondItem="O4c-Ki-Mde" secondAttribute="trailing" id="dVx-gy-x9e"/>
+                <constraint firstAttribute="trailing" secondItem="IbV-ub-sWU" secondAttribute="trailing" id="hiB-gm-u9c"/>
+                <constraint firstItem="O4c-Ki-Mde" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="nsg-cV-opt"/>
+                <constraint firstAttribute="bottom" secondItem="IbV-ub-sWU" secondAttribute="bottom" id="nx2-Tw-azc"/>
+            </constraints>
+            <point key="canvasLocation" x="35.5" y="54.5"/>
+        </view>
+    </objects>
+</document>

@@ -1,0 +1,65 @@
+//
+//  XKTopicModel.h
+//  eHealthCare
+//
+//  Created by jamkin on 2017/6/19.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface XKTopicModel : NSObject
+
+/**
+ 话题编号
+ */
+@property (nonatomic,assign)NSInteger TopicID;
+
+/**
+ 话题类别
+ */
+@property (nonatomic,copy)NSString *TopicTypeName;
+
+/**
+ 话题内容
+ */
+@property (nonatomic,copy)NSString *TopicContent;
+
+/**
+ 发布话题人的头像
+ */
+@property (nonatomic,copy)NSString *HeadImg;
+
+/**
+ CreateTime
+ Long
+ 话题发布时间
+ */
+@property (nonatomic,assign)long CreateTime;
+
+/**
+ ReplyScount
+ Int32
+ 话题回答人数
+ */
+@property (nonatomic,assign)NSInteger ReplyScount;
+
+/**
+ PraiseScount
+ Int32
+ 话题点赞人数
+ */
+@property (nonatomic,assign)NSInteger PraiseScount;
+
+/**
+ 是否已经点赞 0未点赞 1已点赞
+ */
+@property (nonatomic,assign) NSInteger IsPraise;
+
+/**
+ 发布话题人的姓名
+ */
+@property (nonatomic,copy) NSString *NickName;
+
+
+@end

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="F9A-mP-jBE" customClass="XKMessageInputeView">
+            <rect key="frame" x="0.0" y="0.0" width="454" height="64"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JP0-OX-Jor">
+                    <rect key="frame" x="0.0" y="8" width="454" height="56"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WSb-bm-Jk8">
+                            <rect key="frame" x="15" y="8" width="424" height="39"/>
+                            <subviews>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="我也说一句~" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uAm-9w-1Zv">
+                                    <rect key="frame" x="15" y="0.0" width="394" height="39"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                </textField>
+                            </subviews>
+                            <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="39" id="h6u-DU-0HB"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="WSb-bm-Jk8" secondAttribute="trailing" constant="15" id="Ako-DR-HaW"/>
+                        <constraint firstItem="WSb-bm-Jk8" firstAttribute="leading" secondItem="JP0-OX-Jor" secondAttribute="leading" constant="15" id="L8N-tz-Gxf"/>
+                        <constraint firstItem="WSb-bm-Jk8" firstAttribute="centerY" secondItem="JP0-OX-Jor" secondAttribute="centerY" id="hjF-g1-5HG"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIb-oB-uIM">
+                    <rect key="frame" x="0.0" y="0.0" width="454" height="8"/>
+                    <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="8" id="z3N-9Y-zZP"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="JP0-OX-Jor" secondAttribute="bottom" id="GQX-cL-ZXt"/>
+                <constraint firstItem="iIb-oB-uIM" firstAttribute="leading" secondItem="F9A-mP-jBE" secondAttribute="leading" id="KTS-Kx-phG"/>
+                <constraint firstItem="JP0-OX-Jor" firstAttribute="top" secondItem="iIb-oB-uIM" secondAttribute="bottom" id="UsH-SK-aM1"/>
+                <constraint firstAttribute="trailing" secondItem="iIb-oB-uIM" secondAttribute="trailing" id="X5r-U6-uOJ"/>
+                <constraint firstItem="iIb-oB-uIM" firstAttribute="top" secondItem="F9A-mP-jBE" secondAttribute="top" id="fjn-8o-3A3"/>
+                <constraint firstItem="JP0-OX-Jor" firstAttribute="leading" secondItem="F9A-mP-jBE" secondAttribute="leading" id="pOV-SG-hkh"/>
+                <constraint firstAttribute="trailing" secondItem="JP0-OX-Jor" secondAttribute="trailing" id="ro1-rc-nlO"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="txt" destination="uAm-9w-1Zv" id="ZQf-nL-k7n"/>
+                <outlet property="txtContianerview" destination="WSb-bm-Jk8" id="Eqd-ge-bvF"/>
+            </connections>
+            <point key="canvasLocation" x="-22" y="-199"/>
+        </view>
+    </objects>
+</document>

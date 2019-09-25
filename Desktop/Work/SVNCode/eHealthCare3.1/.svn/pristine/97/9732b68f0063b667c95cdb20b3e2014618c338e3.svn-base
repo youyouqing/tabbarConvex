@@ -1,0 +1,37 @@
+//
+//  CertificationController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/26.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "CertificationController.h"
+
+@interface CertificationController ()
+
+@end
+
+@implementation CertificationController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.myTitle = @"实名认证";
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

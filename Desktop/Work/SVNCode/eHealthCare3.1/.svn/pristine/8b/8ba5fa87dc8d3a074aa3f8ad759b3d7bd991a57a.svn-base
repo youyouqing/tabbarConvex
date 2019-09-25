@@ -1,0 +1,161 @@
+//
+//  XKInformationCancelView.m
+//  eHealthCare
+//
+//  Created by xiekang on 2017/6/13.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKInformationCancelView.h"
+@interface XKInformationCancelView ()<UITextViewDelegate>
+
+@end
+@implementation XKInformationCancelView
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+-(void)awakeFromNib
+{
+
+    [super awakeFromNib];
+    self.myTextView.delegate = self;
+    //建议内容的背景设置
+//    self.myTextView.backgroundColor = [UIColor clearColor];
+    self.myTextView.clipsToBounds = YES;
+    self.myTextView.layer.borderColor = [UIColor getColor:@"f2f2f2"].CGColor;
+    self.myTextView.layer.borderWidth = 1.0;
+    self.myTextView.delegate = self;
+     self.sureBtn.enabled = NO;
+    self.sureBtn.clipsToBounds = YES;
+    self.sureBtn.layer.cornerRadius = self.sureBtn.height/2.0;
+     self.textViewLal.text = @"我也说一句～";
+  
+}
+/*防止键盘下落后，回复ABC消失*/
+//- (BOOL)textViewShouldEndEditing:(UITextView *)textView{
+//    self.textViewLal.text = @"我也说一句～";
+//    return YES;
+//}
+-(void)setReplyerMemberID:(NSInteger)ReplyerMemberID
+{
+
+    _ReplyerMemberID = ReplyerMemberID;
+    
+    
+    
+
+}
+#pragma mark - UITextViewDelegate
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
+{
+    if (textView == self.myTextView) {
+        
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(beginTextViewInputData:)]) {
+//            [self.delegate beginTextViewInputData:textView];
+//        }
+        if (self.ReplyerMemberID ==  [UserInfoTool getLoginInfo].MemberID) {
+            
+            return NO;
+        }
+    }
+
+    return YES;
+
+}
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if (textView == self.myTextView) {
+
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(beginTextViewInputData:)]) {
+//            [self.delegate beginTextViewInputData:textView];
+//        }
+
+    }
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    if (textView == self.myTextView) {
+//        self.textViewLal.text = @"我也说一句～";/*防止键盘下落后，回复ABC消失*/
+        if (textView.text.length == 0) {
+            if ([self.textViewLal.text isEqualToString:@"我也说一句～"]) {
+                 self.textViewLal.text = @"我也说一句～";
+            }
+           
+            self.sureBtn.enabled = NO;
+            [self.sureBtn setBackgroundColor:[UIColor getColor:@"dadada"]];
+//             [self.sureBtn setTitleColor:[UIColor getColor:@"bcbcbc"] forState:UIControlStateNormal];
+        }
+        else
+        {
+           
+            self.sureBtn.enabled = YES;
+             [self.sureBtn setBackgroundColor:kMainColor];
+//            [self.sureBtn setTitleColor:kMainColor forState:UIControlStateNormal];
+        }
+        
+    }
+}
+- (void)textViewDidChange:(UITextView *)textView;
+{
+    
+    if (textView == self.myTextView) {
+        if (textView.text.length == 0) {
+            
+            self.textViewLal.hidden = NO;
+            
+            self.sureBtn.enabled = NO;
+             [self.sureBtn setBackgroundColor:[UIColor getColor:@"dadada"]];
+//            [self.sureBtn setTitleColor:[UIColor getColor:@"bcbcbc"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            self.textViewLal.hidden = YES;
+            self.sureBtn.enabled = YES;
+              [self.sureBtn setBackgroundColor:kMainColor];
+//            [self.sureBtn setTitleColor:kMainColor forState:UIControlStateNormal];
+        }
+    }
+    
+  
+}
+- (IBAction)takePictureAction:(id)sender {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(takePicktureBtn)]) {
+        [self.delegate takePicktureBtn];
+    }
+    
+}
+
+- (IBAction)cancelAction:(id)sender {
+    
+    _myTextView.text = @"";
+    
+     self.textViewLal.text = @"我也说一句～";
+    
+//      [self.sureBtn setTitleColor:[UIColor getColor:@"bcbcbc"] forState:UIControlStateNormal];
+      [self.sureBtn setBackgroundColor:[UIColor getColor:@"dadada"]];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cancelForClicked)]) {
+        [self.delegate cancelForClicked];
+    }
+    
+}
+
+- (IBAction)sureAction:(id)sender {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sureForClickedAction:)]) {
+        [self.delegate sureForClickedAction:_myTextView.text];
+    }
+     self.textViewLal.hidden = NO;
+     _myTextView.text = @"";
+    [self.myTextView resignFirstResponder];
+    [self.txtField resignFirstResponder];
+}
+
+
+@end

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="233" id="KGk-i7-Jjw" customClass="XKHistoryTotalCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="233"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="232.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="建议：" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rhe-4G-pVn">
+                        <rect key="frame" x="35" y="76.5" width="305" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="总检时间：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8aN-l4-W7f">
+                        <rect key="frame" x="35" y="160" width="72" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="总检人：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLE-VK-s7J">
+                        <rect key="frame" x="282" y="136" width="58" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="总结：" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oQw-R5-R4F">
+                        <rect key="frame" x="35" y="17" width="305" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="  " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehi-Dj-8k0">
+                        <rect key="frame" x="35" y="34" width="305" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="  " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ADq-7s-RZg">
+                        <rect key="frame" x="35" y="93.5" width="305" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgb-dz-Ga4">
+                        <rect key="frame" x="10" y="0.0" width="355" height="192.5"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.02" colorSpace="calibratedRGB"/>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="8aN-l4-W7f" secondAttribute="bottom" constant="55.5" id="11h-PD-HT8"/>
+                    <constraint firstItem="Rhe-4G-pVn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="35" id="40G-Qp-3qB"/>
+                    <constraint firstAttribute="trailing" secondItem="kLE-VK-s7J" secondAttribute="trailing" constant="35" id="6EH-Os-f4b"/>
+                    <constraint firstItem="8aN-l4-W7f" firstAttribute="top" secondItem="ADq-7s-RZg" secondAttribute="bottom" constant="22" id="BBN-5T-eXI"/>
+                    <constraint firstAttribute="trailing" secondItem="oQw-R5-R4F" secondAttribute="trailing" constant="35" id="DCk-6M-a19"/>
+                    <constraint firstItem="Ehi-Dj-8k0" firstAttribute="leading" secondItem="oQw-R5-R4F" secondAttribute="leading" id="Fdo-D4-9Gc"/>
+                    <constraint firstAttribute="trailing" secondItem="Rhe-4G-pVn" secondAttribute="trailing" constant="35" id="LPV-lG-cEB"/>
+                    <constraint firstItem="hgb-dz-Ga4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="MDg-1k-dTI"/>
+                    <constraint firstItem="oQw-R5-R4F" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="35" id="SiT-Gk-w9a"/>
+                    <constraint firstItem="kLE-VK-s7J" firstAttribute="top" secondItem="ADq-7s-RZg" secondAttribute="bottom" constant="22" id="czR-5j-dKm"/>
+                    <constraint firstItem="8aN-l4-W7f" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="35" id="f7R-GW-ghU"/>
+                    <constraint firstItem="ADq-7s-RZg" firstAttribute="leading" secondItem="Ehi-Dj-8k0" secondAttribute="leading" id="h4b-Bg-KmF"/>
+                    <constraint firstItem="Ehi-Dj-8k0" firstAttribute="trailing" secondItem="oQw-R5-R4F" secondAttribute="trailing" id="mtx-R7-Gsz"/>
+                    <constraint firstItem="hgb-dz-Ga4" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="muO-sw-QiB"/>
+                    <constraint firstItem="Rhe-4G-pVn" firstAttribute="top" secondItem="Ehi-Dj-8k0" secondAttribute="bottom" constant="22" id="nhI-qt-RZV"/>
+                    <constraint firstAttribute="trailing" secondItem="hgb-dz-Ga4" secondAttribute="trailing" constant="10" id="oro-CC-rC7"/>
+                    <constraint firstItem="ADq-7s-RZg" firstAttribute="trailing" secondItem="Ehi-Dj-8k0" secondAttribute="trailing" id="qA6-ic-BPb"/>
+                    <constraint firstAttribute="bottom" secondItem="hgb-dz-Ga4" secondAttribute="bottom" constant="40" id="tfM-OS-78y"/>
+                    <constraint firstItem="Ehi-Dj-8k0" firstAttribute="top" secondItem="oQw-R5-R4F" secondAttribute="bottom" id="uhb-eF-R53"/>
+                    <constraint firstItem="ADq-7s-RZg" firstAttribute="top" secondItem="Rhe-4G-pVn" secondAttribute="bottom" id="v0e-lz-7Xr"/>
+                    <constraint firstItem="oQw-R5-R4F" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="17" id="zTb-ZD-NHi"/>
+                </constraints>
+            </tableViewCellContentView>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="checkPeopleLab" destination="kLE-VK-s7J" id="6Dk-Yk-3tR"/>
+                <outlet property="commentContentLab" destination="ADq-7s-RZg" id="azD-Yp-Svl"/>
+                <outlet property="commentLab" destination="Rhe-4G-pVn" id="yHu-2O-h02"/>
+                <outlet property="rightConstain" destination="6EH-Os-f4b" id="Oct-H3-2Ki"/>
+                <outlet property="timeLab" destination="8aN-l4-W7f" id="Zrd-B3-9bF"/>
+                <outlet property="titleContentLab" destination="Ehi-Dj-8k0" id="tlM-Kb-Csf"/>
+                <outlet property="totalLab" destination="oQw-R5-R4F" id="zxH-AD-iD0"/>
+            </connections>
+            <point key="canvasLocation" x="52.5" y="146.5"/>
+        </tableViewCell>
+    </objects>
+</document>

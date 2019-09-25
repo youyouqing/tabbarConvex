@@ -1,0 +1,158 @@
+//
+//  XKBindToolsViewController.m
+//  eHealthCare
+//
+//  Created by xiekang on 2017/10/20.
+//  Copyright © 2017年 mac. All rights reserved.
+//
+
+#import "XKBindToolsViewController.h"
+#import"XKBindToolTableViewCell.h"
+#import "XKBindEquipmentViewController.h"
+#import "XKDeviceDetailMod.h"
+#import "XKDeviceMod.h"
+#import "XKShopUrlViewController.h"
+#import "XKValidationAndAddScoreTools.h"
+@interface XKBindToolsViewController ()<XKBindToolTableViewCellDelegate>
+@property (nonatomic,strong)NSArray *dataBigArray;
+@end
+
+@implementation XKBindToolsViewController
+
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = [NSString stringWithFormat:@"%@绑定",self.title];
+    self.tableView.backgroundColor=[UIColor colorWithHexString:@"f2f2f2"];
+    self.tableView.estimatedRowHeight = 44;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    [self.tableView registerNib:[UINib nibWithNibName:@"XKBindToolTableViewCell" bundle:nil] forCellReuseIdentifier:@"XKBindToolTableViewCell"];
+    
+    if ([[EGOCache globalCache]hasCacheForKey:[NSString stringWithFormat:@"%@%i%li",@"XKDeviceMod",[[UserInfoTool getLoginInfo].MemberID intValue],(long)self.style]]) {
+        NSArray *dic1 = (NSArray *)[[EGOCache globalCache] objectForKey:[NSString stringWithFormat:@"%@%i%li",@"XKDeviceMod",[[UserInfoTool getLoginInfo].MemberID intValue],(long)self.style]];
+        
+        [self loadDataWithDBOrRequest:dic1];
+        
+    }//网络环境差的情况下就本地数据
+    [self loadData];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataBigArray.count;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return 135;
+    
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    XKBindToolTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"XKBindToolTableViewCell" forIndexPath:indexPath];
+    if (cell == nil) {
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"XKBindToolTableViewCell" owner:self options:nil]lastObject];
+    }
+    cell.model = self.dataBigArray[indexPath.row];
+    cell.delegate = self;
+    return cell;
+}
+#pragma mark   数据加载
+-(void)loadData{
+        
+//        [[XKLoadingView shareLoadingView]showLoadingText:nil];//,@"Mobile":[UserInfoTool getLoginInfo].Mobile
+    
+    NSDictionary *dic = @{@"Token":[UserInfoTool getLoginInfo].Token,
+                          @"DeviceID":@(self.DeviceID)};
+    
+    [NetWorkTool postAction:checkHomeGetDeviceBindListUrl params:dic finishedBlock:^(ResponseObject *response) {
+        
+        if (response.code == CodeTypeSucceed)
+        {
+            
+            [self loadDataWithDBOrRequest:response.Result];
+            [[EGOCache globalCache] setObject:response.Result forKey:[NSString stringWithFormat:@"%@%i%li",@"XKDeviceMod",[[UserInfoTool getLoginInfo].MemberID intValue],(long)self.style]];
+            
+        }else
+        {
+            ShowErrorStatus(response.msg);
+        }
+    }];
+//        [ProtosomaticHttpTool protosomaticPostWithURLString:@"809" parameters:@{@"Token":[UserInfoTool getLoginInfo].Token,@"DeviceID":@(self.DeviceID)}  success:^(id json) {
+//
+//            XKLOG(@"809%@",json);
+//
+//            if ([[[json objectForKey:@"Basis"] objectForKey:@"Msg"] isEqualToString:@"操作成功"]) {
+//
+//                [[XKLoadingView shareLoadingView] hideLoding];
+//
+//                //展示当天任务是否完成
+////                XKValidationAndAddScoreTools *tools = [[XKValidationAndAddScoreTools alloc] init];
+////                [tools validationAndAddScore:@{@"Token":[UserInfoTool getLoginInfo].Token,@"TaskType":@(2),@"MemberID":[UserInfoTool getLoginInfo].MemberID,@"TypeID":@(5)} withAdd:@{@"Token":[UserInfoTool getLoginInfo].Token,@"TaskType":@(2),@"MemberID":[UserInfoTool getLoginInfo].MemberID,@"TypeID":@(5)}];
+//
+//
+//
+//                  [self loadDataWithDBOrRequest:[json objectForKey:@"Result"]];
+//                  [[EGOCache globalCache] setObject:[json objectForKey:@"Result"] forKey:[NSString stringWithFormat:@"%@%li%i",@"XKDeviceMod",[UserInfoTool getLoginInfo].MemberID,self.style]];
+//
+//
+//            }else{
+//
+//                XKLOG(@"操作失败");
+//                [[XKLoadingView shareLoadingView] errorloadingText:@"加载失败"];
+//
+//
+//            }
+//
+//        } failure:^(id error) {
+//
+//            XKLOG(@"%@",error);
+//
+//            [[XKLoadingView shareLoadingView] errorloadingText:error];
+//
+//        }];
+    
+}
+-(void)loadDataWithDBOrRequest:(NSArray *)dic1{
+
+    self.dataBigArray = [XKDeviceMod objectArrayWithKeyValuesArray:dic1];
+    [self.tableView reloadData];
+
+}
+-(void)bindView:(XKBindToolTableViewCell *)cell;
+{
+    XKBindEquipmentViewController *bind = [[XKBindEquipmentViewController alloc]init];
+    bind.model = cell.model;
+    bind.style = self.style;
+    bind.title = self.title;
+    [self.navigationController pushViewController:bind animated:YES];
+    
+}
+/**
+ 跳转到商场页去购买设备
+ 
+ @param sender <#sender description#>
+ */
+-(void)buyTools:(XKBindToolTableViewCell *)cell;
+{
+    XKShopUrlViewController *shop = [[XKShopUrlViewController alloc]init];
+    shop.ShopUrl = cell.model.HpptUrl;
+    [self.navigationController pushViewController:shop animated:YES];
+    
+    
+}
+
+
+
+@end

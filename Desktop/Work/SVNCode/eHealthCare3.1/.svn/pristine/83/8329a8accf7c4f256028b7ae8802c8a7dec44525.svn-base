@@ -1,0 +1,109 @@
+//
+//  ExamineReportDetailController.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/17.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "ExamineReportDetailController.h"
+#import "ExamineReportDetailView.h"
+#import "ArcDetailReportCell.h"
+#import "PersonalArcHeadView.h"
+@interface ExamineReportDetailController ()
+@property (strong, nonatomic)  UITableView *tableView;
+
+@property (strong, nonatomic) PersonalArcHeadView *headView;
+@end
+
+@implementation ExamineReportDetailController
+
+
+-(PersonalArcHeadView *)headView{
+    if (!_headView) {
+        _headView=[[[NSBundle mainBundle]loadNibNamed:@"PersonalArcHeadView" owner:self options:nil]firstObject];
+        _headView.x=0;
+        _headView.y=0;
+        _headView.width=KScreenWidth;
+        _headView.height=180;
+    }
+    return _headView;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.myTitle = @"健康报告";
+    [self createUI];
+}
+#pragma mark UI
+- (void)createUI
+{
+    
+    self.tableView= [[UITableView alloc]initWithFrame:CGRectMake(0, PublicY, KScreenWidth, KScreenHeight-(PublicY)) style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.backgroundColor = kbackGroundGrayColor;
+    self.view.backgroundColor =  kbackGroundGrayColor;
+    [self.view addSubview:self.tableView];
+    self.tableView.tableHeaderView = self.headView;
+    self.tableView.estimatedRowHeight = 110;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.separatorColor=[UIColor clearColor];
+        [self.tableView registerNib:[UINib nibWithNibName:@"ArcDetailReportCell" bundle:nil] forCellReuseIdentifier:@"ArcDetailReportCell"];
+
+}
+#pragma mark tableView dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return 1;
+    
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return 88+20;
+    
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *cellid = @"ArcDetailReportCell";
+    ArcDetailReportCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //        cell.mod = _dataBigArr[indexPath.row];
+    return cell;
+    
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+
+        return (4376-480)/2.0;
+
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+
+    ExamineReportDetailView *headV=[[[NSBundle mainBundle]loadNibNamed:@"ExamineReportDetailView" owner:self options:nil]  firstObject];
+
+    return headV;
+
+
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+
+@end

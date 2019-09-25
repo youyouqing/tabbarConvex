@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LoginOutView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4kp-YF-hx8">
+                    <rect key="frame" x="10" y="607" width="355" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="6Gx-XH-Oh3"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <state key="normal" title="退出登录">
+                        <color key="titleColor" red="0.17254901959999999" green="0.27450980390000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </state>
+                    <connections>
+                        <action selector="loginOutAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="ARP-Fr-Qxc"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="4kp-YF-hx8" secondAttribute="trailing" constant="10" id="QKC-fc-47f"/>
+                <constraint firstItem="4kp-YF-hx8" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="hDJ-Ug-rZQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="4kp-YF-hx8" secondAttribute="bottom" constant="10" id="hZJ-Gs-nwG"/>
+                <constraint firstItem="4kp-YF-hx8" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ykn-sx-0wI"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="msgLab" destination="4kp-YF-hx8" id="dbb-KA-Sij"/>
+            </connections>
+        </view>
+    </objects>
+</document>

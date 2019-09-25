@@ -1,0 +1,78 @@
+//
+//  BaiduMapTrackManager.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/13.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "BaiduMapTrackManager.h"
+
+@implementation BaiduMapTrackManager
+
+static BaiduMapTrackManager *sharedBaiduMap = nil;
+
++ (BaiduMapTrackManager *)shareInstance
+{
+    static dispatch_once_t  once;
+    dispatch_once(&once,^{
+        
+        sharedBaiduMap = [[BaiduMapTrackManager alloc] init];
+        
+    });
+    
+    return sharedBaiduMap;
+}
+
+-(instancetype)init {
+    self = [super init];
+    if (self) {
+        _isServiceStarted = FALSE;
+        _isGatherStarted = FALSE;
+    }
+    return self;
+}
+
+/**
+ 开启轨迹服务
+ 
+ @param startServiceOption 开启服务的选项
+ */
+-(void)startServiceWithOption:(BTKStartServiceOption *)startServiceOption
+{
+    dispatch_async(GLOBAL_QUEUE, ^{
+        [[BTKAction sharedInstance] startService:startServiceOption delegate:self];
+    });
+}
+
+/**
+ 停止轨迹服务
+ */
+-(void)stopService
+{
+    dispatch_async(GLOBAL_QUEUE, ^{
+        [[BTKAction sharedInstance] stopService:self];
+    });
+}
+
+/**
+ 开始采集
+ */
+-(void)startGather
+{
+    dispatch_async(GLOBAL_QUEUE, ^{
+        [[BTKAction sharedInstance] startGather:self];
+    });
+}
+
+/**
+ 停止采集
+ */
+-(void)stopGather
+{
+    dispatch_async(GLOBAL_QUEUE, ^{
+        [[BTKAction sharedInstance] stopGather:self];
+    });
+}
+
+@end

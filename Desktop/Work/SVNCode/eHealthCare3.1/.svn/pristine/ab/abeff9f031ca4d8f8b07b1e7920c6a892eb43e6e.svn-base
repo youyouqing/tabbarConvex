@@ -1,0 +1,244 @@
+//
+//  UIViewController+Entension.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/7/6.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "UIViewController+Entension.h"
+#import "LoginViewController.h"
+
+static const char remindTextKey = '\3';
+static const char placeHoldImageKey = '\4';
+
+@interface UIViewController (Extension)
+
+@end
+
+@implementation UIViewController (Entension)
+
+#pragma mark 弹出登录页
+//present登录
+- (void)presentLoginView
+{
+    LoginViewController *login = [[LoginViewController alloc]initWithType:pageTypeOnlyTitle];
+    
+    [self.navigationController presentViewController:login animated:YES completion:nil];
+}
+
+#pragma mark 获取当前viewController
+//获取当前Controller
+- (UIViewController *)getCurrentViewController
+{
+    UIViewController *result = nil;
+    UIWindow * window = [[UIApplication sharedApplication].delegate window];
+    
+    if (window.windowLevel != UIWindowLevelNormal)
+    {
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow * tmpWin in windows)
+        {
+            if (tmpWin.windowLevel == UIWindowLevelNormal)
+            {
+                window = tmpWin;
+                break;
+            }
+        }
+    }
+    id  nextResponder = nil;
+    UIViewController *appRootVC = window.rootViewController;
+    
+    if (appRootVC.presentedViewController) {
+        
+        while (appRootVC.presentedViewController) {
+            
+            appRootVC = appRootVC.presentedViewController;
+            
+            if (appRootVC)
+            {
+                nextResponder = appRootVC;
+            }else
+            {
+                break;
+            }
+        }
+        
+    }else{
+        
+        UIView *frontView = [[window subviews] objectAtIndex:0];
+        nextResponder = [frontView nextResponder];
+    }
+    
+    if ([nextResponder isKindOfClass:[UITabBarController class]])
+    {
+        UITabBarController* tabbar = (UITabBarController *)nextResponder;
+        UINavigationController* nav = (UINavigationController *)tabbar.viewControllers[tabbar.selectedIndex];
+        
+        result = nav.childViewControllers.lastObject;
+        
+    }else if ([nextResponder isKindOfClass:[UINavigationController class]]){
+        
+        UIViewController * nav = (UIViewController *)nextResponder;
+        result = nav.childViewControllers.lastObject;
+        
+    }else{
+        
+        result = nextResponder;
+    }
+    return result;
+}
+
+#pragma mark 顶部提示信息
+//显示顶部提示信息
+- (void)showRemindText:(NSString *)remindText hasNavigation:(BOOL)isHas
+{
+    UILabel *remindTextLabel = [[UILabel alloc]init];
+    
+    remindTextLabel.text = remindText;
+    remindTextLabel.font = Kfont(14);
+    remindTextLabel.textAlignment = NSTextAlignmentCenter;
+    remindTextLabel.textColor = [UIColor redColor];
+    
+    [self.view addSubview:remindTextLabel];
+    self.remindTextLabel = remindTextLabel;
+    
+    [remindTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        if (isHas) {
+            
+           make.top.mas_equalTo(PublicY);
+
+        }else{
+            
+            make.top.mas_equalTo(PublicY - 44);
+        }
+        
+        make.left.right.mas_equalTo(0);
+        make.size.mas_equalTo(CGSizeMake(KScreenWidth, 20));
+        
+    }];
+}
+
+//隐藏顶部提示信息
+- (void)hiddenRemindText
+{
+    [self.remindTextLabel removeFromSuperview];
+}
+
+//getter setter 方法
+//提示文字
+- (UILabel *)remindTextLabel
+{
+    return objc_getAssociatedObject(self, &remindTextKey);
+}
+
+- (void)setRemindTextLabel:(UILabel *)remindTextLabel
+{
+    objc_setAssociatedObject(self, &remindTextKey, remindTextLabel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+#pragma mark 占位图
+//显示占位图
+- (void)showPlaceHoldImageAtCenterOfViewController:(UIImage *)image
+{
+    UIImage *placeImage = [[UIImage alloc]init];
+    if (image)
+    {
+        placeImage = image;
+        
+    }else
+    {
+        placeImage = [UIImage imageNamed:@""];
+    }
+    
+    //占位图
+    UIImageView *placeHoldImage = [[UIImageView alloc]init];
+    
+    if (image)
+    {
+        placeHoldImage.image = image;
+        
+    }else
+    {
+        placeHoldImage.image = [UIImage imageNamed:@"none_dataImage"];
+    }
+    
+    [self.view addSubview:placeHoldImage];
+    self.placeHoldImage = placeHoldImage;
+    
+    [placeHoldImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.centerY.mas_equalTo(self.view.mas_centerY);
+        make.size.mas_equalTo(CGSizeMake(KWidth(164), KHeight(160)));
+    }];
+}
+
+//隐藏占位图
+- (void)hiddenPlaceHoldImage
+{
+    
+    if (self.placeHoldImage)
+    {
+        [self.placeHoldImage removeFromSuperview];
+    }
+}
+
+//getter setter 方法
+- (UIImageView *)placeHoldImage
+{
+    return objc_getAssociatedObject(self, &placeHoldImageKey);
+}
+
+- (void)setPlaceHoldImage:(UIImageView *)placeHoldImage
+{
+    objc_setAssociatedObject(self, &placeHoldImageKey, placeHoldImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+#pragma mark 无导航页面显示title和放回按钮
+//无导航栏页面显示title和返回按钮
+- (void)showTitleAndBackButtonWithoutNavigation:(NSString *)title
+{
+    UILabel *titleLab = [[UILabel alloc] init];
+    titleLab.font = Kfont(20);
+    titleLab.textColor = [UIColor colorWithHexString:@"#ffffff"];
+    titleLab.textAlignment = NSTextAlignmentCenter;
+    titleLab.text = title;
+    [self.view addSubview:titleLab];
+    [titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.top.mas_equalTo(PublicY - 42);
+        make.height.mas_equalTo(40);
+    }];
+    
+    //返回按钮
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [backButton setImage:[UIImage imageNamed:@"breath_back"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"breath_back"] forState:UIControlStateHighlighted];
+    [backButton addTarget:self action:@selector(noNavigationBackToUpviewControllerAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:backButton];
+    [backButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.mas_equalTo(12);
+        make.top.mas_equalTo(PublicY - 42);
+        make.width.height.mas_equalTo(40);
+    }];
+}
+
+//返回按钮的点击事件
+- (void)noNavigationBackToUpviewControllerAction
+{
+    if (self.presentingViewController)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+@end

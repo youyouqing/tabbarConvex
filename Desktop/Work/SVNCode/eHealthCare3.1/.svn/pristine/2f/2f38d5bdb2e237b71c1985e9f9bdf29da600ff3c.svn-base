@@ -1,0 +1,22 @@
+//
+//  XKHotTopicTableViewCell.h
+//  eHealthCare
+//
+//  Created by John shi on 2018/11/2.
+//  Copyright © 2018 Jon Shi. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "XKTopicModel.h"
+
+@protocol XKHotTopicTableViewCellDelegate <NSObject>
+
+-(void)changeHotTopicChildDataSoure:(XKTopicModel *)mdoel;
+
+@end
+@interface XKHotTopicTableViewCell : UITableViewCell
+
+@property (nonatomic,strong) XKTopicModel *model;
+
+@property (nonatomic,weak) id<XKHotTopicTableViewCellDelegate> delegate;
+@end

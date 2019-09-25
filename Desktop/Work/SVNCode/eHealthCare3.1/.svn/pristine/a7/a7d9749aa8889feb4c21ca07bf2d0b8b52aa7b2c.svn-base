@@ -1,0 +1,35 @@
+//
+//  HealthRecordMedical TableViewCell.m
+//  eHealthCare
+//
+//  Created by John shi on 2018/10/16.
+//  Copyright © 2018年 Jon Shi. All rights reserved.
+//
+
+#import "HealthRecordMedical TableViewCell.h"
+
+@implementation HealthRecordMedical_TableViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.backgroundColor = [UIColor getColor:@"EEF7FD"];
+    self.dotOneLab.layer.cornerRadius = 2;
+    self.dotOneLab.clipsToBounds = YES;
+    self.dotTwoLab.backgroundColor = kMainColor;
+    self.dotTwoLab.layer.cornerRadius = 2;
+    self.dotTwoLab.clipsToBounds = YES;
+    self.dotOneLab.backgroundColor = kMainColor;
+    self.dotThreeLab.layer.cornerRadius = 2;
+    self.dotThreeLab.clipsToBounds = YES;
+    self.dotThreeLab.backgroundColor = kMainColor;
+    self.backView.layer.cornerRadius = 5;
+    self.backView.clipsToBounds = YES;
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end
